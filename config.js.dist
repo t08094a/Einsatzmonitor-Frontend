@@ -1,9 +1,0 @@
-let api_key = "123456";
-let active_minutes = 25;  /* Needs to be 2 minutes lower than removal time */
-
-module.exports = {
-    einsatzmonitor_url: "http://127.0.0.1:8000/einsatzmonitor/api/einsatz/?auth_token=" + api_key + "&activeMinutes=" + active_minutes,
-    news_url: "http://127.0.0.1:8000/api/info/news/?auth_token=" + api_key + "&limit=3",
-    einsatz_url: "http://127.0.0.1:8000/api/info/einsaetze/?auth_token=" + api_key + "&limit=10",
-    dienst_url: "http://127.0.0.1:8000/api/info/dienste/?auth_token=" + api_key + "&limit=10",
-};

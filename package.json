@@ -1,9 +1,0 @@
-{
-  "name": "helloworld",
-  "main": "einsatzmonitor.html",
-  "window": {
-    "frame": true,
-    "transparent": false,
-    "kiosk": false
-  }
-}
