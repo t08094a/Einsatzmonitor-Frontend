@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="DE">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    <title>Test</title>
+    <style>
+        #main-container {
+            padding: 30px;
+        }
+    </style>
+</head>
+<body>
+<div id="main-container">
+    <script>
+        var win = nw.Window.get();
+        win.setAlwaysOnTop(true);
+        $(function () {
+            var h = $('#main-container').height() + 2 * 30;
+            console.log(h);
+            console.log(win);
+
+            win.resizeTo(400, h);
+            win.setResizable(true);
+        });
+    </script>
+    <p>
+        <button class="fluid ui button" onclick="alert('Test');">Test</button>
+    </p>
+    <p>
+        <button class="fluid ui button" onclick="nw.App.quit();">Test</button>
+    </p>
+</div>
+</body>
+</html>
