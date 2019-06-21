@@ -1,0 +1,238 @@
+<!doctype html>
+<!--suppress NonAsciiCharacters -->
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Freiwillige Feuerwehr Ashausen Einsatzmonitor</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/bootstrap-4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link href="static/fontawesome-pro-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
+
+    <!-- toastr -->
+    <link href="static/css/toastr.min.css" rel="stylesheet">
+
+    <!-- fonts -->
+    <link href="static/css/fonts.css" rel="stylesheet">
+
+    <!-- einsatzmonitor -->
+    <link href="static/css/einsatzmonitor.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+    <!-- ko if: $root.is_einsatz() -->
+    <div class="einsatzmonitor einsatz-wrapper pt-4" data-bind="visible: $root.is_einsatz()" style="display: none">
+        <div class="einsatz-stichwort jumbotron p-1 m-0" style="border-radius: 0">
+
+            <h1 class="text-danger text-center m-0">
+                <span><i class="fal fa-bell mr-4"></i></span>
+                <span class="badge p-1 pl-2 pr-2" style="margin-top: -14px; vertical-align: middle;" data-bind="text: $root.einsatz().stichwort, class: $root.einsatz().stichwort_color_badge">New</span>
+                <span data-bind="text: $root.einsatz().description"></span>
+            </h1>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-md-5" style="height:725px;">
+                <div class="map" id="map-overview"></div>
+            </div>
+            <div class="col-md-5">
+                <div class="map" id="map-route"></div>
+            </div>
+            <div class="col-md-2">
+                <div class="einsatz-einheiten">
+                    <!-- ko foreach: $root.einsatz().einheiten() -->
+                    <div class="einsatz-einheit bg-dark p-2 mb-1">
+                        <h4 class="text-white text-center m-0">
+                            <span data-bind="text: $data"></span>
+                        </h4>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+
+        <div class="einsatz-adresse bg-danger p-2 mt-2">
+            <h2 class="text-white text-center m-0">
+                <span><i class="fal fa-map-marker-alt"></i></span>
+                <span data-bind="text: $root.einsatz().adresse"></span>
+                <span data-bind="text: $root.einsatz().objekt"></span>
+            </h2>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-md-9">
+                <div class="einsatz-strecke bg-danger p-2 text-white" style="height: 100%;">
+                    <table>
+                        <tbody>
+                        <!-- ko foreach: $root.einsatz().zusatzinfos() -->
+                        <tr>
+                            <td><h5><i class="fal fa-comment-alt-lines mr-1"></i> <strong>Zusatzinfo <span data-bind="text: name"></span>:</strong></h5></td>
+                            <td class="pl-4"><h5 data-bind="text: value"></h5></td>
+                        </tr>
+                        <!-- /ko -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="einsatz-strecke bg-dark p-2">
+                    <h5 class="text-white text-center m-0">
+                        <span><i class="fal fa-route fa-pull-left"></i></span>
+                        <span data-bind="text: $root.einsatz().distDuration()"></span>
+                        <span><i class="fal fa-clock fa-pull-right"></i></span>
+                    </h5>
+                </div>
+
+                <div class="einsatz-adresse bg-info p-2 mt-2">
+                    <h1 class="text-white text-center m-0" data-bind="text: $root.einsatz().time_since_alarmierung"></h1>
+                    <h5 class="text-white text-center">Minuten seit Alarmierung</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+
+
+    <!-- ko if: !$root.is_einsatz() -->
+    <div class="einsatzmonitor news-wrapper pt-4">
+        <h1 class="text-white text-center big-text m-0">Freiwillige Feuerwehr Ashausen</h1>
+
+        <div class="d-flex justify-content-center p-4">
+            <div class="clock-wrapper bg-white custom-shadow" style="width: 350px; background: #ffffff26 !important;">
+                <h1 class="text-danger text-center text-stroke m-2 big-text" data-bind="text: $root.info().parsed_clock"></h1>
+            </div>
+        </div>
+
+        <h2 class="text-white text-center"><i class="fal fa-check-circle mr-1 text-success"></i> derzeit kein Einsatz</h2>
+
+        <div class="row pt-2 m-2">
+            <div class="col col-md-4" data-bind="visible: $root.info().news().length > 0" style="display: none">
+                <h2 class="text-white">Website News</h2>
+
+                <!-- ko foreach: $root.info().sortedNews() -->
+                <div class="info-card news-wrapper bg-white custom-shadow mb-3">
+                    <div class="card" style="border: 0; border-radius: 0">
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img style="object-fit: cover; height: 100%; border-radius: 0" class="card-img" data-bind="attr:{src: image_url()}" alt="">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 data-bind="text: title()" class="card-title"></h5>
+                                    <p class="card-text" data-bind="html: description_truncated()"></p>
+                                    <p class="card-text">
+                                        <small><i class="far fa-clock"></i></small>
+                                        <small class="text-muted" data-bind="text: date_formatted()"></small>
+                                        <small class="pull-right text-muted" style="float: right;"><i class="fal fa-external-link"></i> ff-ashausen.de</small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <div class="col col-md-4" data-bind="visible: $root.info().einsaetze().length > 0" style="display: none">
+                <h2 class="text-white">Einsätze</h2>
+
+                <!-- ko foreach: $root.info().sortedEinsaetze() -->
+                <div class="einsaetze-wrapper bg-white mb-2 custom-shadow" style="border: 1px solid #c9c9c9">
+                    <a data-bind="style: { 'border-left-color': color() }" class="list-group-item p-2" style="border-left: 6px solid; border-radius: 0; border-top: 0; border-bottom: 0;">
+                        <div class="pl-1 mb-0">
+                            <small><i class="far fa-clock" aria-hidden="true"></i></small>
+                            <small data-bind="text: alarmzeit_formatted()"> 7. Oktober 2018 18:30 | Sirene + DME</small>
+                            <br>
+                            <p class="m-0" data-bind="text: title()"></p>
+                        </div>
+                    </a>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <div class="col col-md-4" data-bind="visible: $root.info().dienste().length > 0" style="display: none">
+                <h2 class="text-white">Dienste</h2>
+
+                <!-- ko foreach: $root.info().sortedDienste() -->
+                <div class=" dienst-wrapper bg-white shadow mb-2 custom-shadow" data-bind="css: { 'mb-3': is_today() }">
+                    <table class="dienstplan-table" style="width: 100%">
+                        <tr class="dienst-entry" data-bind="css: { 'dienst-today': is_today() }">
+                            <td>
+                                <span class="dienst-date pull-left bg-info">
+                                    <span class="dienst-date-month text-center text-white" data-bind="text: startDate().toLocaleString('de-de', { month: 'long' }).substring(0, 3)"></span>
+                                    <span class="dienst-date-day text-center text-white" data-bind="text: startDate().getDate()"></span>
+                                </span>
+                            </td>
+                            <td style="max-width: 0;white-space: nowrap; text-overflow: ellipsis;overflow: hidden;">
+                                <span class="pl-2">
+                                    <i class="far fa-clock" aria-hidden="true"></i> <span data-bind="text: startUhrzeit()"></span>
+                                    <i class="far fa-clipboard-list pl-2"></i> <span data-bind="text: title()"></span>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <!-- /ko -->
+            </div>
+
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <div class="version-info mr-2 mb-2 p-1" style="position:fixed; right:0; bottom:0;">
+        <small class="text-muted text-white">EinsatzMonitor V1.0.0 Beta</small>
+    </div>
+</div>
+
+<!-- Insert this line above script imports  -->
+<script>
+    if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }
+</script>
+
+<script src="static/js/jquery.min.js"></script>
+
+<script src="static/js/vendor/popper.min.js"></script>
+<script src="static/bootstrap-4.3.1/js/bootstrap.min.js"></script>
+
+<!-- navigo -->
+<script src="static/js/navigo-6.0.2.js"></script>
+
+<!-- knockoutjs -->
+<script src="static/js/knockout.min.js"></script>
+
+<!-- toastr -->
+<script src="static/js/toastr.min.js"></script>
+
+<!-- reconnecting-websocket -->
+<script src="static/js/reconnecting-websocket.js"></script>
+
+<!-- einsatzmonitor -->
+<script src="static/js/einsatzmonitor-models.js"></script>
+<script src="static/js/einsatzmonitor.js"></script>
+
+<!-- google maps -->
+<script>
+    function loadScript() {
+        let script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=' + config.googleMapsKey + '&language=de&region=de';
+        document.body.appendChild(script);
+        googleLoaded = true;
+    }
+
+    window.onload = loadScript;
+</script>
+
+<!-- Insert this line after script imports -->
+<script>if (window.module) module = window.module;</script>
+</body>
+</html>

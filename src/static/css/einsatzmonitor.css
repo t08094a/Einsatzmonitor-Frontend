@@ -1,0 +1,97 @@
+/* Always set the map height explicitly to define the size of the div element that contains the map. */
+.map {
+    height: 100%;
+}
+
+.container {
+    #max-width: 1340px;
+    max-width: 100%;
+}
+
+body {
+    background: url('https://ff-ashausen.de/static/img/background-compressed.9e24a80e65f3.jpg') no-repeat fixed center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+    /* padding-bottom: 20px; */
+
+    /* Margin bottom by footer height */
+    /* margin-bottom: 230px; */
+
+    font-family: 'Titillium Web', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Lato";
+}
+
+.text-stroke {
+    -webkit-text-stroke: 0.5px #fefefe3b;
+    text-shadow: 3px 3px 0 #0000006b, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    font-family: "Roboto";
+}
+
+.bg-secondary-dark {
+    background-color: #4f5860
+}
+
+.einsatz-wrapper .jumbotron {
+    background: rgb(255, 255, 255); /* This is for ie8 and below */
+    background: rgba(255, 255, 255, 0.54);
+}
+
+.einsatz-wrapper .einsatz-stichwort {
+}
+
+.einsatz-wrapper .einsatz-stichwort h1 {
+    font-size: 50pt;
+}
+
+.big-text {
+    font-size: 50pt;
+}
+
+.info-card {
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    border-top: 3px solid #dc3545;
+}
+
+.custom-shadow {
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .35);
+}
+
+
+/* Dienstplan */
+.dienstplan-table .dienst-entry {
+    border: 1px solid #c9c9c9;
+}
+
+.dienstplan-table .dienst-entry.dienst-today .dienst-date {
+    background-color: #cd2a2a !important;
+}
+
+.dienstplan-table .dienst-entry td:first-child {
+    width: 50px;
+}
+
+.dienstplan-table .dienst-entry .dienst-date {
+    display: block;
+    float: left;
+    height: 50px;
+    width: 50px;
+}
+
+.dienstplan-table .dienst-date-month {
+    display: block;
+    text-transform: uppercase;
+    margin-bottom: -5px;
+}
+
+.dienstplan-table .dienst-date-day {
+    display: block;
+    font-size: 1.4rem
+}

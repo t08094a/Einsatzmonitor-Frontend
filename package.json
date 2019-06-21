@@ -1,9 +1,15 @@
 {
-  "name": "helloworld",
-  "main": "einsatzmonitor.html",
-  "window": {
-    "frame": true,
-    "transparent": false,
-    "kiosk": false
+  "name": "einsatzmonitor",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^3.0.13"
+  },
+  "dependencies": {
+    "auto-launch": "^5.0.5",
+    "chokidar": "^3.0.0"
   }
 }

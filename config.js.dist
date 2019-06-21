@@ -1,9 +1,40 @@
 let api_key = "123456";
-let active_minutes = 25;  /* Needs to be 2 minutes lower than removal time */
 
 module.exports = {
-    einsatzmonitor_url: "http://127.0.0.1:8000/einsatzmonitor/api/einsatz/?auth_token=" + api_key + "&activeMinutes=" + active_minutes,
-    news_url: "http://127.0.0.1:8000/api/info/news/?auth_token=" + api_key + "&limit=3",
-    einsatz_url: "http://127.0.0.1:8000/api/info/einsaetze/?auth_token=" + api_key + "&limit=10",
-    dienst_url: "http://127.0.0.1:8000/api/info/dienste/?auth_token=" + api_key + "&limit=10",
+    debug: true,  // true starts in windowed mode + toolbar, false starts in fullscreen and hides the toolbar
+
+    einsatz: {
+        fetch: "websocket",  // "http" or "websocket"
+        url: "ws://127.0.0.1:8000/ws/einsatzmonitor/?token=" + api_key + "&active_minutes={activeMinutes}",  // http or websocket endpoint
+        httpFetchInterval: 1,  // how often to poll http endpoint in seconds. Only used with 'fetch: "http"'
+        einsatzDisplayTime: 30,   // how long to keep the einsatz displayed before switching into standby again
+    },
+
+    info: {
+        httpFetchInterval: 30,
+
+        news: {
+            show: true,
+            url: "http://127.0.0.1:8000/api/info/news/?auth_token=" + api_key + "&limit=2"
+        },
+
+        einsaetze: {
+            show: true,
+            url: "http://127.0.0.1:8000/api/info/einsaetze/?auth_token=" + api_key + "&limit=9"
+        },
+
+        dienste: {
+            show: true,
+            url: "http://127.0.0.1:8000/api/info/dienste/?auth_token=" + api_key + "&limit=10"
+        },
+    },
+
+    googleMapsKey: "123456abc",
+    feuerwehrLat: "53.365934",
+    feuerwehrLng: "10.137550",
+
+    enableMotionDetector: false,
+    motionDetectorPath: "/opt/einsatzmonitor/motion/motion",
+
+    displayAlwaysOn: false,
 };
