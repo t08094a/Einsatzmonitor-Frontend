@@ -229,13 +229,23 @@
 <script>
     function loadScript() {
         let script = document.createElement('script');
+        script.id = "googleMapsAPI";
         script.type = 'text/javascript';
         script.src = 'https://maps.googleapis.com/maps/api/js?key=' + config.googleMapsKey + '&language=de&region=de';
         document.body.appendChild(script);
         googleLoaded = true;
+        console.log("Loaded Google MAPS API")
     }
 
     window.onload = loadScript;
+
+    let refreshTimer = window.setInterval(function () {
+        let oldScript = document.getElementById("googleMapsAPI");
+        oldScript.parentNode.removeChild(oldScript);
+        console.log("Removed old Google MAPS API");
+        loadScript();
+    }, 1000 * 60 * 60 * 23);
+
 </script>
 
 <!-- Insert this line after script imports -->
