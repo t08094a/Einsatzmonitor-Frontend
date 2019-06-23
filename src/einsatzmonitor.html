@@ -1,6 +1,6 @@
 <!doctype html>
 <!--suppress NonAsciiCharacters -->
-<html lang="de">
+<html lang="de" class="h-100">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -23,9 +23,9 @@
     <link href="static/css/einsatzmonitor.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="h-100">
 
-<div class="container">
+<div class="container d-flex flex-column h-100">
     <!-- ko if: $root.is_einsatz() -->
     <div class="einsatzmonitor einsatz-wrapper pt-4" data-bind="visible: $root.is_einsatz()" style="display: none">
         <div class="einsatz-stichwort jumbotron p-1 m-0" style="border-radius: 0">
@@ -96,6 +96,12 @@
             </div>
         </div>
     </div>
+
+    <!-- <footer class="footer mt-auto py-3">
+        <div class="container">
+            <span class="text-muted">Place sticky footer content here.</span>
+        </div>
+    </footer> -->
     <!-- /ko -->
 
 
