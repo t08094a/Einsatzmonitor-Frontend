@@ -55,53 +55,30 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
 
     /* Google Maps Karten */
     let geocoder = new google.maps.Geocoder();
+    let directionsService = new google.maps.DirectionsService();
+    let directionsDisplay = new google.maps.DirectionsRenderer();
+
     let feuerwehr = new google.maps.LatLng(config.feuerwehrLat, config.feuerwehrLng);
-    let mapOptions = {
-        zoomControl: false,
-        fullscreenControl: false,
-        streetViewControl: false,
-        mapTypeControl: false,
-        mapTypeId: 'satellite',
-        zoom: 0,
-        center: feuerwehr
-    };
 
     geocoder.geocode({'address': self.adresse()}, function (results, status) {
         if (status === google.maps.GeocoderStatus.OK) {
             let latitude = results[0].geometry.location.lat();
             let longitude = results[0].geometry.location.lng();
-            let latLng = {lat: latitude, lng: longitude};
-
-            /* Overview Map */
-            mapOptions['zoom'] = 18;
-            mapOptions['center'] = latLng;
-
-            let overview_map = new google.maps.Map(document.getElementById('map-overview'), mapOptions);
-
-            let marker = new google.maps.Marker({
-                position: latLng,
-                map: overview_map,
-                title: 'Einsatzort'
-            });
-
-            /* Route */
-            let directionsService = new google.maps.DirectionsService();
-            let directionsDisplay = new google.maps.DirectionsRenderer();
 
             let einsatzort = new google.maps.LatLng(latitude, longitude);
 
-            mapOptions['zoom'] = 14;
-            mapOptions['mapTypeId'] = 'roadmap';
+            self.overview_map().lat(latitude);
+            self.overview_map().lng(longitude);
 
-            let map = new google.maps.Map(document.getElementById('map-route'), mapOptions);
-            directionsDisplay.setMap(map);
+            self.route_map().lat(latitude);
+            self.route_map().lng(longitude);
+
+            /* Route */
+            directionsDisplay.setMap(self.route_map().googleMap);
 
             let request = {
                 origin: feuerwehr,
                 destination: einsatzort,
-                // Note that Javascript allows us to access the constant
-                // using square brackets and a string value as its
-                // "property."
                 travelMode: google.maps.TravelMode["DRIVING"],
                 region: "de"
             };
@@ -118,10 +95,81 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
                     self.duration(duration);
                 }
             });
-
         }
     });
+
+    self.overview_map = ko.observable({
+        lat: ko.observable(),
+        lng: ko.observable(),
+
+        mapOptions: ko.observable({
+            zoom: 18,
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+        }),
+
+        einsatzOrtMarker: true
+    });
+
+    self.route_map = ko.observable({
+        lat: ko.observable(),
+        lng: ko.observable(),
+
+        mapOptions: ko.observable({
+            zoom: 14,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        }),
+
+        einsatzOrtMarker: false
+    });
 }
+
+ko.bindingHandlers.map = {
+    init: function (element, valueAccessor, allBindingsAccessor, viewModel) {
+        var mapObj = ko.utils.unwrapObservable(valueAccessor());
+
+        var latLng = new google.maps.LatLng(ko.utils.unwrapObservable(mapObj.lat), ko.utils.unwrapObservable(mapObj.lng));
+
+        var options = mapObj.mapOptions();
+        options['center'] = latLng;
+
+        options['zoomControl'] = false;
+        options['fullscreenControl'] = false;
+        options['streetViewControl'] = false;
+        options['mapTypeControl'] = false;
+
+        mapObj.googleMap = new google.maps.Map(element, options);
+
+        if (mapObj.einsatzOrtMarker) {
+            mapObj.marker = new google.maps.Marker({
+                map: mapObj.googleMap,
+                position: latLng,
+                title: "Einsatzort",
+                draggable: true
+            });
+        }
+
+        mapObj.onChangedCoord = function(newValue) {
+            var latLng = new google.maps.LatLng(ko.utils.unwrapObservable(mapObj.lat), ko.utils.unwrapObservable(mapObj.lng));
+            mapObj.googleMap.setCenter(latLng);
+            if (mapObj.marker)
+                mapObj.marker.setPosition(latLng);
+        };
+
+        mapObj.onMarkerMoved = function(dragEnd) {
+            var latLng = mapObj.marker.getPosition();
+            mapObj.lat(latLng.lat());
+            mapObj.lng(latLng.lng());
+        };
+
+        mapObj.lat.subscribe(mapObj.onChangedCoord);
+        mapObj.lng.subscribe(mapObj.onChangedCoord);
+
+        if (mapObj.marker)
+            google.maps.event.addListener(mapObj.marker, 'dragend', mapObj.onMarkerMoved);
+
+        $("#" + element.getAttribute("id")).data("mapObj", mapObj);
+    }
+};
 
 function Info() {
     let self = this;

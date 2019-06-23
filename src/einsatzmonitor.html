@@ -39,10 +39,10 @@
 
         <div class="row mt-2">
             <div class="col-md-5" style="height:725px;">
-                <div class="map" id="map-overview"></div>
+                <div class="map" data-bind="map:$root.einsatz().overview_map"></div>
             </div>
             <div class="col-md-5">
-                <div class="map" id="map-route"></div>
+                <div class="map" data-bind="map:$root.einsatz().route_map"></div>
             </div>
             <div class="col-md-2">
                 <div class="einsatz-einheiten">
