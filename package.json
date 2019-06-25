@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
-    "chokidar": "^3.0.0"
+    "chokidar": "^3.0.0",
+    "@sentry/electron": "^0.17.0",
+    "@sentry/browser": "^5.4.3"
   }
 }

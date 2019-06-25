@@ -2,6 +2,9 @@ const {app, BrowserWindow} = require('electron');
 const AutoLaunch = require('auto-launch');
 const config = require('./config.js');
 
+if (config.sentry.enabled)
+    require('./sentry');
+
 const ElectronSampleAppLauncher = new AutoLaunch({
     name: 'Electron-sample-app',
     path: '/opt/einsatzmonitor/node_modules/electron/dist/electron /opt/einsatzmonitor'

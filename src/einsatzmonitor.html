@@ -225,6 +225,17 @@
 <script src="static/js/einsatzmonitor-models.js"></script>
 <script src="static/js/einsatzmonitor.js"></script>
 
+<!-- sentry -->
+<!-- Todo: Extract config part from einsatzmonitor.js and move sentry code to the top -->
+<script>
+    if (config.sentry.enabled) {
+        let Sentry = require('@sentry/browser');
+        Sentry.init({
+            dsn: config.sentry.dsn
+        });
+    }
+</script>
+
 <!-- google maps -->
 <script>
     function loadScript() {
@@ -234,7 +245,7 @@
         script.src = 'https://maps.googleapis.com/maps/api/js?key=' + config.googleMapsKey + '&language=de&region=de';
         document.body.appendChild(script);
         googleLoaded = true;
-        console.log("Loaded Google MAPS API")
+        console.log("Loaded Google MAPS API");
     }
 
     window.onload = loadScript;

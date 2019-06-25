@@ -29,6 +29,11 @@ module.exports = {
         },
     },
 
+    sentry: {
+        enabled: false,
+        dsn: "https://dsn@sentry.io/123456"
+    },
+
     googleMapsKey: "123456abc",
     feuerwehrLat: "53.365934",
     feuerwehrLng: "10.137550",
