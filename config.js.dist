@@ -8,6 +8,9 @@ module.exports = {
         url: "ws://127.0.0.1:8000/ws/einsatzmonitor/?token=" + api_key + "&active_minutes={activeMinutes}",  // http or websocket endpoint
         httpFetchInterval: 1,  // how often to poll http endpoint in seconds. Only used with 'fetch: "http"'
         einsatzDisplayTime: 30,   // how long to keep the einsatz displayed before switching into standby again
+
+        showEinheitenLimit: 14,  // how many einheiten shoushould get displayed
+        einheitenAlwaysTop: ["Ashausen", "ELW2", "ELW 2"],  // einheiten containing this string will always be shown on top of the list
     },
 
     info: {

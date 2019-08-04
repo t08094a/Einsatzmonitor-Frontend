@@ -1,12 +1,12 @@
 # Einsatzmonitor - Frontend
 
-## Bilder
+## :camera: Bilder
 | Standbyansicht | Einsatzansicht |
 |:-------------:|:-------------:|
 |![Standbyansicht](http://134.255.237.237/einsatzmonitor-standby-02.png "Standbyansicht")|![Alarmansicht](http://134.255.237.237/einsatzmonitor-einsatz-02.png "Alarmansicht")|
 
 
-## Features und Vorteile
+## :sparkles: Features und Vorteile
 
 - Lauffähig unter Windows und Linux
 - Für Raspberry Pi optimiert
@@ -21,7 +21,7 @@
 - Ein/Ausschalten des Bildschirms mittels Bewegungsmelder am Raspberry Pi möglich
 
 
-## Technik
+## :wrench: Technik
 
 - Verwendete Frameworks und API's
     - [electron](https://github.com/electron/electron)
@@ -36,7 +36,7 @@
     - git
     - node
 
-## Installation auf einem RaspberryPi 3 B+
+## :cloud: Installation auf einem RaspberryPi 3 B+
 
 1. Git installieren
     - ``$ apt install git``
@@ -61,7 +61,7 @@ Es sollte sich nun ein Fenster des Einsatzmonitors öffnen. Dieses kann direkt m
 
 Bei der Installation wurde bereits der Autostart für diese Anwendung eingerichtet. (``/home/pi/.config/autostart/einsatzmonitor.desktop``)
 
-## Funktionsweise
+## :rocket: Funktionsweise
 #### Abrufen von Einsätzen
 Der Einsatzmonitor erwartet für die Abfrage, ob aktuell ein Einsatz angezeigt werden soll, eine REST-API. Die Entsprechende URL kann in der Konfigurationsdatei eingestellt werden.
 Folgende Struktur der API-Antwort wird mindestens benötigt:
@@ -81,20 +81,24 @@ Außerdem sollte die REST-API nur aktive Einsätze ausgeben, die innerhalb der e
 
 Alternativ kann ein Einsatz auch über ein Websocket-Event empfangen werden. Die Überlieferte Nachricht muss das Objekt "einsatz" mit der obengenannten Strutur aufweisen.
 
-## Konfigurationsdatei - Optionen
+## :gear: Konfigurationsdatei - Optionen
 - ``debug: <true|false>``
     - true: Starten im Fenstermodus
     - false: Starten im Vollbildmodus
 - ``einsatz:``
     - ``fetch: <"websocket"|"http">``
-        - "websocket": Einsätze werden über ein Websocket-Event empfangen ("Echtzeit")
-        - "http": Einsätze werden von einer HTTP-API abgerufen. Benötigt zyklische Abfragen an eine Schnittstelle
+        - "websocket": Einsätze werden über ein Websocket-Event empfangen ("Echtzeit").
+        - "http": Einsätze werden von einer HTTP-API abgerufen. Benötigt zyklische Abfragen an eine Schnittstelle.
     - ``url: <String>``
         - URL zum Abfragen von Einsätzen (Websocket oder HTTP).
     - ``httpFetchInterval: <Integer>``
         - Gibt an, wie oft die HTTP-Schnittstelle abgefragt werden soll (in Sekunden, z.B. 1 für jede Sekunde).
     - ``einsatzDisplayTime: <Integer>``
-        - Zeit in Minuten, wie lange die Alarmansicht dargestellt werden soll
+        - Zeit in Minuten, wie lange die Alarmansicht dargestellt werden soll.
+    - ``showEinheitenLimit: <Integer>``
+        - Wieviele Einheiten in der Liste maximal angezeigt werden sollen. (Empfehlung für 1920x1080px Auflösung: 14).
+    - ``einheitenAlwaysTop: <List>``
+        - Einheiten, die einen in der Liste vorhandenen String enthalten, werden immer am Anfang der Liste dargestellt.
 - ``info:``
     - ``httpFetchInterval: <Integer>``
         - Gibt an, wie oft die HTTP-Schnittstelle abgefragt werden soll (in Sekunden, z.B. 30 für alle 30 Sekunden).
@@ -102,27 +106,27 @@ Alternativ kann ein Einsatz auch über ein Websocket-Event empfangen werden. Die
         - ``show: <true|false>``
             - Anzeigen von News-Beiträgen einer Website in der Standbyansicht?
         - ``url: <String>``
-            - URL zum Abfragen von News-Beiträgen (REST-API)
+            - URL zum Abfragen von News-Beiträgen (REST-API).
             - (TODO: Benötigte API-Response-Struktur)
     - ``einsaetze:``
         - ``show: <true|false>``
             - Anzeigen von letzten Einsätzen in der Standbyansicht?
         - ``url: <String>``
-            - URL zum Abfragen von letzten Einsätzen (REST-API)
+            - URL zum Abfragen von letzten Einsätzen (REST-API).
             - (TODO: Benötigte API-Response-Struktur)
     - ``dienste:``
         - ``show: <true|false>``
             - Anzeigen der als nächstes Bevorstehenden Dienste in der Standbyansicht?
         - ``url: <String>``
-            - URL zum Abfragen von Diensten (REST-API)
+            - URL zum Abfragen von Diensten (REST-API).
             - (TODO: Benötigte API-Response-Struktur)
 - ``googleMapsKey: <String>``
     - zum Anzeigen der Route sowie des Einsatzortes wird ein Google Maps API-Key benötigt.
     - Das Einrichten eines solchen Schlüssels wird hier beschrieben: https://developers.google.com/maps/documentation/javascript/get-api-key
 - ``feuerwehrLat: <String>``
-    - Breitengrad Feuerwehrgerätehaus (Start-Position Google Maps Route)
+    - Breitengrad Feuerwehrgerätehaus (Start-Position Google Maps Route).
 - ``feuerwehrLng: <String>``
-    - Längengrad Feuerwehrgerätehaus (Start-Position Google Maps Route)
+    - Längengrad Feuerwehrgerätehaus (Start-Position Google Maps Route).
 - ``enableMotionDetector: <true|false>``
     - Aktivierung des Bewegungsmelders, welcher den Einsatzmonitor bei Bewegung für 10 Minuten einschalten kann, wenn sich dieser in der Standbyansicht befindet.
         - Wenn der Monitor bei einem Einsatz in die Alarmansicht wechselt, wird unabhängig von dieser Einstellung der Bildschirm immer eingeschaltet, auch ohne Bewegung.
@@ -132,7 +136,7 @@ Alternativ kann ein Einsatz auch über ein Websocket-Event empfangen werden. Die
 - ``displayAlwaysOn: <true|false>``
     - Ist dieser Wert auf "true", wird der Monitor zu keiner Zeit ausgeschaltet.
 
-## Bildschirmschoner deaktivieren 
+## :computer: Bildschirmschoner deaktivieren 
 
 1. Benötigte Pakete installieren
     - ``$ apt install x11-xserver-utils``   
@@ -147,7 +151,7 @@ Alternativ kann ein Einsatz auch über ein Websocket-Event empfangen werden. Die
 3. Raspberry Pi neustarten
 4. Sollten diese Einstellungen noch keine Wirkung zeigen, gibt es hier weitere Informationen: https://raspberrypi.stackexchange.com/questions/752/how-do-i-prevent-the-screen-from-going-blank/753#753
 
-## Bewegungsmelder an Raspberry Pi anschließen und Bildschirm ein/ausschalten
+## :eyes: Bewegungsmelder an Raspberry Pi anschließen und Bildschirm ein/ausschalten
 
 Es ist möglich über die GPIO-Pins des Raspberry Pi einen Bewegungsmelder anzuschließen und mit einem simplen Python-Script abzufragen.
 Das Script überschreibt bei Bewegung eine Datei 'motion' im Ordner ./einsatzmonitor/motion.
@@ -172,5 +176,5 @@ Für das Script zur Bewegungserkennung kann ein Systemd-Service angelegt werden.
 Das Ein- und Ausschalten des Bildschirms geschieht intern über die Befehle ``$ vcgencmd display_power 1`` sowie ``$ vcgencmd display_power 0``, wodurch der HDMI-Port Ein- und Ausgeschaltet wird.
 
 
-## Support
+## :interrobang: Support
 Für Fragen und Anregungen stehe ich gerne zur Verfügung, dafür einfach ein Issue erstellen.

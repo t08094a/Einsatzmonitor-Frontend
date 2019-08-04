@@ -1,12 +1,9 @@
 /*
-    Todo: Mehrere Einsätze gleichzeitig
-    - EinatzMonitorModel() -> einsatz = observablearray
-    - get_current_einsatz -> computed function, welche immer den ältesten einsatz ausgibt
-    - wenn displaytime abgelaufen, einsatz aus array rauslöschen
-    - --> computed funktion gibt den neuesten einsatz aus
-    - -> view updatet automatisch
-    - -> $root.einsatz() -> $root.get_current_einsatz ändern
+    Todo: Use electron-settings for configuration
+    Todo: Log to file?
+    Todo: Display alarmzeit (besides the counter)
  */
+
 /*----------------------------------------------------------------------*/
 /* View Model
 /*----------------------------------------------------------------------*/
@@ -19,15 +16,23 @@ function EinsatzMonitorModel() {
     self.einsaetze = ko.observableArray([]);
     self.info = ko.observable(new Info());
 
-    self.is_einsatz = ko.computed(function () {
+    /*self.is_einsatz = ko.computed(function () {
         return self.einsatz()
+    });*/
+
+    self.is_einsatz = ko.computed(function () {
+        return self.einsaetze().length > 0;
     });
 
     self.sortedEinsaetze = ko.computed(function () {
         return self.einsaetze().sort(function (a, b) {
-            return a.id() - b.id();
+            return b.id() - a.id();
         });
     });
+
+    self.get_latest_einsatz = function () {
+        return self.sortedEinsaetze()[0];
+    };
 
     self.is_saved = function (einsatz) {
         return ko.utils.arrayFirst(self.einsaetze(), function (item) {
@@ -37,8 +42,42 @@ function EinsatzMonitorModel() {
 
     self.add_einsatz = function (einsatz) {
         if (!self.is_saved(einsatz)) {
+            einsatz_obj = new Einsatz(einsatz.id, einsatz.stichwort, einsatz.stichwort_color, einsatz.description, einsatz.alarmzeit_seconds, einsatz.adresse, einsatz.objekt);
+
+            einsatz.einheiten.forEach(function (einheit) {
+                einsatz_obj.einheiten.push(einheit.name);
+            });
+
+            einsatz.zusatzinfos.forEach(function (zusatzinfo) {
+                einsatz_obj.zusatzinfos.push({
+                    'name': zusatzinfo.name,
+                    'value': zusatzinfo.value
+                })
+            });
+
+            self.einsaetze.push(einsatz_obj);
+
+            window.dispatchEvent(new CustomEvent(
+                "newEinsatzDisplay",
+                {
+                    detail: {
+                        message: "Hello World!",
+                        time: new Date(),
+                    },
+                    bubbles: true,
+                    cancelable: false
+                }
+            ));
+
             console.log("Added " + einsatz.id + " to array");
-            self.einsaetze.push(new Einsatz(einsatz.id, einsatz.stichwort, einsatz.stichwort_color, einsatz.description, einsatz.alarmzeit_seconds, einsatz.adresse));
+            fitty('.einsatz-einheit div h4', {
+                maxSize: 22.5
+            });
+            fitty('.einsatz-stichwort h1', {
+                maxSize: 50
+            });
+        } else {
+            console.log(einsatz.id + " already in array");
         }
     }
 }
@@ -63,8 +102,6 @@ toastr.options = {
     "hideMethod": "fadeOut"
 };
 
-let config = require('../config.js');
-
 //self.check_einsatz(); # Google maps API might not be ready, yet! Maybe add an callback to the loading function.
 self.loadInfoData();
 
@@ -88,7 +125,7 @@ if (config.einsatz.fetch === "websocket") {
         einsatzWebsocket.onmessage = function (e) {
             var data = JSON.parse(e.data);
             var einsatz = JSON.parse(data.einsatz);
-            console.log("From webSocket: " + einsatz);
+            console.log("From webSocket: " + data.einsatz);
             display_einsatz(einsatz);
         };
 
@@ -113,47 +150,7 @@ function execute(command, callback) {
 }
 
 function display_einsatz(einsatz) {
-    // einsatzMonitorModel.add_einsatz(einsatz);  # Todo: Finish parallel einsatz support
-
-    if (!ko.unwrap(einsatzMonitorModel.is_einsatz())) {
-        console.log(einsatz.id + " now being displayed");
-        var eins = new Einsatz(einsatz.id, einsatz.stichwort, einsatz.stichwort_color, einsatz.description, einsatz.alarmzeit_seconds, einsatz.adresse, einsatz.objekt);
-        einsatzMonitorModel.einsatz(eins);
-
-        einsatz.einheiten.forEach(function (einheit) {
-            einsatzMonitorModel.einsatz().einheiten.push(einheit.name);
-        });
-
-        einsatz.zusatzinfos.forEach(function (zusatzinfo) {
-            einsatzMonitorModel.einsatz().zusatzinfos.push({
-                'name': zusatzinfo.name,
-                'value': zusatzinfo.value
-            })
-        });
-
-        window.dispatchEvent(new CustomEvent(
-            "newEinsatzDisplay",
-            {
-                detail: {
-                    message: "Hello World!",
-                    time: new Date(),
-                },
-                bubbles: true,
-                cancelable: false
-            }
-        ));
-
-        return;
-    }
-
-    // current einsatz is already shown
-    if (ko.unwrap(einsatzMonitorModel.einsatz().id) === einsatz.id) {
-        // console.log(einsatz.id + " is already displayed");
-        return;
-    }
-
-    // we have a new einsatz waiting
-    // console.log(einsatz.id + " is waiting to get displayed");
+    einsatzMonitorModel.add_einsatz(einsatz);
 }
 
 function check_einsatz() {

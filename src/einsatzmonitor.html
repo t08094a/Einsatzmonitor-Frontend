@@ -29,28 +29,39 @@
     <!-- ko if: $root.is_einsatz() -->
     <div class="einsatzmonitor einsatz-wrapper pt-4" data-bind="visible: $root.is_einsatz()" style="display: none">
         <div class="einsatz-stichwort jumbotron p-1 m-0" style="border-radius: 0">
-
-            <h1 class="text-danger text-center m-0">
-                <span><i class="fal fa-bell mr-4"></i></span>
-                <span class="badge p-1 pl-2 pr-2" style="margin-top: -14px; vertical-align: middle;" data-bind="text: $root.einsatz().stichwort, class: $root.einsatz().stichwort_color_badge">New</span>
-                <span data-bind="text: $root.einsatz().description"></span>
-            </h1>
+            <div class="text-center"> <!-- needs a surrounding div for size calculation because of padding -->
+                <h1 class="text-danger m-0">
+                    <span class="badge p-1 pl-2 pr-2" style="margin-top: -14px; vertical-align: middle;" data-bind="text: $root.get_latest_einsatz().stichwort, class: $root.get_latest_einsatz().stichwort_color_badge">New</span>
+                    <span class="description" data-bind="text: $root.get_latest_einsatz().get_description"></span>
+                </h1>
+            </div>
         </div>
 
         <div class="row mt-2">
             <div class="col-md-5" style="height:725px;">
-                <div class="map" data-bind="map:$root.einsatz().overview_map"></div>
+                <div class="map" data-bind="map:$root.get_latest_einsatz().overview_map"></div>
             </div>
             <div class="col-md-5">
-                <div class="map" data-bind="map:$root.einsatz().route_map"></div>
+                <div class="map" data-bind="map:$root.get_latest_einsatz().route_map"></div>
             </div>
             <div class="col-md-2">
                 <div class="einsatz-einheiten">
-                    <!-- ko foreach: $root.einsatz().einheiten() -->
+                    <!-- ko foreach: $root.get_latest_einsatz().get_visible_einheiten_sorted() -->
                     <div class="einsatz-einheit bg-dark p-2 mb-1">
-                        <h4 class="text-white text-center m-0">
-                            <span data-bind="text: $data"></span>
-                        </h4>
+                        <div class="text-center"> <!-- needs a surrounding div for size calculation because of padding -->
+                            <h4 class="text-white m-0">
+                                <span data-bind="text: $data"></span>
+                            </h4>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko if: $root.get_latest_einsatz().get_invisible_einheiten_count() > 0 -->
+                    <div class="einsatz-einheit bg-dark p-2 mb-1">
+                        <div class="text-center"> <!-- needs a surrounding div for size calculation because of padding -->
+                            <h4 class="text-warning m-0">
+                                + <span data-bind="text: $root.get_latest_einsatz().get_invisible_einheiten_count()"></span> weitere
+                            </h4>
+                        </div>
                     </div>
                     <!-- /ko -->
                 </div>
@@ -60,8 +71,8 @@
         <div class="einsatz-adresse bg-danger p-2 mt-2">
             <h2 class="text-white text-center m-0">
                 <span><i class="fal fa-map-marker-alt"></i></span>
-                <span data-bind="text: $root.einsatz().adresse"></span>
-                <span data-bind="text: $root.einsatz().objekt"></span>
+                <span data-bind="text: $root.get_latest_einsatz().adresse"></span>
+                <span data-bind="text: $root.get_latest_einsatz().objekt"></span>
             </h2>
         </div>
 
@@ -70,7 +81,7 @@
                 <div class="einsatz-strecke bg-danger p-2 text-white" style="height: 100%;">
                     <table>
                         <tbody>
-                        <!-- ko foreach: $root.einsatz().zusatzinfos() -->
+                        <!-- ko foreach: $root.get_latest_einsatz().zusatzinfos() -->
                         <tr>
                             <td><h5><i class="fal fa-comment-alt-lines mr-1"></i> <strong>Zusatzinfo <span data-bind="text: name"></span>:</strong></h5></td>
                             <td class="pl-4"><h5 data-bind="text: value"></h5></td>
@@ -84,13 +95,13 @@
                 <div class="einsatz-strecke bg-dark p-2">
                     <h5 class="text-white text-center m-0">
                         <span><i class="fal fa-route fa-pull-left"></i></span>
-                        <span data-bind="text: $root.einsatz().distDuration()"></span>
+                        <span data-bind="text: $root.get_latest_einsatz().distDuration()"></span>
                         <span><i class="fal fa-clock fa-pull-right"></i></span>
                     </h5>
                 </div>
 
                 <div class="einsatz-adresse bg-info p-2 mt-2">
-                    <h1 class="text-white text-center m-0" data-bind="text: $root.einsatz().time_since_alarmierung"></h1>
+                    <h1 class="text-white text-center m-0" data-bind="text: $root.get_latest_einsatz().time_since_alarmierung"></h1>
                     <h5 class="text-white text-center">Minuten seit Alarmierung</h5>
                 </div>
             </div>
@@ -192,7 +203,7 @@
     <!-- /ko -->
 
     <div class="version-info mr-2 mb-2 p-1" style="position:fixed; right:0; bottom:0;">
-        <small class="text-muted text-white">EinsatzMonitor V1.0.1 Beta</small>
+        <small class="text-muted text-white">EinsatzMonitor V1.1.0 Beta</small>
     </div>
 </div>
 
@@ -202,6 +213,8 @@
         window.module = module;
         module = undefined;
     }
+
+    let config = require('../config.js');
 </script>
 
 <script src="static/js/jquery.min.js"></script>
@@ -221,12 +234,15 @@
 <!-- reconnecting-websocket -->
 <script src="static/js/reconnecting-websocket.js"></script>
 
+<!-- fitty -->
+<script src="static/js/fitty.min.js"></script>
+
 <!-- einsatzmonitor -->
 <script src="static/js/einsatzmonitor-models.js"></script>
 <script src="static/js/einsatzmonitor.js"></script>
 
 <!-- sentry -->
-<!-- Todo: Extract config part from einsatzmonitor.js and move sentry code to the top -->
+<!-- Todo: move sentry code to the top -->
 <script>
     if (config.sentry.enabled) {
         let Sentry = require('@sentry/browser');
