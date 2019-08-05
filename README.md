@@ -1,4 +1,7 @@
 # Einsatzmonitor - Frontend
+[![Current Release](https://img.shields.io/github/release/Finn0811/Einsatzmonitor-Frontend)](https://github.com/Finn0811/Einsatzmonitor-Frontend/releases/latest)
+[![Commits since last release](https://img.shields.io/github/commits-since/Finn0811/Einsatzmonitor-Frontend/latest.svg)](https://github.com/Finn0811/Einsatzmonitor-Frontend/releases/latest)
+[![Open issues](http://isitmaintained.com/badge/open/Finn0811/Einsatzmonitor-Frontend.svg)](https://github.com/Finn0811/Einsatzmonitor-Frontend/issues)
 
 ## :camera: Bilder
 | Standbyansicht | Einsatzansicht |
