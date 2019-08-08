@@ -1,6 +1,7 @@
 const {app, BrowserWindow} = require('electron');
 const AutoLaunch = require('auto-launch');
 const config = require('./config.js');
+const settings = require('electron-settings');
 
 if (config.sentry.enabled)
     require('./sentry');
@@ -24,6 +25,9 @@ ElectronSampleAppLauncher.isEnabled()
     });
 
 function createWindow() {
+    // Create default config
+    createDefaultConfig();
+
     // Create the browser window.
     let win = new BrowserWindow({
         width: 1920,
@@ -36,7 +40,54 @@ function createWindow() {
     });
 
     // and load the index.html of the app.
-    win.loadFile('src/einsatzmonitor.html')
+    win.loadFile('src/einsatzmonitor.html');
+}
+
+function createDefaultConfig() {
+    setDefaultConfigValue("debug", true);
+
+    setDefaultConfigValue("einsatz.fetch", "websocket");
+    setDefaultConfigValue("einsatz.url", "ws://127.0.0.1:8000/ws/einsatzmonitor/?token={api_key}&active_minutes={activeMinutes}");
+    setDefaultConfigValue("einsatz.httpFetchInterval", 1);
+    setDefaultConfigValue("einsatz.displayTime", 30);
+
+    setDefaultConfigValue("einsatz.showEinheitenLimit", 14);
+    setDefaultConfigValue("einsatz.einheitenAlwaysTop", "Ashausen, ELW2, ELW 2");
+
+
+    setDefaultConfigValue("info.httpFetchInterval", 30);
+
+    setDefaultConfigValue("info.news.show", true);
+    setDefaultConfigValue("info.news.url", "http://127.0.0.1:8000/api/info/news/?auth_token={api_key}&limit=2");
+
+    setDefaultConfigValue("info.einsaetze.show", true);
+    setDefaultConfigValue("info.einsaetze.url", "http://127.0.0.1:8000/api/info/einsaetze/?auth_token={api_key}&limit=9");
+
+    setDefaultConfigValue("info.dienste.show", true);
+    setDefaultConfigValue("info.dienste.url", "http://127.0.0.1:8000/api/info/dienste/?auth_token={api_key}&limit=10");
+
+
+    setDefaultConfigValue("sentry.enabled", false);
+    setDefaultConfigValue("sentry.dsn", "https://dsn@sentry.io/123456");
+
+
+    setDefaultConfigValue("googleMapsKey", "123456abc");
+    setDefaultConfigValue("feuerwehrLat", "53.365934");
+    setDefaultConfigValue("feuerwehrLng", "10.137550");
+
+
+    setDefaultConfigValue("motionDetector.enabled", false);
+    setDefaultConfigValue("motionDetector.filePath", "/opt/einsatzmonitor/motion/motion");
+
+
+    setDefaultConfigValue("displayAlwaysOn", false);
+}
+
+function setDefaultConfigValue(key, value) {
+    if (settings.has(key))
+        return;
+
+    settings.set(key, value)
 }
 
 app.on('ready', createWindow);

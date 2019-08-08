@@ -4,6 +4,7 @@
     Todo: Display alarmzeit (besides the counter)
  */
 
+
 /*----------------------------------------------------------------------*/
 /* View Model
 /*----------------------------------------------------------------------*/
@@ -107,19 +108,19 @@ self.loadInfoData();
 
 window.setInterval(function () {
     self.loadInfoData();
-}, 1000 * config.info.httpFetchInterval);
+}, 1000 * settings.get("info.httpFetchInterval"));
 
-if (config.einsatz.fetch === "http") {
+if (settings.get("einsatz.fetch") === "http") {
     // create task to poll einsatz from http api
     window.setInterval(function () {
         self.check_einsatz();
-    }, 1000 * config.einsatz.httpFetchInterval);
+    }, 1000 * settings.get("einsatz.httpFetchInterval"));
 }
 
-if (config.einsatz.fetch === "websocket") {
+if (settings.get("einsatz.fetch") === "websocket") {
     // create websocket connection
     setTimeout(function () {
-        var einsatzWebsocket = new ReconnectingWebSocket(config.einsatz.url.replace("{activeMinutes}", config.einsatz.einsatzDisplayTime - 2));
+        var einsatzWebsocket = new ReconnectingWebSocket(settings.get("einsatz.url").replace("{activeMinutes}", settings.get("einsatz.einsatzDisplayTime") - 2));
         einsatzWebsocket.reconnectDecay = 1.0;
 
         einsatzWebsocket.onmessage = function (e) {
@@ -156,7 +157,7 @@ function display_einsatz(einsatz) {
 function check_einsatz() {
     $.ajax({
         type: 'GET',
-        url: config.einsatz.url.replace("{activeMinutes}", config.einsatz.einsatzDisplayTime - 2),
+        url: settings.get("einsatz.url").replace("{activeMinutes}", settings.get("einsatz.einsatzDisplayTime") - 2),
         datatype: "json",
         contentType: "application/json charset=utf-8",
         success: function (data) {
@@ -175,15 +176,15 @@ function check_einsatz() {
  */
 
 function loadInfoData() {
-    if (config.info.news.show) {
+    if (settings.get("info.news.show")) {
         self.infoLoadNews();
     }
 
-    if (config.info.einsaetze.show) {
+    if (settings.get("info.einsaetze.show")) {
         self.infoLoadEinsaetze();
     }
 
-    if (config.info.dienste.show) {
+    if (settings.get("info.dienste.show")) {
         self.infoLoadDienste();
     }
 }
@@ -191,7 +192,7 @@ function loadInfoData() {
 function infoLoadNews() {
     $.ajax({
         type: 'GET',
-        url: config.info.news.url,
+        url: settings.get("info.news.url"),
         datatype: "json",
         contentType: "application/json charset=utf-8",
         success: function (data) {
@@ -227,7 +228,7 @@ function infoLoadNews() {
 function infoLoadEinsaetze() {
     $.ajax({
         type: 'GET',
-        url: config.info.einsaetze.url,
+        url: settings.get("info.einsaetze.url"),
         datatype: "json",
         contentType: "application/json charset=utf-8",
         success: function (data) {
@@ -262,7 +263,7 @@ function infoLoadEinsaetze() {
 function infoLoadDienste() {
     $.ajax({
         type: 'GET',
-        url: config.info.dienste.url,
+        url: settings.get("info.dienste.url"),
         datatype: "json",
         contentType: "application/json charset=utf-8",
         success: function (data) {
@@ -331,9 +332,9 @@ window.addEventListener("einsatzRemoved", function (e) {
 
 
 let lastMovement = 0;
-if (config.enableMotionDetector) {
+if (settings.get("motionDetector.enabled")) {
     const chokidar = require('chokidar');
-    let watcher = chokidar.watch(config.motionDetectorPath);
+    let watcher = chokidar.watch(settings.get("motionDetector.filePath"));
 
     watcher.on('add', path => {
         console.log('File ' + path + ' has been added');
@@ -380,7 +381,7 @@ function turnOnDisplay() {
 
 function turnOffDisplay() {
     if (hdmiState !== 0) {
-        if (config.displayAlwaysOn) {
+        if (settings.get("displayAlwaysOn")) {
             return;
         }
 

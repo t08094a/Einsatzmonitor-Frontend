@@ -41,7 +41,7 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
     });
 
     self.get_einheiten_sorted = ko.computed(() => {
-        let custom = config.einsatz.einheitenAlwaysTop;
+        let custom = settings.get("einsatz.einheitenAlwaysTop").split(",");
 
         sorted__array = self.einheiten().reduce((acc, element) => {
             var found = false;
@@ -62,11 +62,11 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
     });
 
     self.get_visible_einheiten_sorted = ko.computed(() => {
-        return self.get_einheiten_sorted().slice(0, config.einsatz.showEinheitenLimit);
+        return self.get_einheiten_sorted().slice(0, settings.get("einsatz.showEinheitenLimit"));
     });
 
     self.get_invisible_einheiten_count = ko.computed(() => {
-        return self.einheiten().length - config.einsatz.showEinheitenLimit;
+        return self.einheiten().length - settings.get("einsatz.showEinheitenLimit");
     });
 
     let removeTimer = window.setInterval(function () {
@@ -80,7 +80,7 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
 
         self.time_since_alarmierung(finalTime);
 
-        if (minutes >= config.einsatz.einsatzDisplayTime) {
+        if (minutes >= settings.get("einsatz.displayTime")) {
             clearInterval(removeTimer);
             einsatzMonitorModel.einsaetze.splice(einsatzMonitorModel.einsaetze().indexOf(this), 1);
 
@@ -213,7 +213,7 @@ ko.bindingHandlers.map = {
             let directionsService = new google.maps.DirectionsService();
             let directionsDisplay = new google.maps.DirectionsRenderer();
 
-            let feuerwehr = new google.maps.LatLng(config.feuerwehrLat, config.feuerwehrLng);
+            let feuerwehr = new google.maps.LatLng(settings.get("feuerwehrLat"), settings.get("feuerwehrLng"));
 
             directionsDisplay.setMap(mapObj.googleMap);
 
@@ -243,7 +243,7 @@ ko.bindingHandlers.map = {
                         '&path=enc:' + response.routes[0].overview_polyline +
                         '&markers=size:mid|color:green|' + feuerwehr.lat() + ',' + feuerwehr.lng() +
                         '&markers=size:mid|color:red|' + mapObj.lat() + ',' + mapObj.lng() +
-                        '&key=' + config.googleMapsKey;
+                        '&key=' + settings.get("googleMapsKey");
                 }
             });
         }
