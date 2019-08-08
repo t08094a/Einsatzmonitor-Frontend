@@ -95,3 +95,11 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     font-size: 1.4rem
 }
+
+.window-buttons-wrapper .buttons {
+    opacity: 0;
+}
+
+.window-buttons-wrapper:hover .buttons {
+    opacity: 1;
+}

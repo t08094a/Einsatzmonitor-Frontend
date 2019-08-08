@@ -207,6 +207,13 @@
         <button id="settings-menu" class="btn btn-sm btn-outline-secondary mr-2" style="padding: 0 4px;"> <i class="fal fa-cogs"></i></button>
         <small class="text-muted text-white">EinsatzMonitor V1.1.0 Beta</small>
     </div>
+
+    <div class="window-buttons-wrapper mr-1 p-1 close-button-wrapper" style="position:fixed; right:0; top:0;">
+        <div class="buttons">
+            <button id="fullscreen-button" class="btn btn-sm btn-outline-primary fullscreen-button" style="padding: 0 4px; width: 24px;"> <i class="fal fa-window-restore"></i></button>
+            <button id="close-button" class="btn btn-sm btn-outline-danger close-button" style="padding: 0 4px; width: 24px;"> <i class="fal fa-times"></i></button>
+        </div>
+    </div>
 </div>
 
 <!-- Insert this line above script imports  -->
@@ -297,6 +304,21 @@
 
         win.loadFile('src/settings.html');
     }
+</script>
+
+<!-- window buttons -->
+<script>
+    const close_button = document.getElementById('close-button');
+    const fullscreen_button = document.getElementById('fullscreen-button');
+    let win = require('electron').remote.getCurrentWindow();
+
+    close_button.addEventListener('click', () => {
+        win.close();
+    });
+
+    fullscreen_button.addEventListener('click', () => {
+        win.setFullScreen(!win.isFullScreen());
+    });
 </script>
 
 <!-- Insert this line after script imports -->
