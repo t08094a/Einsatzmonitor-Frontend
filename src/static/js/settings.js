@@ -96,7 +96,7 @@ function Setting(key, value, type) {
     self.value = ko.observable(value);
     self.type = ko.observable(type);
 
-    self.booleanValues = ko.observableArray([new BooleanSetting(0, "false"), new BooleanSetting(1, "true")]);
+    self.booleanValues = ko.observableArray([new BooleanSetting(false, "false"), new BooleanSetting(true, "true")]);
     self.fetchValues = ko.observableArray([new FetchSetting(0, "http"), new FetchSetting(1, "websocket")]);
 
     self.get_value = ko.computed(() => {
