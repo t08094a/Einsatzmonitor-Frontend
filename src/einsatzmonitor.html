@@ -87,6 +87,12 @@
                             <td class="pl-4"><h5 data-bind="text: value"></h5></td>
                         </tr>
                         <!-- /ko -->
+                        <!-- ko if: $root.get_latest_einsatz().alarmzeit_datetime() -->
+                        <tr>
+                            <td><h5><i class="fal fa-clock mr-1"></i> <strong>Alarmzeit:</strong></h5></td>
+                            <td class="pl-4"><h5 data-bind="text: $root.get_latest_einsatz().alarmzeit_datetime()"></h5></td>
+                        </tr>
+                        <!-- /ko -->
                         </tbody>
                     </table>
                 </div>
@@ -205,7 +211,7 @@
 
     <div class="version-info mr-2 mb-2 p-1" style="position:fixed; right:0; bottom:0;">
         <button id="settings-menu" class="btn btn-sm btn-outline-secondary mr-2" style="padding: 0 4px;"> <i class="fal fa-cogs"></i></button>
-        <small class="text-muted text-white">EinsatzMonitor V1.1.0 Beta</small>
+        <small class="text-muted text-white">EinsatzMonitor V1.1.1 Beta</small>
     </div>
 
     <div class="window-buttons-wrapper mr-1 p-1 close-button-wrapper" style="position:fixed; right:0; top:0;">
@@ -245,6 +251,9 @@
 
 <!-- fitty -->
 <script src="static/js/fitty.min.js"></script>
+
+<!-- moment.js -->
+<script src="static/js/moment.min.js"></script>
 
 <!-- einsatzmonitor -->
 <script src="static/js/einsatzmonitor-models.js"></script>

@@ -6,6 +6,7 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
     self.stichwort_color = ko.observable(stichwort_color);
     self.description = ko.observable(description);
     self.alarmzeit = ko.observable(alarmzeit);
+    self.alarmzeit_datetime = ko.observable();
     self.adresse = ko.observable(adresse);
     self.objekt = ko.observable(objekt);
     self.einheiten = ko.observableArray([]);
@@ -72,6 +73,10 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
     let removeTimer = window.setInterval(function () {
         let now = Date.now() / 1000 | 0;
         let diff = now - self.alarmzeit();
+
+        if (diff > 900) {
+            self.alarmzeit_datetime(moment(self.alarmzeit() * 1000).format("DD.MM.YYYY HH:mm:ss"));
+        }
 
         let minutes = Math.floor(diff / 60);
         let seconds = diff - minutes * 60;
