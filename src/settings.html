@@ -26,10 +26,16 @@
 <body class="h-100">
 
 <div class="container d-flex flex-column h-100">
-    <div class="card">
+    <div class="card mt-2 mb-2">
         <div class="card-body">
+            <h4 class="card-title">EinsatzMonitor - Einstellungen</h4>
+            <h5 class="card-subtitle mb-2 text-muted">Allgemein</h5>
             <div class="mb-4" data-bind="template: { name: 'button-template', foreach: $root.settings() }"></div>
+
+            <h5 class="card-subtitle mb-2 text-muted">Einsatz</h5>
             <div class="mb-4" data-bind="template: { name: 'button-template', foreach: $root.einsatzSettings() }"></div>
+
+            <h5 class="card-subtitle mb-2 text-muted">Info</h5>
             <div class="mb-4" data-bind="template: { name: 'button-template', foreach: $root.infoSettings() }"></div>
 
             <button class="btn btn-outline-success btn-sm" data-bind="click: $root.saveSettings, enable: !$root.saving() ">Speichern <i data-bind="visible: $root.saving()" class="fa fa-cog fa-spin fa-fw"></i></button>
