@@ -125,18 +125,32 @@ if (settings.get("einsatz.fetch") === "websocket") {
 
         einsatzWebsocket.onmessage = function (e) {
             var data = JSON.parse(e.data);
-            var einsatz = JSON.parse(data.einsatz);
-            console.log("From webSocket: " + data.einsatz);
-            display_einsatz(einsatz);
+            console.log("From webSocket: " + data.type);
+
+            if (data.type === "new_einsatz") {
+                console.log("From webSocket: " + data.einsatz);
+
+                var einsatz = JSON.parse(data.einsatz);
+                display_einsatz(einsatz);
+            }
+
+            if (data.type === "command") {
+                console.log("From webSocket: " + data.command);
+
+                if (data.command === "clear") {
+                    console.log("will clear display now");
+                    einsatzMonitorModel.einsaetze.removeAll();
+                }
+            }
         };
 
         einsatzWebsocket.onclose = function (e) {
-            console.error('Chat socket closed unexpectedly');
+            console.error('Websocket closed unexpectedly');
             toastr.error("Einsätze können nicht empfangen werden.", "Verbindung zum Server verloren");
         };
 
         einsatzWebsocket.onerror = function (e) {
-            console.error('Chat socket errored unexpectedly');
+            console.error('Websocket errored unexpectedly');
             toastr.error("Einsätze können nicht empfangen werden.", "Verbindung zum Server verloren");
         };
     }, 5000); // Wait 5 seconds for google maps api to load

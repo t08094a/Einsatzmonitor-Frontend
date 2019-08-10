@@ -209,8 +209,10 @@
     </div>
     <!-- /ko -->
 
-    <div class="version-info mr-2 mb-2 p-1" style="position:fixed; right:0; bottom:0;">
-        <button id="settings-menu" class="btn btn-sm btn-outline-secondary mr-2" style="padding: 0 4px;"> <i class="fal fa-cogs"></i></button>
+    <div class="window-buttons-wrapper version-info mr-2 mb-2 p-1" style="position:fixed; right:0; bottom:0;">
+        <div class="buttons">
+            <button id="settings-button" class="btn btn-sm btn-outline-secondary mr-2" style="padding: 0 4px;"> <i class="fal fa-cogs"></i></button>
+        </div>
         <small class="text-muted text-white">EinsatzMonitor V1.1.1 Beta</small>
     </div>
 
@@ -295,7 +297,7 @@
 
 <!-- settings menu -->
 <script>
-    const button = document.getElementById('settings-menu');
+    const button = document.getElementById('settings-button');
     button.addEventListener('click', () => {
         createBrowserWindow();
     });
