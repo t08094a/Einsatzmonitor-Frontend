@@ -25,15 +25,13 @@ function SettingsModel() {
     };
 
     self.loadSettings = () => {
-        console.log(settings);
-        console.log(settings.getAll());
-
         let all = dotNotate(settings.getAll());
+        log.info('Loaded settings:', all);
 
         for (var key in all) {
             if (all.hasOwnProperty(key)) {
                 // console.log(key, all[key]);
-                settings_obj = new Setting(key, all[key], self.get_type(key));
+                let settings_obj = new Setting(key, all[key], self.get_type(key));
 
                 if (key.startsWith("einsatz.")) {
                     self.einsatzSettings.push(settings_obj);
@@ -57,12 +55,15 @@ function SettingsModel() {
             self.settings().forEach((s) => {
                 s.save();
             });
+
             self.einsatzSettings().forEach((s) => {
                 s.save();
             });
+
             self.infoSettings().forEach((s) => {
                 s.save();
             });
+
             toastr.success("Einstellungen erfolgreich gespeichert", "Einstellungen");
             self.saving(false);
         }, 100)
@@ -113,7 +114,7 @@ function Setting(key, value, type) {
     });
 
     self.save = () => {
-        console.log("saving... ", self.key(), self.get_value());
+        log.info(`Saving config entry ${self.key()} => ${self.value()}`);
         settings.set(self.key(), self.value())
     }
 }

@@ -1,14 +1,6 @@
-/*
-    Todo: Use electron-settings for configuration
-    Todo: Log to file?
-    Todo: Display alarmzeit (besides the counter)
- */
-
-
 /*----------------------------------------------------------------------*/
 /* View Model
 /*----------------------------------------------------------------------*/
-var googleLoaded = false;
 
 function EinsatzMonitorModel() {
     var self = this;
@@ -70,7 +62,8 @@ function EinsatzMonitorModel() {
                 }
             ));
 
-            console.log("Added " + einsatz.id + " to array");
+            log.info(`Added new einsatz (${einsatz.id}) to array`);
+
             fitty('.einsatz-einheit div h4', {
                 maxSize: 22.5
             });
@@ -78,7 +71,7 @@ function EinsatzMonitorModel() {
                 maxSize: 50
             });
         } else {
-            console.log(einsatz.id + " already in array");
+            log.warn(`Einsatz already in array (${einsatz.id})`);
         }
     }
 }
@@ -125,32 +118,32 @@ if (settings.get("einsatz.fetch") === "websocket") {
 
         einsatzWebsocket.onmessage = function (e) {
             var data = JSON.parse(e.data);
-            console.log("From webSocket: " + data.type);
+            log.info(`Type from WebSocket: ${data.type}`);
 
             if (data.type === "new_einsatz") {
-                console.log("From webSocket: " + data.einsatz);
+                log.info(`Einsatz from WebSocket: ${data.einsatz}`);
 
                 var einsatz = JSON.parse(data.einsatz);
                 display_einsatz(einsatz);
             }
 
             if (data.type === "command") {
-                console.log("From webSocket: " + data.command);
+                log.info(`Command from WebSocket: ${data.command}`);
 
                 if (data.command === "clear") {
-                    console.log("will clear display now");
+                    log.info(`Clearing display now...`);
                     einsatzMonitorModel.einsaetze.removeAll();
                 }
             }
         };
 
         einsatzWebsocket.onclose = function (e) {
-            console.error('Websocket closed unexpectedly');
+            log.error(`Websocket closed unexpectedly: ${e.toString()}`);
             toastr.error("Einsätze können nicht empfangen werden.", "Verbindung zum Server verloren");
         };
 
         einsatzWebsocket.onerror = function (e) {
-            console.error('Websocket errored unexpectedly');
+            log.error(`Websocket errored unexpectedly: ${e.toString()}`);
             toastr.error("Einsätze können nicht empfangen werden.", "Verbindung zum Server verloren");
         };
     }, 5000); // Wait 5 seconds for google maps api to load
@@ -180,6 +173,7 @@ function check_einsatz() {
             })
         },
         error: function (data) {
+            log.error(`Error while requesting Einsatz from API: ${data.toString()}`);
             toastr.error("Einsätze konnten nicht abgerufen werden.", "Keine Verbindung zum Server");
         }
     });
@@ -351,11 +345,11 @@ if (settings.get("motionDetector.enabled")) {
     let watcher = chokidar.watch(settings.get("motionDetector.filePath"));
 
     watcher.on('add', path => {
-        console.log('File ' + path + ' has been added');
+        log.info(`File ${path} has been added`);
     });
 
     watcher.on('change', path => {
-        console.log('File ' + path + ' has been changed');
+        log.info(`File ${path} has been changed`);
         lastMovement = new Date().getTime();
         self.turnOnDisplay();
     });
@@ -375,7 +369,7 @@ window.setInterval(function () {
     let diffSeconds = (currentTimestamp - lastMovement) / 1000;
 
     if (diffSeconds < 600) {
-        console.log("Last movement: " + diffSeconds + " ago.");
+        log.info(`Last movement: ${diffSeconds}s ago.`);
         return;
     }
 
@@ -389,7 +383,7 @@ function turnOnDisplay() {
         hdmiState = 1;
         execute("vcgencmd display_power 1", function () {
         });
-        console.log("Turned on display");
+        log.info('Turned on display');
     }
 }
 
@@ -402,7 +396,6 @@ function turnOffDisplay() {
         hdmiState = 0;
         execute("vcgencmd display_power 0", function () {
         });
-        console.log("Turned off display");
-
+        log.info('Turned off display');
     }
 }

@@ -2,6 +2,7 @@ const {app, BrowserWindow, Menu} = require('electron');
 const AutoLaunch = require('auto-launch');
 const config = require('./config.js');
 const settings = require('electron-settings');
+const log = require('electron-log');
 
 if (config.sentry.enabled)
     require('./sentry');
@@ -90,7 +91,8 @@ function setDefaultConfigValue(key, value) {
     if (settings.has(key))
         return;
 
-    settings.set(key, value)
+    settings.set(key, value);
+    log.info(`Saved new config value ${key} => ${value}`);
 }
 
 app.on('ready', createWindow);

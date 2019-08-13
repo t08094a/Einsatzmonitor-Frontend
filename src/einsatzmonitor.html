@@ -233,7 +233,8 @@
         module = undefined;
     }
 
-    let settings = require('electron-settings');
+    const settings = require('electron-settings');
+    const log = require("electron-log");
 </script>
 
 <script src="static/js/jquery.min.js"></script>
@@ -283,7 +284,7 @@
         script.src = 'https://maps.googleapis.com/maps/api/js?key=' + settings.get("googleMapsKey") + '&language=de&region=de';
         document.body.appendChild(script);
         googleLoaded = true;
-        console.log("Loaded Google MAPS API");
+        log.info("Loaded Google Maps API")
     }
 
     window.onload = loadScript;
@@ -291,7 +292,7 @@
     let refreshTimer = window.setInterval(function () {
         let oldScript = document.getElementById("googleMapsAPI");
         oldScript.parentNode.removeChild(oldScript);
-        console.log("Removed old Google MAPS API");
+        log.info("Removed old Google Maps API Javascript code");
         loadScript();
     }, 1000 * 60 * 60 * 23);
 

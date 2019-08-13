@@ -249,6 +249,8 @@ ko.bindingHandlers.map = {
                         '&markers=size:mid|color:green|' + feuerwehr.lat() + ',' + feuerwehr.lng() +
                         '&markers=size:mid|color:red|' + mapObj.lat() + ',' + mapObj.lng() +
                         '&key=' + settings.get("googleMapsKey");
+
+                    log.info(`StaticMap-URL: ${static_url}`)
                 }
             });
         }
