@@ -235,6 +235,9 @@
 
     const settings = require('electron-settings');
     const log = require("electron-log");
+
+    const emitter = require('events').EventEmitter;
+    const em = new emitter();
 </script>
 
 <script src="static/js/jquery.min.js"></script>
@@ -262,6 +265,7 @@
 
 <!-- einsatzmonitor -->
 <script src="static/js/einsatzmonitor-models.js"></script>
+<script src="static/js/einsatzmonitor-events.js"></script>
 <script src="static/js/einsatzmonitor.js"></script>
 
 <!-- sentry -->

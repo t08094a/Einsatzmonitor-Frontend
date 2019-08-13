@@ -87,19 +87,11 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
 
         if (minutes >= settings.get("einsatz.displayTime")) {
             clearInterval(removeTimer);
-            einsatzMonitorModel.einsaetze.splice(einsatzMonitorModel.einsaetze().indexOf(this), 1);
 
-            window.dispatchEvent(new CustomEvent(
-                "einsatzRemoved",
-                {
-                    detail: {
-                        message: "Hello World!",
-                        time: new Date(),
-                    },
-                    bubbles: true,
-                    cancelable: false
-                }
-            ));
+            // Trigger EinsatzRemove event
+            em.emit('EinsatzRemove', self.id());
+
+            einsatzMonitorModel.einsaetze.splice(einsatzMonitorModel.einsaetze().indexOf(this), 1);
         }
     }, 500);
 

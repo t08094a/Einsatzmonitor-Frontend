@@ -50,17 +50,8 @@ function EinsatzMonitorModel() {
 
             self.einsaetze.push(einsatz_obj);
 
-            window.dispatchEvent(new CustomEvent(
-                "newEinsatzDisplay",
-                {
-                    detail: {
-                        message: "Hello World!",
-                        time: new Date(),
-                    },
-                    bubbles: true,
-                    cancelable: false
-                }
-            ));
+            // Trigger EinsatzAdd event
+            em.emit('EinsatzAdd', einsatz.id);
 
             log.info(`Added new einsatz (${einsatz.id}) to array`);
 
@@ -327,17 +318,14 @@ function str_pad_left(string, pad, length) {
 
 ko.applyBindings(einsatzMonitorModel);
 
-window.addEventListener("newEinsatzDisplay", function (e) {
-    console.log("New einsatz event fired");
-    console.log(e);
+em.on('EinsatzAdd', (data) => {
+    log.info(`EinsatzAdd event fired (${data})`);
     self.turnOnDisplay();
-}, false);
+});
 
-window.addEventListener("einsatzRemoved", function (e) {
-    console.log("Einsatz removed event fired");
-    console.log(e);
-}, false);
-
+em.on('EinsatzRemove', (data) => {
+    log.info('EinsatzRemove event fired');
+});
 
 let lastMovement = 0;
 if (settings.get("motionDetector.enabled")) {
