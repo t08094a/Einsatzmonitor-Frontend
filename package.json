@@ -3,16 +3,70 @@
   "version": "1.1.1",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "buildall": "build --win --linux",
+    "publish": "build --win --linux -p always"
   },
   "devDependencies": {
-    "electron": "^3.0.13"
+    "electron": "^3.0.13",
+    "electron-builder": "^20.28.4"
   },
   "dependencies": {
     "@sentry/browser": "^5.4.3",
     "@sentry/electron": "^0.17.0",
     "auto-launch": "^5.0.5",
     "chokidar": "^3.0.0",
-    "electron-settings": "^3.2.0"
+    "electron-settings": "^3.2.0",
+    "electron-updater": "^4.0.6"
+  },
+  "build": {
+    "productName": "EinsatzMonitor",
+    "appId": "com.github.finn0811.einsatzmonitor-frontend",
+    "nsis": {
+      "oneClick": false,
+      "artifactName": "${productName}-${version}-win-Setup.${ext}"
+    },
+    "win": {
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+      "target": [
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "ia32",
+            "armv7l",
+            "arm64"
+          ]
+        },
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "ia32",
+            "armv7l",
+            "arm64"
+          ]
+        }
+      ]
+    }
   }
 }
