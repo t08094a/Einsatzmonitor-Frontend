@@ -218,9 +218,10 @@
 
     <div class="window-buttons-wrapper mr-1 p-1 close-button-wrapper" style="position:fixed; right:0; top:0;">
         <div class="buttons">
-            <button id="toolbar-button" class="btn btn-sm btn-outline-primary toolbar-button" style="padding: 0 4px; width: 24px;"> <i class="fal fa-wrench"></i></button>
-            <button id="fullscreen-button" class="btn btn-sm btn-outline-primary fullscreen-button" style="padding: 0 4px; width: 24px;"> <i class="fal fa-window-restore"></i></button>
-            <button id="close-button" class="btn btn-sm btn-outline-danger close-button" style="padding: 0 4px; width: 24px;"> <i class="fal fa-times"></i></button>
+            <button id="console-button" class="btn btn-sm btn-outline-primary console-button" style="padding: 0 5px; width: 28px;"> <i class="far fa-terminal"></i></button>
+            <button id="toolbar-button" class="btn btn-sm btn-outline-primary toolbar-button" style="padding: 0 5px; width: 28px;"> <i class="fal fa-wrench"></i></button>
+            <button id="fullscreen-button" class="btn btn-sm btn-outline-primary fullscreen-button" style="padding: 0 5px; width: 28px;"> <i class="fal fa-window-restore"></i></button>
+            <button id="close-button" class="btn btn-sm btn-outline-danger close-button" style="padding: 0 5px; width: 28px;"> <i class="fal fa-times"></i></button>
         </div>
     </div>
 </div>
@@ -323,6 +324,7 @@
     const close_button = document.getElementById('close-button');
     const fullscreen_button = document.getElementById('fullscreen-button');
     const toolbar_button = document.getElementById('toolbar-button');
+    const console_button = document.getElementById('console-button');
     let win = require('electron').remote.getCurrentWindow();
 
     close_button.addEventListener('click', () => {
@@ -335,6 +337,10 @@
 
     toolbar_button.addEventListener('click', () => {
         win.setMenuBarVisibility(!win.isMenuBarVisible());
+    });
+
+    console_button.addEventListener('click', () => {
+        win.webContents.openDevTools();
     });
 </script>
 

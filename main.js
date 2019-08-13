@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, Menu} = require('electron');
 const AutoLaunch = require('auto-launch');
 const config = require('./config.js');
 const settings = require('electron-settings');
@@ -35,9 +35,12 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true
         },
-        fullscreen: !config.debug,
-        autoHideMenuBar: !config.debug
+        fullscreen: !settings.get("debug"),
+        autoHideMenuBar: !settings.get("debug")
     });
+
+    if (settings.get("debug"))
+        win.webContents.openDevTools();
 
     // and load the index.html of the app.
     win.loadFile('src/einsatzmonitor.html');
@@ -91,3 +94,7 @@ function setDefaultConfigValue(key, value) {
 }
 
 app.on('ready', createWindow);
+
+app.on('window-all-closed', () => {
+    app.quit();
+});
