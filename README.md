@@ -1,4 +1,11 @@
-# Einsatzmonitor - Frontend
+<p align="center">
+  <img src="http://134.255.237.237/einsatzmonitor-logo-256w.png" alt="Logo"/>
+</p>
+
+<h1 align="center">
+  Einsatzmonitor - Frontend
+</h1>
+
 [![Current Release](https://img.shields.io/github/release/Finn0811/Einsatzmonitor-Frontend)](https://github.com/Finn0811/Einsatzmonitor-Frontend/releases/latest)
 [![Commits since last release](https://img.shields.io/github/commits-since/Finn0811/Einsatzmonitor-Frontend/latest.svg)](https://github.com/Finn0811/Einsatzmonitor-Frontend/releases/latest)
 [![Open issues](http://isitmaintained.com/badge/open/Finn0811/Einsatzmonitor-Frontend.svg)](https://github.com/Finn0811/Einsatzmonitor-Frontend/issues)

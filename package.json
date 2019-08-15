@@ -4,7 +4,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "buildall": "build --win --linux",
+    "build:win": "build --win",
+    "build:linux": "build --linux",
     "publish": "build --win --linux -p always"
   },
   "devDependencies": {
