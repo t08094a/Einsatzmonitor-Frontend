@@ -2,6 +2,7 @@ const {app, BrowserWindow, Menu} = require('electron');
 const AutoLaunch = require('auto-launch');
 const config = require('./config.js');
 const settings = require('electron-settings');
+const {autoUpdater} = require("electron-updater");
 const log = require('electron-log');
 
 if (config.sentry.enabled)
@@ -45,6 +46,8 @@ function createWindow() {
 
     // and load the index.html of the app.
     win.loadFile('src/einsatzmonitor.html');
+
+    // autoUpdater.checkForUpdates();
 }
 
 function createDefaultConfig() {
@@ -94,6 +97,30 @@ function setDefaultConfigValue(key, value) {
     settings.set(key, value);
     log.info(`Saved new config value ${key} => ${value}`);
 }
+
+autoUpdater.on('checking-for-update', () => {
+    log.info('Checking for update...');
+});
+
+autoUpdater.on('update-available', (info) => {
+    log.info('Update available.', info);
+});
+
+autoUpdater.on('update-not-available', (info) => {
+    log.info('Update not available.', info);
+});
+
+autoUpdater.on('error', (err) => {
+    log.info('Error in auto-updater. ', err);
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+    log.info(`Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}% (${progressObj.transferred}/${progressObj.total})`);
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+    log.info('Update downloaded');
+});
 
 app.on('ready', createWindow);
 
