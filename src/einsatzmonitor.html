@@ -213,7 +213,7 @@
         <div class="buttons">
             <button id="settings-button" class="btn btn-sm btn-outline-secondary mr-2" style="padding: 0 4px;"> <i class="fal fa-cogs"></i></button>
         </div>
-        <small class="text-muted text-white">EinsatzMonitor V1.1.1 Beta</small>
+        <small id="app-version" class="text-muted text-white">EinsatzMonitor V0.0.0 Beta</small>
     </div>
 
     <div class="window-buttons-wrapper mr-1 p-1 close-button-wrapper" style="position:fixed; right:0; top:0;">
@@ -347,6 +347,15 @@
     console_button.addEventListener('click', () => {
         win.webContents.openDevTools();
     });
+</script>
+
+<!-- version display -->
+<script>
+    const version_container = document.getElementById('app-version');
+    const appVersion = window.require('electron').remote.app.getVersion();
+    const versionString = `EinsatzMonitor V${appVersion} Beta`;
+
+    version_container.innerHTML = versionString;
 </script>
 
 <!-- Insert this line after script imports -->
