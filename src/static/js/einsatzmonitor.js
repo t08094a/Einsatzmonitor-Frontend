@@ -833,22 +833,6 @@ em.on('EinsatzRemove', (data) => {
     log.info('EinsatzRemove event fired');
 });
 
-let lastMovement = 0;
-if (settings.get("motionDetector.enabled")) {
-    const chokidar = require('chokidar');
-    let watcher = chokidar.watch(settings.get("motionDetector.filePath"));
-
-    watcher.on('add', path => {
-        log.info(`File ${path} has been added`);
-    });
-
-    watcher.on('change', path => {
-        log.info(`File ${path} has been changed`);
-        lastMovement = new Date().getTime();
-        self.turnOnDisplay();
-    });
-}
-
 let hdmiState = -1; // Default unknown
 
 // Task every minute to check if we should turn the display off
@@ -893,3 +877,27 @@ function turnOffDisplay() {
         log.info('Turned off display');
     }
 }
+
+let lastMovement = 0;
+
+// Networking
+var net = require('net');
+
+var controlServer = net.createServer();
+
+controlServer.listen(10000, '0.0.0.0', () => {
+    log.info('Control TCP Server is running on port 10000.');
+});
+
+controlServer.on('connection', function (sock) {
+    sock.on('data', function (data) {
+        let parsedData = JSON.parse(data);
+
+        if (parsedData['event'] === 'sensor_trigger') {
+            if(parsedData['sensor'] === 'motion' && settings.get("motionDetector.enabled")) {
+                lastMovement = new Date().getTime();
+                self.turnOnDisplay();
+            }
+        }
+    });
+});
