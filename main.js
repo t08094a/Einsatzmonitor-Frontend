@@ -45,7 +45,8 @@ function createWindow() {
         win.webContents.openDevTools();
 
     // and load the index.html of the app.
-    win.loadFile('src/einsatzmonitor.html');
+    //win.loadFile('src/einsatzmonitor.html');
+    win.loadURL(`file://${__dirname}/src/einsatzmonitor.html`)
 
     // autoUpdater.checkForUpdates();
 }

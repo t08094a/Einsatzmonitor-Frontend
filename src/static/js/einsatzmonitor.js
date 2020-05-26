@@ -2,6 +2,23 @@
 /* View Model
 /*----------------------------------------------------------------------*/
 
+const widgetTypes = {
+    INFO: "info",
+    OPERATION: "operation"
+};
+
+const fs = require('fs');
+const path = require('path');
+const electron = require('electron');
+const app = electron.app || electron.remote.app;
+const userDataPath = app.getPath('userData');
+const gridsterWidgetsFilePath = path.join(userDataPath, "gridster_widgets.json");
+const gridsterWidgetsOperationFilePath = path.join(userDataPath, "gridster_widgets_operation.json");
+
+/*import { EinsatzTest } from "./model/einsatz";
+let test = new EinsatzTest("test");
+console.log(test);*/
+
 function EinsatzMonitorModel() {
     var self = this;
 
@@ -64,6 +81,451 @@ function EinsatzMonitorModel() {
         } else {
             log.warn(`Einsatz already in array (${einsatz.id})`);
         }
+    };
+
+    self.testeinsatz_fe2_id = ko.observable();
+    self.testeinsatz_adresse = ko.observable();
+    self.addTesteinsatz = function() {
+        self.add_einsatz({
+            'id': 1,
+            'stichwort': "F1",
+            'stichwort_color': "danger",
+            'description': "Testalarm",
+            'alarmzeit_seconds': moment().unix(),
+            'adresse': self.testeinsatz_adresse(),
+            'objekt': "(Testobjekt)",
+            'einheiten': [
+                {
+                    'name': "TE FF Testfeuerwehr voll"
+                },
+                {
+                    'name': "TE FF Feuerwehr2 voll"
+                }
+            ],
+            'zusatzinfos': [
+                {
+                    'name': "Ort",
+                    'value': "Testort"
+                }
+            ]
+        });
+
+        if (self.testeinsatz_fe2_id())
+            self.get_latest_einsatz().feedback_fe2_id(self.testeinsatz_fe2_id());
+    };
+
+    self.clearOperations = function() {
+        self.einsaetze().forEach(function (einsatz) {
+            einsatz.stopTasks();
+        });
+        self.einsaetze.removeAll();
+    };
+
+    self.board = ko.observable(new BoardViewModel());
+
+
+    // Widgets
+    // Todo: create default extra_config values and set to new widget
+    // Todo: Maybe: on widget loading check if default config keys are empty to set them to default value
+
+    // Info
+    self.addInfoClock = function () {
+        self.board().widgets.push(new Widget("clock-widget", self.getCurrentWidgetType()));
+    };
+
+    self.addInfoText = function () {
+        self.board().widgets.push(new Widget("text-widget", self.getCurrentWidgetType()));
+    };
+
+    self.addInfoNews = function () {
+        self.board().widgets.push(new Widget("info-news-widget", self.getCurrentWidgetType()));
+    };
+
+    self.addInfoDienste = function () {
+        self.board().widgets.push(new Widget("info-dienste-widget", self.getCurrentWidgetType()));
+    };
+
+    self.addInfoOperations = function () {
+        self.board().widgets.push(new Widget("info-operations-widget", self.getCurrentWidgetType()));
+    };
+
+    // Operation
+    self.addOperationStichwort = function () {
+        self.board().widgets.push(new Widget("operation-stichwort", self.getCurrentWidgetType()));
+    };
+
+    self.addOperationAddress = function () {
+        self.board().widgets.push(new Widget("operation-address", self.getCurrentWidgetType()));
+    };
+    self.addOperationAdditionalInformation = function () {
+        self.board().widgets.push(new Widget("operation-additionalInformation", self.getCurrentWidgetType()));
+    };
+
+    self.addOperationRouteInformation = function () {
+        self.board().widgets.push(new Widget("operation-routeInformation", self.getCurrentWidgetType()));
+    };
+
+    self.addOperationUnits = function () {
+        self.board().widgets.push(new Widget("operation-units", self.getCurrentWidgetType()));
+    };
+
+    self.addOperationFeedback = function () {
+        self.board().widgets.push(new Widget("operation-feedback", self.getCurrentWidgetType()));
+    };
+
+    self.addOperationFeedbackCount = function () {
+        self.board().widgets.push(new Widget("operation-feedback-count", self.getCurrentWidgetType()));
+    };
+
+    self.addOperationAlarmMinutes = function () {
+        self.board().widgets.push(new Widget("operation-alarmMinutes", self.getCurrentWidgetType()));
+    };
+
+    self.addOperationOverviewMap = function () {
+        self.board().widgets.push(new Widget("operation-overviewMap", self.getCurrentWidgetType()));
+    };
+
+    self.addOperationRouteMap = function () {
+        self.board().widgets.push(new Widget("operation-routeMap", self.getCurrentWidgetType()));
+    };
+
+
+    self.serialize = function () {
+        log.debug(self.board().gridsterInfo.serialize());
+    };
+
+    self.saveWidgets = function () {
+        var file = self.view() === "info" ? gridsterWidgetsFilePath : gridsterWidgetsOperationFilePath;
+        log.info(`View | Saving view ${self.view()} to ${file}`);
+
+        var to_save = [];
+
+        self.board().gridsterInfo.serialize().forEach(widget => {
+            wdg = self.board().get_by_id(self.board().widgets(), widget.id);
+
+            log.info(`View | Saving widget ${ko.toJSON(wdg.config.toJSON())}`);
+
+            widget['config'] = wdg.config;
+            widget['extra_config'] = wdg.extra_config;
+            to_save.push(widget);
+        });
+
+        fs.writeFile(file, JSON.stringify(to_save), 'utf8', function (err) {
+            if (err) {
+                log.error("An error occurred while writing JSON file");
+                return log.error(err);
+            }
+
+            log.info(`View | JSON file has been written`);
+        });
+    };
+
+    self.loadWidgets = function (path) {
+        log.info(`View | Loading view from ${path}`);
+
+        fs.readFile(path, function (err, data) {
+            var jsonParsed = JSON.parse(data);
+
+            jsonParsed.forEach(widget => {
+                log.debug(`View | Loaded widget: `, widget);
+
+                wdg = new Widget(widget.config.template, widget.config.type, widget['row'], widget['col'], widget['size_x'], widget['size_y']);
+
+                for (key in widget.config) {
+                    if (widget.config.hasOwnProperty(key)) {
+                        log.debug(`View | Widget | Config | Set ${key} to ${widget.config[key]}`);
+                        wdg.config.push(key, widget.config[key])
+                    }
+                }
+
+                //wdg.extra_config = widget.extra_config;
+                for (key in widget.extra_config) {
+                    if (widget.extra_config.hasOwnProperty(key)) {
+                        wdg.extra_config.push(key, widget.extra_config[key])
+                    }
+                }
+
+                self.board().widgets.push(wdg);
+            });
+        });
+    };
+
+    self.load = function () {
+        self.loadWidgets(gridsterWidgetsFilePath);
+    };
+
+    self.save = function () {
+        self.saveWidgets();
+    };
+
+    self.clearWidgets = function () {
+        //while(self.board().widgets().length > 0) {
+        //    self.board().widgets().forEach(wdg => {
+        //        self.board().widgets.remove(wdg);
+        //    });
+        //}
+        //self.board().widgets.removeAll();
+        self.board().gridsterInfo.remove_all_widgets();
+        self.board().widgets.removeAll();
+    };
+
+    self.view = ko.observable("init");
+
+    self.getCurrentWidgetType = function () {
+        if (self.view() === "info")
+            return widgetTypes.INFO;
+
+        return widgetTypes.OPERATION;
+    };
+
+    // Update view if "einsaetze" changes
+    self.einsaetze.subscribe(function (newValue) {
+        self.loadView();
+    });
+
+    self.loadView = function () {
+        log.info(`View | Switching view - Einsatz: ${self.is_einsatz()} - View: ${self.view()}`);
+        if (self.is_einsatz() && self.view() !== "operation") {
+            self.view("operation");
+            log.info(`View | Loading operation view`);
+            self.clearWidgets();
+            self.loadWidgets(gridsterWidgetsOperationFilePath);
+        }
+        if (!self.is_einsatz() && self.view() !== "info") {
+            self.view("info");
+            log.info(`View | Loading info view`);
+            self.clearWidgets();
+            self.loadWidgets(gridsterWidgetsFilePath);
+        }
+    };
+    self.loadView();
+}
+
+function BoardViewModel() {
+    var self = this;
+
+    self.widgets = ko.observableArray([]);
+    self.widgetsOperation = ko.observableArray([]);
+    self.editWidget = ko.observable();
+
+    gridsterConfig = {
+        // widget_margins: [10, 10],
+        // widget_base_dimensions: [140, 140],
+
+        widget_margins: [5, 5],
+        // widget_base_dimensions: [100, 31],
+        widget_base_dimensions: ['auto', 45],
+        autogenerate_stylesheet: true,
+        min_cols: 1,
+        max_cols: 24,
+        // extra_rows: 20,
+        // min_rows: 30,
+        max_rows: 30,
+        shift_widgets_up: false,
+        shift_larger_widgets_down: false,
+        collision: {
+            wait_for_mouseup: true
+        },
+        resize: {
+            enabled: true,
+
+            stop: function (e, ui, widget) {
+                // var newDimensions = this.serialize(widget)[0];
+                // console.log("New size: " + newDimensions.size_x + ", " + newDimensions.size_y);
+
+                // Update font size on widget resize
+                self.get_by_id(self.widgets(), parseInt(widget.attr('id'))).fitIfPossible();
+            }
+        },
+        draggable: {
+            stop: function (event, ui) {
+                // var newrow = ui.$player[0].dataset.row;
+                // var newcol = ui.$player[0].dataset.col;
+                // console.log("New position: " + newrow + ", " + newcol);
+            }
+        },
+        serialize_params(w, wgd) {
+            return {
+                id: parseInt(w.attr('id')),
+                col: wgd.col,
+                row: wgd.row,
+                size_x: wgd.size_x,
+                size_y: wgd.size_y
+            }
+        }
+    };
+
+    // Initialize the gridster plugin.
+    self.gridsterInfo = $("#gridsterInfo ul").gridster(gridsterConfig).data('gridster');
+
+    self.openWidgetAddModal = function () {
+        $('#addWidgetModal').appendTo("body").modal('show');
+    };
+
+    self.openSettingsMenuModal = function () {
+        $('#settingsMenuModal').appendTo("body").modal('show');
+    };
+
+    self.get_by_id = function (widgets, id) {
+        return ko.utils.arrayFirst(widgets, function (item) {
+            return id === item.id;
+        });
+    };
+
+    /**
+     * Used as a callback for knockout's afterAdd function. This will be called
+     * after a node has been added to the dom from the foreach template. Here,
+     * we need to tell gridster that the node has been added and then set up
+     * the correct gridster parameters on the widget.
+     */
+    self.addGridster = function (node, index, obj) {
+        var widget = $(node);
+        var column = widget.attr("data-col");
+        var row = widget.attr("data-row");
+
+        // only process the main tag which has "data-col" attr
+        if (column) {
+            var sizeX = obj.datasizex;
+            var sizeY = obj.datasizey;
+            // var sizeY = (obj.state() === "Minimized" || obj.state() === "Closed") ? 1 : obj.datasizey;
+
+            // add the widget to the next position
+            self.gridsterInfo.add_widget(widget, sizeX, sizeY, column, row);
+
+            // trigger fitty to properly scale font size
+            self.get_by_id(self.widgets(), parseInt(widget.attr('id'))).fitIfPossible();
+        }
+    };
+
+    /**
+     * Used as a callback for knockout's beforeRemove. Needs
+     * to remove node parameter from the dom, or tell gridster
+     * that the node should be removed if it is an li.
+     */
+    self.removeGridster = function (node, index, widget, gridster = self.gridsterInfo) {
+        var wdg = $("#" + widget.id);
+
+        if (wdg.attr("data-col")) {
+            self.gridsterInfo.remove_widget(wdg);
+        } else {
+            node.parentNode.removeChild(node);
+        }
+    };
+
+    self.removeGridsterOperation = function(node, index, widget) {
+        self.removeGridster(node, index, widget, self.gridsterOperation);
+    };
+
+    /**
+     * Remove a widget from knockout
+     */
+    self.removeWidget = function (widget) {
+        try {
+            self.widgets.remove(widget);
+            self.widgetsOperation.remove(widget);
+        } catch (e) {
+        }
+    };
+
+    /**
+     * Returns the template name of the given widget
+     * @param widget
+     * @returns {*|string}
+     */
+    self.templateName = function(widget) {
+        return widget.config.get('template')();
+    };
+};
+
+var ids = 1;
+
+class Widget {
+    constructor(template_name, type, row = 0, col = 0, x = 3, y = 2) {
+        var self = this;
+
+        self.id = ids++;
+
+        self.datasizex = x;
+        self.datasizey = y;
+
+        self.dataRow = ko.observable(row);
+        self.dataCol = ko.observable(col);
+
+        self.availableAlignments = ko.observableArray(['left', 'center', 'right']);
+
+        self.removeSelected = function () {
+            einsatzMonitorModel.board().removeWidget(this);
+        };
+
+        self.config = ko.observableDictionary({
+            template: template_name,
+            type: type,
+            align: 'left'
+        });
+
+        self.extra_config = ko.observableDictionary();
+
+        self.edit = function() {
+            einsatzMonitorModel.board().editWidget(self);
+            $('#edit-' + self.id).appendTo("body").modal('show');
+            $('.widget-colorpicker').colorpicker({
+                extensions: [
+                    {
+                        name: 'swatches',
+                        options: {
+                            colors: {
+                                'white': '#ffffff',
+                                'black': '#000000',
+                                'dark': '#343a40',
+                                'primary': '#337ab7',
+                                'success': '#5cb85c',
+                                'info': '#5bc0de',
+                                'warning': '#f0ad4e',
+                                'danger': '#d9534f',
+                                'bootstrap-danger': '#dc3545'
+                            },
+                            namesAsValues: false
+                        }
+                    }
+                ],
+                format: null
+            });
+
+            $("[id ='edit-" + self.id + "'] .widget-slider").slider({
+                slide: function (event, ui) {
+                    self.extra_config.get($(this).attr("data-field"))(ui.value);
+                },
+                create: function(event, ui){
+                    $(this).slider('value', self.extra_config.get($(this).attr("data-field"))());
+
+                    // set max size if available
+                    if (parseInt($(this).attr("data-max"))) {
+                        $(this).slider('option', 'max', parseInt($(this).attr("data-max")));
+                    }
+                }
+            });
+        };
+
+        self.fitIfPossible = function () {
+            let max = 50;
+            let newmax = parseInt($("[id ='" + self.id + "'] .fitty-element").attr("data-maxfitty"));
+
+            if (newmax)
+                max = newmax;
+
+            if (self.extra_config.get('text-fitty')()) {
+                fitty("[id ='" + self.id + "'] .fitty-element", {
+                    maxSize: max,
+                    fitHeight: false
+                });
+            }
+        };
+    }
+}
+
+class ClockWidget extends Widget {
+    constructor(row = 0, col = 0, x = 2, y = 6)  {
+        super("clock-widget", widgetTypes.INFO, row, col, x, y) ;
     }
 }
 
@@ -87,7 +549,7 @@ toastr.options = {
     "hideMethod": "fadeOut"
 };
 
-//self.check_einsatz(); # Google maps API might not be ready, yet! Maybe add an callback to the loading function.
+// self.check_einsatz(); # Google maps API might not be ready, yet! Maybe add an callback to the loading function.
 self.loadInfoData();
 
 window.setInterval(function () {
@@ -124,6 +586,16 @@ if (settings.get("einsatz.fetch") === "websocket") {
                 if (data.command === "clear") {
                     log.info(`Clearing display now...`);
                     einsatzMonitorModel.einsaetze.removeAll();
+                }
+            }
+
+            if (data.type === "new_feedbackId") {
+                log.info(`FE2 Feedback ID from WebSocket: ${data.feedbackId.id}`);
+
+                var id = data.feedbackId.id;
+
+                if (einsatzMonitorModel.is_einsatz()) {
+                    einsatzMonitorModel.get_latest_einsatz().feedback_fe2_id(id);
                 }
             }
         };
@@ -315,8 +787,42 @@ function str_pad_left(string, pad, length) {
     return (new Array(length + 1).join(pad) + string).slice(-length);
 }
 
+// Custom widget test
+// Todo: Refactor into actual widgets
+ko.components.register('like-widget', {
+    viewModel: function (params) {
+        // Data: value is either null, 'like', or 'dislike'
+        this.chosenValue = params.value;
+
+        // Behaviors
+        this.like = function () {
+            this.chosenValue('like');
+        }.bind(this);
+        this.dislike = function () {
+            this.chosenValue('dislike');
+        }.bind(this);
+    },
+    template:
+        '<div>Test</div>'
+        /*'<div class="like-or-dislike" data-bind="visible: !chosenValue()">\
+            <button data-bind="click: like">Like it</button>\
+            <button data-bind="click: dislike">Dislike it</button>\
+        </div>\
+        <div class="result" data-bind="visible: chosenValue">\
+            You <strong data-bind="text: chosenValue"></strong> it\
+        </div>'*/
+});
 
 ko.applyBindings(einsatzMonitorModel);
+
+window.addEventListener('resize', () => {
+    clearTimeout(this.resizeTimer);
+    this.resizeTimer = setTimeout(() => {
+        // Recalculate grister if window size changed
+        einsatzMonitorModel.board().gridsterInfo.recalculate_faux_grid();
+    }, 250);
+});
+
 
 em.on('EinsatzAdd', (data) => {
     log.info(`EinsatzAdd event fired (${data})`);

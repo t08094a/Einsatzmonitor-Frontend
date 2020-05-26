@@ -15,22 +15,23 @@
 ## :camera: Bilder
 | Standbyansicht | Einsatzansicht |
 |:-------------:|:-------------:|
-|![Standbyansicht](http://134.255.237.237/einsatzmonitor-standby-02.png "Standbyansicht")|![Alarmansicht](http://134.255.237.237/einsatzmonitor-einsatz-02.png "Alarmansicht")|
+|![Standbyansicht](http://134.255.237.237/einsatzmonitor/1.2.0/info.png "Standbyansicht")|![Alarmansicht](http://134.255.237.237/einsatzmonitor/1.2.0/einsatz.png "Alarmansicht")|
 
 
-## :sparkles: Features und Vorteile
+## :sparkles: Features
 
 - Lauffähig unter Windows und Linux
-- Für Raspberry Pi optimiert
+- Für RaspberryPi optimiert
 - Darstellung von News, Terminen und ggf. einer Einsatz-Historie von einer REST-API in der Standbyansicht
-- Sollte der Raspberry Pi während eines Einsatzes unerwartet neustarten, wechselt der Einsatzmonitor nach dem Hochfahren automatisch wieder in die Einsatzansicht
+- Sollte der RaspberryPi während eines Einsatzes unerwartet neustarten, wechselt der Einsatzmonitor nach dem Hochfahren automatisch wieder in die Einsatzansicht
 - "Client/Server" Setup
-    - Geringer Resourcenbedarf auf dem Raspberry Pi, da die Alarmauswertung von einem separaten Server ausgeführt werden kann
+    - Geringer Resourcenbedarf auf dem RaspberryPi, da die Alarmauswertung von einem separaten Server ausgeführt werden kann
     - Unbegrenzt viele Bildschirme sind einfach zu installieren
-- Einfache Anpassung des Layouts durch Ändern des HTML-Templates
+- Einfache Anpassung des Layouts durch Widgets
 - Geringe Hardwarekosten auch für mehre Bildschirme
 - Darstellung der Route und Berechnung der Strecke mithilfe der Google Maps API
-- Ein/Ausschalten des Bildschirms mittels Bewegungsmelder am Raspberry Pi möglich
+- Ein/Ausschalten des Bildschirms mittels Bewegungsmelder am RaspberryPi möglich
+- Rückmeldungen von [Alamos aPager Pro](https://www.alamos-gmbh.com/service/apager-pro/) anzeigen
 
 
 ## :wrench: Technik
@@ -42,6 +43,7 @@
     - [toastr](https://github.com/CodeSeven/toastr)
     - [jQuery](https://jquery.com/)
     - [Google Maps API](https://developers.google.com/maps/documentation/?hl=de)
+    - [Gridster](https://github.com/dsmorse/gridster.js)
 
 
 - Benötigte Software
@@ -160,12 +162,12 @@ Alternativ kann ein Einsatz auch über ein Websocket-Event empfangen werden. Die
         @xset -dpms
         @xset s noblank
         ```
-3. Raspberry Pi neustarten
+3. RaspberryPi neustarten
 4. Sollten diese Einstellungen noch keine Wirkung zeigen, gibt es hier weitere Informationen: https://raspberrypi.stackexchange.com/questions/752/how-do-i-prevent-the-screen-from-going-blank/753#753
 
-## :eyes: Bewegungsmelder an Raspberry Pi anschließen und Bildschirm ein/ausschalten
+## :eyes: Bewegungsmelder an RaspberryPi anschließen und Bildschirm ein/ausschalten
 
-Es ist möglich über die GPIO-Pins des Raspberry Pi einen Bewegungsmelder anzuschließen und mit einem simplen Python-Script abzufragen.
+Es ist möglich über die GPIO-Pins des RaspberryPi einen Bewegungsmelder anzuschließen und mit einem simplen Python-Script abzufragen.
 Das Script überschreibt bei Bewegung eine Datei 'motion' im Ordner ./einsatzmonitor/motion.
 Der Einsatzmonitor erkennt die Dateiänderung und schaltet den Bildschirm für 10 Minuten ein. Wird keine Bewegung mehr erkannt, wird der Bildschirm nach Ablauf der 10 Minuten wieder ausgeschaltet.
 
@@ -189,4 +191,4 @@ Das Ein- und Ausschalten des Bildschirms geschieht intern über die Befehle ``$ 
 
 
 ## :interrobang: Support
-Für Fragen und Anregungen stehe ich gerne zur Verfügung, dafür einfach ein Issue erstellen.
+Für Fragen und Anregungen stehe ich gerne zur Verfügung!

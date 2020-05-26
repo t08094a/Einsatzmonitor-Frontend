@@ -11,6 +11,8 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
     self.objekt = ko.observable(objekt);
     self.einheiten = ko.observableArray([]);
     self.zusatzinfos = ko.observableArray([]);
+    self.feedback_persons = ko.observableArray([]);
+    self.feedback_fe2_id = ko.observable();
 
     self.time_since_alarmierung = ko.observable("00:00");
 
@@ -62,6 +64,120 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
         return sorted__array;
     });
 
+    self.get_feedback_persons_sorted = ko.pureComputed(() => {
+        // Only one sorting argument
+        /*sorted__array = self.feedback_persons().reduce((acc, element) => {
+            if (element.feedback() === "YES") {
+                return [element, ...acc];
+            }
+
+            return [...acc, element];
+        }, []);
+
+        return sorted__array;*/
+
+        // Works on windows but NOT on linux
+        /*return self.feedback_persons().sort(function(a, b) {
+            let sortVal = 0;
+
+            if(a.feedback() === "YES" && b.feedback() !== "YES") { sortVal--; }
+            if(a.feedback() !== "YES" && b.feedback() === "YES") { sortVal++; }
+
+            if (a.functions().length > b.functions().length) { sortVal--; }
+
+            // console.log(a.name() + " VS " + b.name() + ": " + sortVal);
+
+            return sortVal;
+        });*/
+
+        // Works on both platforms
+        return self.feedback_persons().sort(function(a, b) {
+            let sortVal = 0;
+
+            if(a.feedback() === "YES" && b.feedback() !== "YES") { sortVal--; }
+            if(a.feedback() !== "YES" && b.feedback() === "YES") { sortVal++; }
+
+            if (a.functions().length > b.functions().length && (a.feedback() === "YES" && b.feedback() === "YES")) { sortVal--; }
+            if (a.functions().length < b.functions().length && (a.feedback() === "YES" && b.feedback() === "YES")) { sortVal++; }
+
+            if (a.functions().length > b.functions().length && (a.feedback() !== "YES" && b.feedback() !== "YES")) { sortVal--; }
+            if (a.functions().length < b.functions().length && (a.feedback() !== "YES" && b.feedback() !== "YES")) { sortVal++; }
+
+            // console.log(a.name() + " VS " + b.name() + ": " + sortVal);
+
+            return sortVal;
+        });
+    });
+
+    self.is_feedback_person_saved = function (feedback) {
+        return ko.utils.arrayFirst(self.feedback_persons(), function (item) {
+            return feedback.name === item.name();
+        });
+    };
+
+    self.load_alamos_feedback = function() {
+        var request = require('request');
+        request('https://apager-firemergency-2.appspot.com/fe2/feedback?dbId=' + self.feedback_fe2_id(), function (error, response, body) {
+            log.info(`Alamos Feedback Request | Status: ${response.statusCode}`);
+
+            if (response.statusCode === 200) {
+                var response_json = JSON.parse(body);
+                var lstOfFeedbacks = response_json.lstOfFeedbacks;
+
+                lstOfFeedbacks.forEach(function (feedback) {
+                    if (self.is_feedback_person_saved(feedback)) {
+                        // update
+                        log.debug(`${feedback.name} is already saved in feedback list. Updating entry`);
+
+                        ko.utils.arrayFirst(self.feedback_persons(), function (item) {
+                            if (feedback.name === item.name()) {
+                                item.feedback(feedback.state);
+                            }
+                        });
+                    } else {
+                        // new
+                        log.info(`Creating new feedback entry for ${feedback.name}`);
+                        let person = new Person(feedback.name, feedback.state);
+                        if(feedback.functions) {
+                            if (feedback.functions.includes(";")) {
+                                feedback.functions.split(";").forEach(item => {
+                                    person.functions.push(new Functioning(item, "badge-primary"));
+                                });
+                            } else {
+                                person.functions.push(new Functioning(feedback.functions, "badge-primary"));
+                            }
+                        }
+                        self.feedback_persons.push(person);
+                    }
+                })
+            }
+        })
+    };
+
+    self.get_function_count = function(fn, feedback) {
+        let count = 0;
+        let check;
+
+        if (feedback === "YES")
+            check = ["YES", "HERE"];
+        else if (feedback === "NO")
+            check = ["NO", "ABSENT"];
+        else
+            check = ["RECEIVED", "READ", "FREE"];
+
+        self.feedback_persons().forEach(item => {
+            item.functions().forEach(func => {
+                let function_name = func.name();
+
+                if (function_name === fn && check.includes(item.feedback())) {
+                    count++;
+                }
+            })
+        });
+
+        return count;
+    };
+
     self.get_visible_einheiten_sorted = ko.computed(() => {
         return self.get_einheiten_sorted().slice(0, settings.get("einsatz.showEinheitenLimit"));
     });
@@ -86,7 +202,7 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
         self.time_since_alarmierung(finalTime);
 
         if (minutes >= settings.get("einsatz.displayTime")) {
-            clearInterval(removeTimer);
+            self.stopTasks();
 
             // Trigger EinsatzRemove event
             em.emit('EinsatzRemove', self.id());
@@ -94,6 +210,20 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
             einsatzMonitorModel.einsaetze.splice(einsatzMonitorModel.einsaetze().indexOf(this), 1);
         }
     }, 500);
+
+    let getFeedbackTimer = window.setInterval(function () {
+        if (self.feedback_fe2_id() == null) {
+            log.info("No feedback ID found. Not requesting Alamos feedback.");
+            return;
+        }
+
+        self.load_alamos_feedback();
+    }, 5000);
+
+    self.stopTasks = function() {
+        clearInterval(removeTimer);
+        clearInterval(getFeedbackTimer);
+    };
 
     /* Google Maps Karten */
     let geocoder = new google.maps.Geocoder();
@@ -147,6 +277,41 @@ function Einsatz(id, stichwort, stichwort_color, description, alarmzeit, adresse
     self.distDuration = ko.computed(function () {
         return self.route_map().distance() + " - " + self.route_map().duration();
     });
+}
+
+function Person(name, feedback) {
+    let self = this;
+
+    self.name = ko.observable(name);
+    self.functions = ko.observableArray([]);
+    self.feedback = ko.observable(feedback);
+
+    self.get_feedback_color = ko.computed(function () {
+        if (self.feedback() === "YES")
+            return "bg-success";
+
+        if (self.feedback() === "NO")
+            return "bg-danger";
+
+        if (self.feedback() === "ABSENT")
+            return "bg-danger";
+
+        if (self.feedback() === "FREE")
+            return "bg-warning";
+
+        return "bg-secondary"
+    });
+
+    self.isHidden = function (widget, fb) {
+        return widget.extra_config.get('hide-' + fb.toLowerCase())()
+    }
+}
+
+function Functioning(name, color) {
+    let self = this;
+
+    self.name = ko.observable(name);
+    self.color = ko.observable(color);
 }
 
 ko.bindingHandlers.map = {

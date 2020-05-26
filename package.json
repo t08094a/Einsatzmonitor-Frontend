@@ -1,16 +1,17 @@
 {
   "name": "einsatzmonitor",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "build": "build",
     "build:win": "build --win",
     "build:linux": "build --linux",
     "publish": "build --win --linux -p always"
   },
   "devDependencies": {
     "electron": "^3.0.13",
-    "electron-builder": "^20.28.4"
+    "electron-builder": "^22.3.2"
   },
   "dependencies": {
     "@sentry/browser": "^5.4.3",
@@ -32,7 +33,10 @@
       {
         "from": "build/",
         "to": ".",
-        "filter": ["EinsatzMonitor.VisualElementsManifest.xml", "icon.png"]
+        "filter": [
+          "EinsatzMonitor.VisualElementsManifest.xml",
+          "icon.png"
+        ]
       }
     ],
     "win": {

@@ -103,3 +103,9 @@ h1, h2, h3, h4, h5, h6 {
 .window-buttons-wrapper:hover .buttons {
     opacity: 1;
 }
+
+.vert-center {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
