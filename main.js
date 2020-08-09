@@ -89,6 +89,9 @@ function createDefaultConfig() {
 
 
     setDefaultConfigValue("displayAlwaysOn", false);
+
+    setDefaultConfigValue("alamos.alarmInput.enabled", false);
+    setDefaultConfigValue("alamos.alarmInput.password", "");
 }
 
 function setDefaultConfigValue(key, value) {

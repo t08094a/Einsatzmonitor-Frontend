@@ -17,11 +17,15 @@
   "dependencies": {
     "@sentry/browser": "^5.4.3",
     "@sentry/electron": "^0.17.0",
+    "aes-ecb": "^1.3.10",
     "auto-launch": "^5.0.5",
     "chokidar": "^3.0.0",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.0.0",
     "electron-log": "^3.0.7",
     "electron-settings": "^3.2.0",
-    "electron-updater": "^4.0.6"
+    "electron-updater": "^4.0.6",
+    "ncrypt-js": "^2.0.0"
   },
   "build": {
     "productName": "EinsatzMonitor",

@@ -901,3 +901,53 @@ controlServer.on('connection', (sock) => {
         }
     });
 });
+
+var crypto = require('crypto');
+var aesEcb = require('aes-ecb');
+
+if (settings.get("alamos.alarmInput.enabled")) {
+    var alarmReceiver = net.createServer();
+
+    alarmReceiver.listen(10000, '0.0.0.0', () => {
+        log.info('AlarmReceiver TCP Server is running on port 10000.');
+    });
+
+    alarmReceiver.on('connection', (sock) => {
+        sock.setEncoding('utf8')
+        sock.on('data', function (data) {
+            sha256(settings.get("alamos.alarmInput.password")).then((passwordHash) => {
+                let encodedPassword = passwordHash.substring(0, 32);
+                let decryptedData = aesEcb.decrypt(encodedPassword, data.toString());
+
+                let finalData = decodeURIComponent(decodeURI(decryptedData.toString())).replaceAll('+', ' ');
+                let alarmJson = JSON.parse(finalData.substring(0, finalData.lastIndexOf("}") + 1));
+
+                let einsatz = {
+                    'id': 0,
+                    'stichwort': alarmJson['keyword'],
+                    'description': alarmJson['keyword_description'],
+                    'adresse': alarmJson['location_dest'],
+                    'alarmzeit_seconds': alarmJson['timestamp'] / 1000,
+                    'einheiten': [],
+                    'zusatzinfos': [],
+                }
+
+                display_einsatz(einsatz);
+            });
+        });
+    });
+}
+
+async function sha256(message) {
+    const msgBuffer = new TextEncoder('utf-8').encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+}
+
+
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.split(search).join(replacement);
+};

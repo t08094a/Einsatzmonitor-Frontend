@@ -18,6 +18,7 @@ function SettingsModel() {
         "motionDetector.enabled": "Boolean",
         "displayAlwaysOn": "Boolean",
         "einsatz.fetch": "FetchType",
+        "alamos.alarmInput.enabled": "Boolean",
     };
 
     self.get_type = (key) => {
