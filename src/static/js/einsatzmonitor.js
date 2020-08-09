@@ -885,11 +885,11 @@ var net = require('net');
 
 var controlServer = net.createServer();
 
-controlServer.listen(10000, '0.0.0.0', () => {
-    log.info('Control TCP Server is running on port 10000.');
+controlServer.listen(11000, '0.0.0.0', () => {
+    log.info('Control TCP Server is running on port 11000.');
 });
 
-controlServer.on('connection', function (sock) {
+controlServer.on('connection', (sock) => {
     sock.on('data', function (data) {
         let parsedData = JSON.parse(data);
 
