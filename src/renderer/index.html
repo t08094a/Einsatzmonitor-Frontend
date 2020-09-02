@@ -1,0 +1,305 @@
+<!doctype html>
+<!--suppress NonAsciiCharacters -->
+<html lang="de" class="h-100">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Feuerwehr Einsatzmonitor</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./static/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap colorpicker -->
+    <link href="./static/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+
+    <!-- noUiSlider -->
+    <link href="./static/css/nouislider.min.css" rel="stylesheet">
+    <link href="./static/css/jquery-ui.css" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link href="./static/fontawesome-pro-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
+
+    <!-- toastr -->
+    <link href="./static/css/toastr.min.css" rel="stylesheet">
+
+    <!-- fonts -->
+    <link href="./static/css/fonts.css" rel="stylesheet">
+
+    <!-- gridster -->
+    <link href="./static/css/gridster.css" rel="stylesheet">
+
+    <!-- einsatzmonitor -->
+    <link href="./static/css/einsatzmonitor.css" rel="stylesheet">
+</head>
+
+<body class="h-100">
+
+<template id="gridstack-template">
+    <li data-bind="attr: { 'id': id, 'data-row': dataRow, 'data-col': dataCol,'data-sizex': datasizex, 'data-sizey': datasizey }" class='gs-w' style='list-style-type: none; background:#99FF99;'>
+        <div data-bind="click: removeSelected" style='float:right; cursor: pointer'>X</div>
+        <div data-bind='if: state() === "Minimized"'><span data-bind="style:{ 'backgroundColor': color}">-</span></div>
+        <div data-bind='if: state() === "Maximized"'><span data-bind="text: value"></span></div>
+    </li>
+</template>
+
+<div class="template-output"></div>
+
+
+<div class="container d-flex flex-column h-100 px-0">
+    <div class="gridster-test">
+        <div class="gridster" id="gridsterInfo">
+            <ul class="m-0" data-bind="template: { name: board().templateName, foreach: board().widgets, as: 'widget', afterAdd: board().addGridster, beforeRemove: board().removeGridster }"></ul>
+        </div>
+    </div>
+
+    <div id="addWidgetModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Widget hinzufügen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>Info-Widgets</h4>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoClock'><i class="fal fa-plus"></i> Uhr</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoText'><i class="fal fa-plus"></i> Text</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoNews'><i class="fal fa-plus"></i> News</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoDienste'><i class="fal fa-plus"></i> Dienste</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoOperations'><i class="fal fa-plus"></i> Einsätze</button>
+
+                    <!-- <button class="btn btn-outline-success mt-1" data-bind='click: serialize'> Serialize </button> -->
+
+                    <h4 class="mt-5">Einsatz-Widgets</h4>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationStichwort'><i class="fal fa-plus"></i> Stichwort</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationAddress'><i class="fal fa-plus"></i> Adresse</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationAdditionalInformation'><i class="fal fa-plus"></i> Zusatzinfos</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationRouteInformation'><i class="fal fa-plus"></i> Route - Informationen</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationUnits'><i class="fal fa-plus"></i> Einheiten</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationFeedback'><i class="fal fa-plus"></i> Rückmeldungen</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationFeedbackCount'><i class="fal fa-plus"></i> Anzahl Rückmeldungen</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationAlarmMinutes'><i class="fal fa-plus"></i> Minuten seit Alarmierung</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationOverviewMap'><i class="fal fa-plus"></i> Karte - Übersicht</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationRouteMap'><i class="fal fa-plus"></i> Karte - Anfahrtsweg</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bind='click: board().openSettingsMenuModal' data-dismiss="modal">Zurück</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsMenuModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Einstellungen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h4>Funktionen</h4>
+
+                    <label for="inputAlamosDbId"><strong>Alamos Feedback-ID für Testeinsatz</strong></label>
+                    <input type="text" class="form-control mb-2" id="inputAlamosDbId" data-bind="textInput: testeinsatz_fe2_id">
+
+                    <label for="inputAdresse"><strong>Adresse für Testeinsatz</strong></label>
+                    <input type="text" class="form-control mb-2" id="inputAdresse" data-bind="textInput: testeinsatz_adresse">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-warning btn-block" data-bind='click: addTesteinsatz'><i class="fal fa-play"></i> Testeinsatz starten</button>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-outline-danger btn-block" data-bind='click: clearOperations'><i class="fal fa-stop"></i> Einsatz beenden</button>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-5">Ansicht</h4>
+                    <button class="btn btn-success" data-bind='click: save'><i class="fal fa-save"></i> Widgets dieser Ansicht speichern</button>
+                    <button class="btn btn-success mt-2" data-bind='click: load'><i class="fal fa-download"></i> Widgets dieser Ansicht laden</button>
+
+                    <h4 class="mt-5">Widgets</h4>
+                    <button class="btn btn-success" data-bind='click: board().openWidgetAddModal' data-dismiss="modal"><i class="fal fa-plus"></i> Widget hinzufügen</button>
+                    <button class="btn btn-danger" data-bind='click: clearWidgets'><i class="fal fa-trash"></i> Alle Widgets entfernen</button>
+
+                    <h4 class="mt-5">EinsatzMonitor Einstellungen</h4>
+                    <button id="settings-button" class="btn btn-secondary"><i class="fal fa-cogs"></i> Einstellungen öffnen</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="window-buttons-wrapper version-info mr-2 mb-2 p-1" style="position:fixed; right:0; bottom:0;">
+        <small id="app-version" class="text-muted text-white">EinsatzMonitor V0.0.0 Beta</small>
+    </div>
+
+    <div class="window-buttons-wrapper version-info mr-2 mb-2 p-1" style="position:fixed; bottom:0; z-index: 1000;">
+        <div class="buttons">
+            <button class="btn btn-outline-secondary mr-2" style="padding: 0 4px;" data-bind='click: board().openSettingsMenuModal' data-toggle="tooltip" data-placement="top" title="Einstellungen"><i class="fal fa-cogs"></i></button>
+        </div>
+    </div>
+
+    <div class="window-buttons-wrapper mr-1 p-1 close-button-wrapper" style="position:fixed; right:0; top:0; z-index: 1000;">
+        <div class="buttons">
+            <button id="console-button" class="btn btn-sm btn-outline-primary console-button" style="padding: 0 5px; width: 28px;"><i class="far fa-terminal"></i></button>
+            <button id="toolbar-button" class="btn btn-sm btn-outline-primary toolbar-button" style="padding: 0 5px; width: 28px;"><i class="fal fa-wrench"></i></button>
+            <button id="fullscreen-button" class="btn btn-sm btn-outline-primary fullscreen-button" style="padding: 0 5px; width: 28px;"><i class="fal fa-window-restore"></i></button>
+            <button id="close-button" class="btn btn-sm btn-outline-danger close-button" style="padding: 0 5px; width: 28px;"><i class="fal fa-times"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- Insert this line above script imports  -->
+<script>
+    if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+    }
+
+    const settings = require('electron-settings');
+    const log = require("electron-log");
+</script>
+
+<script src="./static/js/jquery.min.js"></script>
+<script type='text/javascript' src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> <!-- need to be loaded before bootstrap -->
+
+<script src="./static/js/popper.min.js"></script>
+<script src="./static/js/bootstrap.min.js"></script>
+
+<!-- bootstrap colorpicker -->
+<script src="./static/js/bootstrap-colorpicker.min.js"></script>
+
+<!-- knockoutjs -->
+<script src="./static/js/knockout.min.js"></script>
+
+<script type='text/javascript' src="./static/js/ko.observableDictionary.js"></script>
+
+<!-- gridster.js -->
+<script src="./static/js/gridster.with-extras.js"></script>
+
+<!-- sentry -->
+<!-- Todo: move sentry code to the top -->
+<script>
+    if (settings.get("sentry.enabled")) {
+        let Sentry = require('@sentry/browser');
+        Sentry.init({
+            dsn: settings.get("sentry.dsn")
+        });
+    }
+</script>
+
+<!-- google maps -->
+<script>
+    function loadMaps(doLoadBundle) {
+        let script = document.createElement('script');
+        script.id = "googleMapsAPI";
+        script.type = 'text/javascript';
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=' + settings.get("googleMapsKey") + '&language=de&region=de';
+        document.body.appendChild(script);
+        log.info("Loaded Google Maps API");
+
+        if (doLoadBundle)
+            loadBundle();
+    }
+
+    function isDev() {
+        return process.mainModule.filename.indexOf('app.asar') === -1;
+    }
+
+    function loadBundle() {
+        let scriptSrc = isDev() ? 'http://localhost:8080/src/renderer/dist/ui-bundle.js' : './dist/ui-bundle.js';
+
+        let script = document.createElement('script');
+        script.id = "appBundle";
+        script.type = 'text/javascript';
+        script.src = scriptSrc;
+        document.body.appendChild(script);
+        log.info("Loaded javascript bundle")
+    }
+
+    window.onload = () => {
+        loadMaps(true);
+    };
+
+    let refreshTimer = window.setInterval(function () {
+        let oldScript = document.getElementById("googleMapsAPI");
+        oldScript.parentNode.removeChild(oldScript);
+        log.info("Removed old Google Maps API Javascript code");
+        loadMaps(false);
+    }, 1000 * 60 * 60 * 23);
+
+</script>
+
+<!-- settings menu -->
+<script>
+    const button = document.getElementById('settings-button');
+    button.addEventListener('click', () => {
+        createBrowserWindow();
+    });
+
+    function createBrowserWindow() {
+        const remote = require('electron').remote;
+        const BrowserWindow = remote.BrowserWindow;
+        const win = new BrowserWindow({
+            height: 900,
+            width: 900,
+            webPreferences: {
+                nodeIntegration: true
+            },
+        });
+
+        win.loadFile('src/settings.html');
+    }
+</script>
+
+<!-- window buttons -->
+<script>
+    const close_button = document.getElementById('close-button');
+    const fullscreen_button = document.getElementById('fullscreen-button');
+    const toolbar_button = document.getElementById('toolbar-button');
+    const console_button = document.getElementById('console-button');
+    let win = require('electron').remote.getCurrentWindow();
+
+    close_button.addEventListener('click', () => {
+        win.close();
+    });
+
+    fullscreen_button.addEventListener('click', () => {
+        win.setFullScreen(!win.isFullScreen());
+    });
+
+    toolbar_button.addEventListener('click', () => {
+        win.setMenuBarVisibility(!win.isMenuBarVisible());
+    });
+
+    console_button.addEventListener('click', () => {
+        win.webContents.openDevTools();
+    });
+
+    // Tooltips
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+
+<!-- version display -->
+<script>
+    const version_container = document.getElementById('app-version');
+    const appVersion = window.require('electron').remote.app.getVersion();
+    const versionString = `EinsatzMonitor V${appVersion} Beta`;
+
+    version_container.innerHTML = versionString;
+</script>
+
+<!-- Insert this line after script imports -->
+<script>if (window.module) module = window.module;</script>
+</body>
+</html>

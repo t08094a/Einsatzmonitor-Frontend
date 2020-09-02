@@ -1,0 +1,58 @@
+<template id="info-dienste-widget">
+    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }, style: { 'background-color': widget.extra_config.get('background-color'), 'padding-left': widget.extra_config.get('padding-x')() + 'px', 'padding-right': widget.extra_config.get('padding-x')() + 'px' }"
+        class='gs-w' style='list-style-type: none; overflow: hidden;'>
+        <div data-bind="template: { name: 'widget-buttons' }"></div>
+
+        <h2 class="text-white" data-bind="text: widget.extra_config.get('title')"></h2>
+
+        <div data-bind="foreach: $root.info().sortedDienste()">
+            <div class="dienst-wrapper bg-white shadow mb-2 custom-shadow" data-bind="css: { 'mb-3': is_today() }, style: { 'color': widget.extra_config.get('text-color') }">
+                <table class="dienstplan-table" style="width: 100%">
+                    <tr class="dienst-entry" data-bind="css: { 'dienst-today': is_today() }">
+                        <td>
+                            <span class="dienst-date pull-left bg-info">
+                                <span class="dienst-date-month text-center text-white" data-bind="text: startDate().toLocaleString('de-de', { month: 'long' }).substring(0, 3)"></span>
+                                <span class="dienst-date-day text-center text-white" data-bind="text: startDate().getDate()"></span>
+                            </span>
+                        </td>
+                        <td style="max-width: 0;white-space: nowrap; text-overflow: ellipsis;overflow: hidden;">
+                            <span class="pl-2">
+                                <i style="font-size: 1.1rem;" class="far fa-clock" aria-hidden="true"></i> <span style="font-size: 1.1rem;" data-bind="text: startUhrzeit()"></span>
+                                <strong style="font-size: 1.1rem;"><i class="far fa-clipboard-list pl-2"></i> <span data-bind="text: title()"></span></strong>
+                                <span class="ml-2" data-bind="text: description()"></span>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Widget - Dienste</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="infoDiensteWidgetTextTitle" class="mb-1"><Strong>Titel</Strong></label>
+                            <input type="text" class="form-control" id="infoDiensteWidgetTextTitle" aria-describedby="infoDiensteWidgetTextTitleHelp" data-bind="value: widget.extra_config.get('title'), valueUpdate: 'afterkeydown'">
+                            <small id="infoDiensteWidgetTextTitleHelp" class="form-text text-muted">Titel, der über den Diensten angezeigt werden soll.</small>
+
+                            <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'padding-x', max: '100',  title: 'Padding x', description: 'Abstand links und rechts: ' } }"></div>
+
+                            <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
+                            <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</template>

@@ -1,0 +1,23 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es2015",
+    "moduleResolution": "node",
+    "pretty": true,
+    "newLine": "LF",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,  // Todo: fix
+    "strictNullChecks": false,  // todo: fix
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "jsx": "preserve",
+    "noImplicitAny": false   // Todo: fix
+  },
+  "exclude": [
+    "node_modules",
+    "src/renderer"
+  ]
+}

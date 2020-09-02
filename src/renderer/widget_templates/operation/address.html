@@ -1,0 +1,40 @@
+<template id="operation-address">
+    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }, style: { 'background-color': widget.extra_config.get('background-color') }" class='gs-w'
+        style='list-style-type: none; overflow: hidden;'>
+        <div data-bind="template: { name: 'widget-buttons' }"></div>
+
+        <!-- ko if: $root.get_latest_einsatz() -->
+        <div class="text-center vert-center" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }"> <!-- needs a surrounding div for size calculation because of padding -->
+            <h2 class="m-0 fitty-element">
+                <span><i class="fal fa-map-marker-alt"></i></span>
+                <span data-bind="text: $root.get_latest_einsatz().adresse"></span>
+                <span data-bind="text: $root.get_latest_einsatz().objekt"></span>
+            </h2>
+        </div>
+        <!-- /ko -->
+
+        <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Widget - Adresse</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'text-fitty', description: 'Textgröße automatisch anpassen' } }"></div>
+
+                            <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
+                            <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</template>

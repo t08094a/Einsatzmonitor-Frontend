@@ -1,0 +1,44 @@
+<template id="text-widget">
+    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }, style: { 'background-color': widget.extra_config.get('background-color') }, css: { 'gs-shadow': widget.extra_config.get('shadow') }"
+        class='gs-w' style='list-style-type: none'>
+        <div data-bind="template: { name: 'widget-buttons' }"></div>
+
+        <h1 class="big-text m-0"
+            data-bind="text: widget.extra_config.get('text-title'), style: { 'color': widget.extra_config.get('text-color'), 'font-size': widget.extra_config.get('text-size')() + 'px' }, class: 'text-' + widget.config.get('align')(), css: { 'vert-center': widget.extra_config.get('vert-center') }"></h1>
+
+        <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Widget - Text</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="widget-slider" data-field="text-size"></div>
+                            <p data-bind="text: widget.extra_config.get('text-size')() + 'px'"></p>
+
+                            <label for="textWidgetTextTitle" class="mb-1"><Strong>Text</Strong></label>
+                            <input type="text" class="form-control" id="textWidgetTextTitle" aria-describedby="textWidgetTextTitleHelp" data-bind="value: widget.extra_config.get('text-title'), valueUpdate: 'afterkeydown'">
+                            <small id="textWidgetTextTitleHelp" class="form-text text-muted">Text, welcher angezeigt werden soll.</small>
+
+                            <label for="textWidgetAlignment" class="mb-1 mt-3"><Strong>Ausrichtung</Strong></label>
+                            <select class="form-control" id="textWidgetAlignment" data-bind="options: widget.availableAlignments, value: widget.config.get('align')"></select>
+
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'shadow', description: 'Schatten im Hintergrund' } }"></div>
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'vert-center', description: 'Vertikal zentrieren' } }"></div>
+
+                            <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
+                            <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</template>

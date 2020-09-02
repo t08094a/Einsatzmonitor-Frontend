@@ -1,0 +1,60 @@
+<template id="operation-feedback-count">
+    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }, style: { 'background-color': widget.extra_config.get('background-color') }" class='gs-w'
+        style='list-style-type: none; overflow: hidden;'>
+        <div data-bind="template: { name: 'widget-buttons' }"></div>
+
+        <div style="position: absolute; left: 0; /*bottom: 0;*/ z-index: -1000;" class="ml-1 mb-1 mt-1">
+            <span class="badge badge-primary p-1 pl-2 pr-2" style="font-size: 18px;" data-bind="text: widget.extra_config.get('function')"></span>
+        </div>
+
+        <!-- ko if: $root.get_latest_einsatz() -->
+        <div class="einsatz-einheiten ml-0 mr-0" style="position: absolute; bottom: 0; left: 0; right: 0;"
+             data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }, css: { 'vert-center': widget.extra_config.get('vert-center') }">
+            <div class="pl-0" style="/*position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%);*/">
+                <div class="einsatz-einheit">
+                    <div class=""> <!-- needs a surrounding div for size calculation because of padding -->
+                        <h2 class="text-white m-0" style="line-height: 0.9" data-maxfitty="100" data-bind="style: {'font-size': widget.extra_config.get('text-size')() + 'px', class: 'text-' + widget.config.get('align')()}">
+                            <span data-bind="text: $root.get_latest_einsatz().get_function_count(widget.extra_config.get('function')(), 'YES')" class="text-success">20</span>
+                            /
+                            <span data-bind="text: $root.get_latest_einsatz().get_function_count(widget.extra_config.get('function')(), 'NO')" class="text-danger">10</span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Widget - Anzahl an Rückmeldungen</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="feedbackCountWidgetFunktion" class="mb-1"><Strong>Funktion</Strong></label>
+                            <input type="text" class="form-control" id="feedbackCountWidgetFunktion" aria-describedby="feedbackCountWidgetFunktionHelp" data-bind="value: widget.extra_config.get('function'), valueUpdate: 'afterkeydown'">
+                            <small id="feedbackCountWidgetFunktionHelp" class="form-text text-muted">Gibt an, für welche Funktion die Anazhl an Rückmeldungen dargestellt werden soll.</small>
+
+                            <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'text-size', max: '300', title: 'Textgröße', description: 'Textgröße: ' } }"></div>
+
+                            <label for="feedbackCountWidgetAlignment" class="mb-1 mt-3"><Strong>Ausrichtung</Strong></label>
+                            <select class="form-control" id="feedbackCountWidgetAlignment" data-bind="options: widget.availableAlignments, value: widget.config.get('align')"></select>
+
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'vert-center', description: 'Vertikal zentrieren' } }"></div>
+
+                            <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
+                            <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</template>
