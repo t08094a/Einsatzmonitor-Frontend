@@ -11,7 +11,8 @@
     "dist:linux": "electron-builder --linux",
     "dev:electron_old": "webpack --config webpack.config.js --mode development && electron .",
     "dev:webpack": "webpack-dev-server --progress --colors --hot --inline",
-    "dev:electron": "electron ."
+    "dev:electron": "electron .",
+    "dist:webpack": "webpack"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
