@@ -11,8 +11,12 @@ import {debug, warn, info, error} from "electron-log";
 import moment from "moment";
 import fitty from "fitty";
 import toastr from "toastr";
-import Widget, {widgetTypes} from "../common/models/Widget";
+import Widget, {widgetTypes} from "./widgets/Widget";
 import {em} from "../common/common";
+import InfoNewsWidget from "./widgets/InfoNewsWidget";
+import InfoOperationWidget from "./widgets/InfoOperationWidget";
+import InfoAppointmentWidget from "./widgets/InfoAppointmentWidget";
+import dynamicWidget from "./widgets/DynamicWidget";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
@@ -137,15 +141,15 @@ class EinsatzMonitorModel {
     };
 
     addInfoNews() {
-        this.board().widgets.push(new Widget(this.board(), "info-news-widget", this.getCurrentWidgetType()));
+        this.board().widgets.push(new InfoNewsWidget(this.board(), "info-news-widget", this.getCurrentWidgetType()));
     };
 
     addInfoDienste() {
-        this.board().widgets.push(new Widget(this.board(), "info-dienste-widget", this.getCurrentWidgetType()));
+        this.board().widgets.push(new InfoAppointmentWidget(this.board(), "info-dienste-widget", this.getCurrentWidgetType()));
     };
 
     addInfoOperations() {
-        this.board().widgets.push(new Widget(this.board(), "info-operations-widget", this.getCurrentWidgetType()));
+        this.board().widgets.push(new InfoOperationWidget(this.board(), "info-operations-widget", this.getCurrentWidgetType()));
     };
 
     // Operation
@@ -228,7 +232,8 @@ class EinsatzMonitorModel {
             jsonParsed.forEach((widget: any) => {
                 debug(`View | Loaded widget: `, widget);
 
-                let wdg = new Widget(this.board(), widget.config.template, widget.config.type, widget['row'], widget['col'], widget['size_x'], widget['size_y']);
+                let WidgetClass = dynamicWidget(widget.config.template);
+                let wdg = new WidgetClass(this.board(), widget.config.template, widget.config.type, widget['row'], widget['col'], widget['size_x'], widget['size_y']);
 
                 for (let key in widget.config) {
                     if (widget.config.hasOwnProperty(key)) {
@@ -243,6 +248,8 @@ class EinsatzMonitorModel {
                         wdg.extra_config.push(key, widget.extra_config[key])
                     }
                 }
+
+                wdg.loaded();
 
                 this.board().widgets.push(wdg);
             });
@@ -264,6 +271,11 @@ class EinsatzMonitorModel {
         //    });
         //}
         //self.board().widgets.removeAll();
+
+        this.board().widgets().forEach((wdg: any) => {
+            wdg.destroy();
+        });
+
         this.board().gridsterInfo.remove_all_widgets();
         this.board().widgets.removeAll();
     };
@@ -370,6 +382,12 @@ export class BoardViewModel {
 
     get_by_id(widgets: any, id: any) {
         return ko.utils.arrayFirst(widgets, (item: any) => {
+            return id === item.id;
+        });
+    };
+
+    getWidgetById(id: any) {
+        return ko.utils.arrayFirst(this.widgets(), (item: any) => {
             return id === item.id;
         });
     };

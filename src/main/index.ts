@@ -64,15 +64,6 @@ function createDefaultConfig() {
 
     setDefaultConfigValue("info.httpFetchInterval", 30);
 
-    setDefaultConfigValue("info.news.show", true);
-    setDefaultConfigValue("info.news.url", "http://127.0.0.1:8000/api/info/news/?auth_token={api_key}&limit=2");
-
-    setDefaultConfigValue("info.einsaetze.show", true);
-    setDefaultConfigValue("info.einsaetze.url", "http://127.0.0.1:8000/api/info/einsaetze/?auth_token={api_key}&limit=9");
-
-    setDefaultConfigValue("info.dienste.show", true);
-    setDefaultConfigValue("info.dienste.url", "http://127.0.0.1:8000/api/info/dienste/?auth_token={api_key}&limit=10");
-
 
     setDefaultConfigValue("sentry.enabled", false);
     setDefaultConfigValue("sentry.dsn", "https://dsn@sentry.io/123456");

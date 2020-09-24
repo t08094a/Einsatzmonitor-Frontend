@@ -5,7 +5,8 @@
 
         <h2 class="text-white" data-bind="text: widget.extra_config.get('title')"></h2>
 
-        <div data-bind="foreach: $root.info().sortedEinsaetze()">
+        <!-- ko if: $root.board().getWidgetById(id) -->
+        <div data-bind="foreach: $root.board().getWidgetById(id).sortedOperations()">
             <div class="einsaetze-wrapper bg-white mb-2 custom-shadow" style="border: 1px solid #c9c9c9">
                 <a data-bind="style: { 'border-left-color': color(), 'color': widget.extra_config.get('text-color')} " class="list-group-item p-2" style="border-left: 6px solid; border-radius: 0; border-top: 0; border-bottom: 0;">
                     <div class="pl-1 mb-0">
@@ -17,6 +18,7 @@
                 </a>
             </div>
         </div>
+        <!-- /ko -->
 
         <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -32,6 +34,10 @@
                             <label for="infoOperationsWidgetTextTitle" class="mb-1"><Strong>Titel</Strong></label>
                             <input type="text" class="form-control" id="infoOperationsWidgetTextTitle" aria-describedby="infoOperationsWidgetTextTitleHelp" data-bind="value: widget.extra_config.get('title'), valueUpdate: 'afterkeydown'">
                             <small id="infoOperationsWidgetTextTitleHelp" class="form-text text-muted">Titel, der über den Einsätzen angezeigt werden soll.</small>
+
+                            <label for="infoOperationsWidgetUrl" class="mb-1 mt-3"><Strong>URL</Strong></label>
+                            <input type="text" class="form-control" id="infoOperationsWidgetUrl" aria-describedby="infoOperationsWidgetUrlHelp" data-bind="value: widget.extra_config.get('url'), valueUpdate: 'afterkeydown'">
+                            <small id="infoOperationsWidgetUrlHelp" class="form-text text-muted">Schnittstelle zum Abrufen der Einsätze</small>
 
                             <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'padding-x', max: '100', title: 'Padding x', description: 'Abstand links und rechts: ' } }"></div>
 

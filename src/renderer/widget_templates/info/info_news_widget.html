@@ -5,7 +5,8 @@
 
         <h2 class="text-white" data-bind="text: widget.extra_config.get('title')"></h2>
 
-        <div data-bind="foreach: $root.info().sortedNews()">
+        <!-- ko if: $root.board().getWidgetById(id) -->
+        <div data-bind="foreach: $root.board().getWidgetById(id).sortedNews()">
             <div class="info-card news-wrapper bg-white custom-shadow mb-3">
                 <div class="card" style="border: 0; border-radius: 0" data-bind="style: { 'color': widget.extra_config.get('text-color') }">
                     <div class="row no-gutters">
@@ -27,6 +28,7 @@
                 </div>
             </div>
         </div>
+        <!-- /ko -->
 
         <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -42,6 +44,10 @@
                             <label for="infoNewsWidgetTextTitle" class="mb-1"><Strong>Titel</Strong></label>
                             <input type="text" class="form-control" id="infoNewsWidgetTextTitle" aria-describedby="infoNewsWidgetTextTitleHelp" data-bind="value: widget.extra_config.get('title'), valueUpdate: 'afterkeydown'">
                             <small id="infoNewsWidgetTextTitleHelp" class="form-text text-muted">Titel, der über den News angezeigt werden soll.</small>
+
+                            <label for="infoNewsWidgetUrl" class="mb-1 mt-3"><Strong>URL</Strong></label>
+                            <input type="text" class="form-control" id="infoNewsWidgetUrl" aria-describedby="infoNewsWidgetUrlHelp" data-bind="value: widget.extra_config.get('url'), valueUpdate: 'afterkeydown'">
+                            <small id="infoNewsWidgetUrlHelp" class="form-text text-muted">Schnittstelle zum Abrufen der News</small>
 
                             <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'padding-x', max: '100', title: 'Padding x', description: 'Abstand links und rechts: ' } }"></div>
 

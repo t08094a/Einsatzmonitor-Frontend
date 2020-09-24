@@ -1,8 +1,6 @@
-// Todo: check
-
 import {Observable, ObservableArray} from "knockout";
 import fitty from "fitty";
-import {BoardViewModel} from "../../renderer/einsatzmonitor";
+import {BoardViewModel} from "../einsatzmonitor";
 
 const ko = require('knockout');
 
@@ -24,16 +22,10 @@ class Widget {
 
     removeSelected = () => {
         this.board.removeWidget(this);
+        this.destroy();
     };
 
-    // config = test.observableDictionary({
-    //     template: template_name,
-    //     type: type,
-    //     align: 'left'
-    // });
-
     config: any;
-
     extra_config: any = ko.observableDictionary();
 
     edit = () => {
@@ -90,6 +82,14 @@ class Widget {
         }
     };
 
+    loaded() {
+
+    }
+
+    destroy() {
+
+    }
+
     constructor(board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
         this.board = board;
         this.id = ids++;
@@ -109,11 +109,5 @@ class Widget {
         this.availableAlignments = ko.observableArray(['left', 'center', 'right']);
     }
 }
-
-// class ClockWidget extends Widget {
-//     constructor(row = 0, col = 0, x = 2, y = 6)  {
-//         super("clock-widget", widgetTypes.INFO, row, col, x, y);
-//     }
-// }
 
 export default Widget;
