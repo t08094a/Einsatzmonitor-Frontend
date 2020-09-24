@@ -1,8 +1,3 @@
-/*----------------------------------------------------------------------*/
-/* View Model
-/*----------------------------------------------------------------------*/
-
-import Info from "../common/models/info";
 import {Computed, Observable, ObservableArray} from 'knockout';
 const ko = require('knockout');
 
@@ -17,6 +12,7 @@ import InfoNewsWidget from "./widgets/InfoNewsWidget";
 import InfoOperationWidget from "./widgets/InfoOperationWidget";
 import InfoAppointmentWidget from "./widgets/InfoAppointmentWidget";
 import dynamicWidget from "./widgets/DynamicWidget";
+import Info from "../common/models/Info";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
