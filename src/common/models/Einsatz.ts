@@ -3,7 +3,7 @@ import Person from './Person';
 import Functioning from './Functioning';
 import {debug, info} from "electron-log";
 import moment from "moment";
-import {em, str_pad_left} from "../common";
+import {alamosFeedbackUrl, em, str_pad_left} from "../common";
 import settings from "electron-settings";
 
 const ko = require('knockout');
@@ -145,7 +145,7 @@ class Einsatz {
 
     load_alamos_feedback = () => {
         var request = require('request');
-        request('https://apager-firemergency-2.appspot.com/fe2/feedback?dbId=' + this.feedback_fe2_id(), (error: any, response: any, body: any) => {
+        request(alamosFeedbackUrl(this.feedback_fe2_id()), (error: any, response: any, body: any) => {
             info(`Alamos Feedback Request | Status: ${response.statusCode}`);
 
             if (response.statusCode === 200) {

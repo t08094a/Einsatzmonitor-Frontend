@@ -45,4 +45,6 @@ export async function sha256(message: any) {
 const emitter = require('events').EventEmitter;
 export const em = new emitter();
 
+export const alamosFeedbackUrl = (dbId: string) => `https://apager-firemergency-2.appspot.com/fe2/feedback?dbId=${dbId}`;
+
 export default {}
