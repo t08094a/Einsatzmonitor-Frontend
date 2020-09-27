@@ -1,5 +1,5 @@
 import settings from "electron-settings";
-import EinsatzMonitorModel from "./einsatzmonitor";
+import EinsatzMonitorModel from "./EinsatzMonitor";
 import DisplayManager from "./DisplayManager";
 import AlarmReceiverWebsocket from "./AlarmReceiverWebsocket";
 import AlarmReceiverHttp from "./AlarmReceiverHttp";

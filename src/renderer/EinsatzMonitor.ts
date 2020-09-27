@@ -8,11 +8,11 @@ import fitty from "fitty";
 import toastr from "toastr";
 import Widget, {widgetTypes} from "./widgets/Widget";
 import {em} from "../common/common";
-import InfoNewsWidget from "./widgets/InfoNewsWidget";
-import InfoOperationWidget from "./widgets/InfoOperationWidget";
-import InfoAppointmentWidget from "./widgets/InfoAppointmentWidget";
+import InfoNewsWidget from "./widgets/info/InfoNewsWidget";
+import InfoOperationWidget from "./widgets/info/InfoOperationWidget";
+import InfoAppointmentWidget from "./widgets/info/InfoAppointmentWidget";
 import dynamicWidget from "./widgets/DynamicWidget";
-import ClockWidget from "./widgets/ClockWidget";
+import ClockWidget from "./widgets/info/ClockWidget";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 

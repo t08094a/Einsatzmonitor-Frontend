@@ -1,11 +1,11 @@
-import Widget from "./Widget";
+import Widget from "../Widget";
 
 const ko = require('knockout');
 import {Computed, ObservableArray} from "knockout";
 import axios from "axios";
 import settings from "electron-settings";
-import {axiosConfigParams, updateModel} from "../../common/common";
-import InfoEinsatz from "../../common/models/InfoEinsatz";
+import {axiosConfigParams, updateModel} from "../../../common/common";
+import InfoEinsatz from "../../../common/models/InfoEinsatz";
 import {info} from "electron-log";
 
 class InfoOperationWidget extends Widget {

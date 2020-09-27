@@ -1,6 +1,6 @@
-import Widget from "./Widget";
+import Widget from "../Widget";
 import {Computed, Observable} from "knockout";
-import {str_pad_left} from "../../common/common";
+import {str_pad_left} from "../../../common/common";
 
 const ko = require('knockout');
 

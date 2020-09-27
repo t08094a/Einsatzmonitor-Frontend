@@ -1,4 +1,4 @@
-import EinsatzMonitorModel from "./einsatzmonitor";
+import EinsatzMonitorModel from "./EinsatzMonitor";
 import axios from "axios";
 import settings from "electron-settings";
 import toastr from "toastr";

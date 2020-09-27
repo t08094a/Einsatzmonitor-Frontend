@@ -2,7 +2,7 @@ import ReconnectingWebSocket from "reconnectingwebsocket";
 import settings from "electron-settings";
 import {error, info} from "electron-log";
 import toastr from "toastr";
-import EinsatzMonitorModel from "./einsatzmonitor";
+import EinsatzMonitorModel from "./EinsatzMonitor";
 
 class AlarmReceiverWebsocket {
     einsatzMonitorModel: EinsatzMonitorModel;

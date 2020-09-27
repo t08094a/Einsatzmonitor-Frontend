@@ -1,6 +1,6 @@
 import {info} from "electron-log";
 import settings from "electron-settings";
-import EinsatzMonitorModel from "./einsatzmonitor";
+import EinsatzMonitorModel from "./EinsatzMonitor";
 import {em, execute} from "../common/common";
 
 const ko = require('knockout');

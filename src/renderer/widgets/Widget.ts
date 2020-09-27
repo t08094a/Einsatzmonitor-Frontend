@@ -1,6 +1,6 @@
 import {Observable, ObservableArray} from "knockout";
 import fitty from "fitty";
-import {BoardViewModel} from "../einsatzmonitor";
+import {BoardViewModel} from "../EinsatzMonitor";
 
 const ko = require('knockout');
 

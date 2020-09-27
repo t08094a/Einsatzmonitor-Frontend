@@ -1,8 +1,8 @@
-import InfoNewsWidget from "./InfoNewsWidget";
-import InfoAppointmentWidget from "./InfoAppointmentWidget";
-import InfoOperationWidget from "./InfoOperationWidget";
 import Widget from "./Widget";
-import ClockWidget from "./ClockWidget";
+import InfoNewsWidget from "./info/InfoNewsWidget";
+import InfoAppointmentWidget from "./info/InfoAppointmentWidget";
+import InfoOperationWidget from "./info/InfoOperationWidget";
+import ClockWidget from "./info/ClockWidget";
 
 type tClassMapping = {
     [key: string]: any

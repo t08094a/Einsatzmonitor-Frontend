@@ -1,4 +1,4 @@
-import EinsatzMonitorModel from "./einsatzmonitor";
+import EinsatzMonitorModel from "./EinsatzMonitor";
 import {info} from "electron-log";
 import settings from "electron-settings";
 import {replaceAll, sha256} from "../common/common";
