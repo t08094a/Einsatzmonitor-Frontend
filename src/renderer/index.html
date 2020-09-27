@@ -202,12 +202,15 @@
         let script = document.createElement('script');
         script.id = "googleMapsAPI";
         script.type = 'text/javascript';
-        script.src = 'https://maps.googleapis.com/maps/api/js?key=' + settings.get("googleMapsKey") + '&language=de&region=de';
+        script.src = 'https://maps.googleapis.com/maps/api/js?key=' + settings.get("googleMapsKey") + '&language=de&region=de&callback=initMap';
         document.body.appendChild(script);
         log.info("Loaded Google Maps API");
 
-        if (doLoadBundle)
-            loadBundle();
+        window.initMap = function() {
+            // JS MAPS API is loaded and available
+            if (doLoadBundle)
+                loadBundle();
+        };
     }
 
     function isDev() {
