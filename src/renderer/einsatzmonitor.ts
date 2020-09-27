@@ -12,7 +12,7 @@ import InfoNewsWidget from "./widgets/InfoNewsWidget";
 import InfoOperationWidget from "./widgets/InfoOperationWidget";
 import InfoAppointmentWidget from "./widgets/InfoAppointmentWidget";
 import dynamicWidget from "./widgets/DynamicWidget";
-import Info from "../common/models/Info";
+import ClockWidget from "./widgets/ClockWidget";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
@@ -28,7 +28,6 @@ const gridsterWidgetsOperationFilePath = path.join(userDataPath, "gridster_widge
 class EinsatzMonitorModel {
     einsatz: Observable = ko.observable();
     einsaetze: ObservableArray = ko.observableArray([]);
-    info: Observable = ko.observable(new Info());
 
     is_einsatz: Computed = ko.computed(() => {
         return this.einsaetze().length > 0;
@@ -129,7 +128,7 @@ class EinsatzMonitorModel {
 
     // Info
     addInfoClock () {
-        this.board().widgets.push(new Widget(this.board(), "clock-widget", this.getCurrentWidgetType()));
+        this.board().widgets.push(new ClockWidget(this.board(), "clock-widget", this.getCurrentWidgetType()));
     };
 
     addInfoText() {

@@ -3,7 +3,9 @@
         style='list-style-type: none'>
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
-        <h1 class="vert-center text-stroke m-0 big-text" data-bind="text: $root.info().parsed_clock, style: { 'color': widget.extra_config.get('text-color') }, class: 'text-' + widget.config.get('align')()"></h1>
+        <!-- ko if: $root.board().getWidgetById(id) -->
+        <h1 class="vert-center text-stroke m-0 big-text" data-bind="text: $root.board().getWidgetById(id).parsed_clock, style: { 'color': widget.extra_config.get('text-color') }, class: 'text-' + widget.config.get('align')()"></h1>
+        <!-- /ko -->
 
         <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
