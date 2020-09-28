@@ -33,14 +33,14 @@ jobs:
           # release the app after building
           # release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      - name: deploy files
-        uses: garygrossgarten/github-action-scp@release
-        with:
-          local: './dist/'
-          remote: '/var/www/html/einsatzmonitor-frontend'
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          password: ${{ secrets.SSH_PRIVATE_KEY }}
+#      - name: deploy files
+#        uses: garygrossgarten/github-action-scp@release
+#        with:
+#          local: './dist/'
+#          remote: '/var/www/html/einsatzmonitor-frontend'
+#          host: ${{ secrets.SSH_HOST }}
+#          username: ${{ secrets.SSH_USER }}
+#          password: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0

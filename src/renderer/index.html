@@ -214,8 +214,8 @@
     }
 
     function isDev() {
-        log.debug(`Environment: ${process.env.NODE_ENV.trim()}`);
-        return process.env.NODE_ENV ? process.env.NODE_ENV.trim() === 'dev' : false;
+        log.info(`Environment: ${process.env?.NODE_ENV?.trim()}`);
+        return process.env?.NODE_ENV?.trim() === 'dev';
     }
 
     function loadBundle() {
