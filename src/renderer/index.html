@@ -206,7 +206,7 @@
         document.body.appendChild(script);
         log.info("Loaded Google Maps API");
 
-        window.initMap = function() {
+        window.initMap = function () {
             // JS MAPS API is loaded and available
             if (doLoadBundle)
                 loadBundle();
@@ -214,7 +214,8 @@
     }
 
     function isDev() {
-        return process.mainModule.filename.indexOf('app.asar') === -1;
+        log.debug(`Environment: ${process.env.NODE_ENV.trim()}`);
+        return process.env.NODE_ENV ? process.env.NODE_ENV.trim() === 'dev' : false;
     }
 
     function loadBundle() {

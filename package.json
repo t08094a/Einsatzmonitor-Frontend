@@ -10,9 +10,9 @@
     "dist:win": "electron-builder --win",
     "dist:linux": "electron-builder --linux",
     "dev:electron_old": "webpack --config webpack.config.js --mode development && electron .",
-    "dev:webpack": "webpack-dev-server --progress --colors --hot --inline",
-    "dev:electron": "electron .",
-    "dist:webpack": "webpack"
+    "dev:webpack": "webpack-dev-server --progress --colors --hot --inline --mode development",
+    "dev:electron": "set NODE_ENV=dev && electron .",
+    "dist:webpack": "webpack --mode production"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
@@ -21,7 +21,7 @@
     "@types/toastr": "^2.1.38",
     "@types/webpack-env": "^1.15.2",
     "babel-loader": "^8.1.0",
-    "electron": "^3.0.13",
+    "electron": "^10.1.2",
     "electron-builder": "^22.3.2",
     "html-loader": "^1.3.0",
     "html-webpack-plugin": "^4.4.1",

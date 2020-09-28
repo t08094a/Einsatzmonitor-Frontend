@@ -37,6 +37,7 @@ function createWindow() {
         height: 1080,
         webPreferences: {
             nodeIntegration: true,
+            enableRemoteModule: true
         },
         fullscreen: !settings.get("debug"),
         autoHideMenuBar: !settings.get("debug")
