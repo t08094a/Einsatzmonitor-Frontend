@@ -3,8 +3,9 @@ import Person from './Person';
 import Functioning from './Functioning';
 import {debug, info} from "electron-log";
 import moment from "moment";
-import {alamosFeedbackUrl, em, str_pad_left} from "../common";
+import {alamosFeedbackUrl, axiosConfigParams, em, str_pad_left} from "../common";
 import settings from "electron-settings";
+import axios from "axios";
 
 const ko = require('knockout');
 const google = require('google');
@@ -144,44 +145,45 @@ class Einsatz {
     };
 
     load_alamos_feedback = () => {
-        var request = require('request');
-        request(alamosFeedbackUrl(this.feedback_fe2_id()), (error: any, response: any, body: any) => {
-            info(`Alamos Feedback Request | Status: ${response.statusCode}`);
+        axios.get(alamosFeedbackUrl(this.feedback_fe2_id()), axiosConfigParams)
+            .then((response) => {
+                if (response.status === 200) {
+                    let response_json = JSON.parse(response.data);
+                    let lstOfFeedbacks = response_json.lstOfFeedbacks;
 
-            if (response.statusCode === 200) {
-                var response_json = JSON.parse(body);
-                var lstOfFeedbacks = response_json.lstOfFeedbacks;
+                    lstOfFeedbacks.forEach((feedback: any) => {
+                        if (this.is_feedback_person_saved(feedback)) {
+                            // update
+                            debug(`${feedback.name} is already saved in feedback list. Updating entry`);
 
-                lstOfFeedbacks.forEach((feedback: any) => {
-                    if (this.is_feedback_person_saved(feedback)) {
-                        // update
-                        debug(`${feedback.name} is already saved in feedback list. Updating entry`);
-
-                        ko.utils.arrayFirst(this.feedback_persons(), (item: any) => {
-                            if (feedback.name === item.name()) {
-                                item.feedback(feedback.state);
+                            ko.utils.arrayFirst(this.feedback_persons(), (item: any) => {
+                                if (feedback.name === item.name()) {
+                                    item.feedback(feedback.state);
+                                }
+                                return true;
+                                // Todo: is this correct?
+                            });
+                        } else {
+                            // new
+                            info(`Creating new feedback entry for ${feedback.name}`);
+                            let person = new Person(feedback.name, feedback.state);
+                            if (feedback.functions) {
+                                if (feedback.functions.includes(";")) {
+                                    feedback.functions.split(";").forEach((item: any) => {
+                                        person.functions.push(new Functioning(item, "badge-primary"));
+                                    });
+                                } else {
+                                    person.functions.push(new Functioning(feedback.functions, "badge-primary"));
+                                }
                             }
-                            return true;
-                            // Todo: is this correct?
-                        });
-                    } else {
-                        // new
-                        info(`Creating new feedback entry for ${feedback.name}`);
-                        let person = new Person(feedback.name, feedback.state);
-                        if (feedback.functions) {
-                            if (feedback.functions.includes(";")) {
-                                feedback.functions.split(";").forEach((item: any) => {
-                                    person.functions.push(new Functioning(item, "badge-primary"));
-                                });
-                            } else {
-                                person.functions.push(new Functioning(feedback.functions, "badge-primary"));
-                            }
+                            this.feedback_persons.push(person);
                         }
-                        this.feedback_persons.push(person);
-                    }
-                })
-            }
-        })
+                    })
+                }
+            })
+            .catch((error) => {
+                error(`Error while requesting feedback from Alamos server: ${error.toString()}`);
+            })
     };
 
     get_function_count = (fn: any, feedback: any) => {
