@@ -1,7 +1,6 @@
 import EinsatzMonitorModel from "./EinsatzMonitor";
-import {info} from "electron-log";
 import settings from "electron-settings";
-import {replaceAll, sha256} from "../common/common";
+import {logger, replaceAll, sha256} from "../common/common";
 
 const aesEcb = require('aes-ecb');
 const net = require('net');
@@ -14,7 +13,7 @@ class AlarmReceiverAlamos {
         this.einsatzMonitorModel = einsatzMonitorModel;
 
         alarmReceiver.listen(10000, '0.0.0.0', () => {
-            info('AlarmReceiver TCP Server is running on port 10000.');
+            logger.info('AlarmReceiver TCP Server is running on port 10000.');
         });
 
         alarmReceiver.on('connection', (sock: any) => {

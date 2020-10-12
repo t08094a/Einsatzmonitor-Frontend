@@ -4,9 +4,8 @@ const ko = require('knockout');
 import {Computed, ObservableArray} from "knockout";
 import axios from "axios";
 import settings from "electron-settings";
-import {axiosConfigParams, updateModel} from "../../../common/common";
+import {axiosConfigParams, logger, updateModel} from "../../../common/common";
 import Dienst from "../../../common/models/Dienst";
-import {info} from "electron-log";
 
 class InfoAppointmentWidget extends Widget {
     actionTimer: any;
@@ -22,7 +21,7 @@ class InfoAppointmentWidget extends Widget {
         let url = this.extra_config.get('url')();
 
         if (!url) {
-            info("Keine URL zum Abrufen von Diensten konfiguriert.");
+            logger.info("Keine URL zum Abrufen von Diensten konfiguriert.");
             return;
         }
 

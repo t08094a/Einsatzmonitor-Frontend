@@ -2,7 +2,7 @@ import EinsatzMonitorModel from "./EinsatzMonitor";
 import axios from "axios";
 import settings from "electron-settings";
 import toastr from "toastr";
-import {axiosConfigParams} from "../common/common";
+import {axiosConfigParams, logger} from "../common/common";
 
 class AlarmReceiverHttp {
     einsatzMonitorModel: EinsatzMonitorModel;
@@ -15,7 +15,7 @@ class AlarmReceiverHttp {
                 })
             })
             .catch((error) => {
-                error(`Error while requesting Einsatz from API: ${error.toString()}`);
+                logger.error(`Error while requesting Einsatz from API: ${error.toString()}`);
                 toastr.error("Einsätze konnten nicht abgerufen werden.", "Keine Verbindung zum Server");
             })
     }

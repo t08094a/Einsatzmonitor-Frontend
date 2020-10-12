@@ -4,9 +4,8 @@ const ko = require('knockout');
 import {Computed, ObservableArray} from "knockout";
 import axios from "axios";
 import settings from "electron-settings";
-import {axiosConfigParams, updateModel} from "../../../common/common";
+import {axiosConfigParams, logger, updateModel} from "../../../common/common";
 import InfoEinsatz from "../../../common/models/InfoEinsatz";
-import {info} from "electron-log";
 
 class InfoOperationWidget extends Widget {
     actionTimer: any;
@@ -22,7 +21,7 @@ class InfoOperationWidget extends Widget {
         let url = this.extra_config.get('url')();
 
         if (!url) {
-            info("Keine URL zum Abrufen von Einsätzen konfiguriert.");
+            logger.info("Keine URL zum Abrufen von Einsätzen konfiguriert.");
             return;
         }
 

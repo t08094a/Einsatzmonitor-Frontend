@@ -4,9 +4,8 @@ const ko = require('knockout');
 import {Computed, ObservableArray} from "knockout";
 import axios from "axios";
 import settings from "electron-settings";
-import {axiosConfigParams, updateModel} from "../../../common/common";
+import {axiosConfigParams, logger, updateModel} from "../../../common/common";
 import NewsPost from "../../../common/models/NewsPost";
-import {info} from "electron-log";
 
 class InfoNewsWidget extends Widget {
     actionTimer: any;
@@ -22,7 +21,7 @@ class InfoNewsWidget extends Widget {
         let url = this.extra_config.get('url')();
 
         if (!url) {
-            info("Keine URL zum Abrufen von News konfiguriert.");
+            logger.info("Keine URL zum Abrufen von News konfiguriert.");
             return;
         }
 

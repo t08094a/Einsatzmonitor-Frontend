@@ -1,9 +1,8 @@
 import {Computed, Observable, ObservableArray, PureComputed} from 'knockout';
 import Person from './Person';
 import Functioning from './Functioning';
-import {debug, info} from "electron-log";
 import moment from "moment";
-import {alamosFeedbackUrl, axiosConfigParams, em, str_pad_left} from "../common";
+import {alamosFeedbackUrl, axiosConfigParams, em, logger, str_pad_left} from "../common";
 import settings from "electron-settings";
 import axios from "axios";
 
@@ -104,7 +103,7 @@ ko.bindingHandlers.map = {
                         '&markers=size:mid|color:red|' + mapObj.lat() + ',' + mapObj.lng() +
                         '&key=' + settings.get("googleMapsKey");
 
-                    info(`StaticMap-URL: ${static_url}`)
+                    logger.info(`StaticMap-URL: ${static_url}`)
                 }
             });
         }
@@ -148,13 +147,11 @@ class Einsatz {
         axios.get(alamosFeedbackUrl(this.feedback_fe2_id()), axiosConfigParams)
             .then((response) => {
                 if (response.status === 200) {
-                    let response_json = JSON.parse(response.data);
-                    let lstOfFeedbacks = response_json.lstOfFeedbacks;
+                    let lstOfFeedbacks = response.data.lstOfFeedbacks;
 
                     lstOfFeedbacks.forEach((feedback: any) => {
                         if (this.is_feedback_person_saved(feedback)) {
-                            // update
-                            debug(`${feedback.name} is already saved in feedback list. Updating entry`);
+                            logger.debug(`${feedback.name} is already saved in feedback list. Updating entry`);
 
                             ko.utils.arrayFirst(this.feedback_persons(), (item: any) => {
                                 if (feedback.name === item.name()) {
@@ -165,7 +162,7 @@ class Einsatz {
                             });
                         } else {
                             // new
-                            info(`Creating new feedback entry for ${feedback.name}`);
+                            logger.info(`Creating new feedback entry for ${feedback.name}`);
                             let person = new Person(feedback.name, feedback.state);
                             if (feedback.functions) {
                                 if (feedback.functions.includes(";")) {
@@ -181,8 +178,8 @@ class Einsatz {
                     })
                 }
             })
-            .catch((error) => {
-                error(`Error while requesting feedback from Alamos server: ${error.toString()}`);
+            .catch((error_resp) => {
+                logger.error(`Error while requesting feedback from Alamos server: ${error_resp.toString()}`);
             })
     };
 
@@ -238,7 +235,7 @@ class Einsatz {
 
     getFeedbackTimer = window.setInterval(() => {
         if (this.feedback_fe2_id() == null) {
-            info("No feedback ID found. Not requesting Alamos feedback.");
+            logger.info("No feedback ID found. Not requesting Alamos feedback.");
             return;
         }
 
@@ -253,7 +250,7 @@ class Einsatz {
     /* Google Maps Karten */
 
     load_map() {
-        info("Loading google map")
+        logger.info("Loading google map")
         let geocoder = new google.maps.Geocoder();
         geocoder.geocode({'address': this.adresse()}, (results: any, status: any) => {
             if (status === google.maps.GeocoderStatus.OK) {

@@ -1,7 +1,6 @@
-import {info} from "electron-log";
 import settings from "electron-settings";
 import EinsatzMonitorModel from "./EinsatzMonitor";
-import {em, execute} from "../common/common";
+import {em, execute, logger} from "../common/common";
 
 const ko = require('knockout');
 const net = require('net');
@@ -17,19 +16,19 @@ class DisplayManager {
         this.einsatzMonitorModel = einsatzMonitorModel;
 
         em.on('EinsatzAdd', (data: any) => {
-            info(`EinsatzAdd event fired (${data})`);
+            logger.info(`EinsatzAdd event fired (${data})`);
             turnOnDisplay();
         });
 
         em.on('EinsatzRemove', (operation: any) => {
-            info('EinsatzRemove event fired');
+            logger.info('EinsatzRemove event fired');
 
             // Todo: move outside since it has nothing to do with display
             this.einsatzMonitorModel.einsaetze.splice(einsatzMonitorModel.einsaetze().indexOf(operation), 1);
         });
 
         controlServer.listen(11000, '0.0.0.0', () => {
-            info('Control TCP Server is running on port 11000.');
+            logger.info('Control TCP Server is running on port 11000.');
         });
 
         controlServer.on('connection', (sock: any) => {
@@ -57,7 +56,7 @@ class DisplayManager {
             let diffSeconds = (currentTimestamp - lastMovement) / 1000;
 
             if (diffSeconds < 600) {
-                info(`Last movement: ${diffSeconds}s ago.`);
+                logger.info(`Last movement: ${diffSeconds}s ago.`);
                 return;
             }
 
@@ -71,7 +70,7 @@ class DisplayManager {
                 hdmiState = 1;
                 execute("vcgencmd display_power 1", function () {
                 });
-                info('Turned on display');
+                logger.info('Turned on display');
             }
         }
 
@@ -84,7 +83,7 @@ class DisplayManager {
                 hdmiState = 0;
                 execute("vcgencmd display_power 0", function () {
                 });
-                info('Turned off display');
+                logger.info('Turned off display');
             }
         }
     }

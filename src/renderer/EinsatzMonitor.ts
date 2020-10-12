@@ -1,13 +1,11 @@
 import {Computed, Observable, ObservableArray} from 'knockout';
-const ko = require('knockout');
 
 import Einsatz from "../common/models/Einsatz";
-import {debug, warn, info, error} from "electron-log";
 import moment from "moment";
 import fitty from "fitty";
 import toastr from "toastr";
 import Widget, {widgetTypes} from "./widgets/Widget";
-import {em} from "../common/common";
+import {em, logger} from "../common/common";
 import InfoNewsWidget from "./widgets/info/InfoNewsWidget";
 import InfoOperationWidget from "./widgets/info/InfoOperationWidget";
 import InfoAppointmentWidget from "./widgets/info/InfoAppointmentWidget";
@@ -16,6 +14,7 @@ import ClockWidget from "./widgets/info/ClockWidget";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
+const ko = require('knockout');
 const fs = require('fs');
 const path = require('path');
 const electron = require('electron');
@@ -69,7 +68,7 @@ class EinsatzMonitorModel {
             // Trigger EinsatzAdd event
             em.emit('EinsatzAdd', einsatz.id);
 
-            info(`Added new einsatz (${einsatz.id}) to array`);
+            logger.info(`Added new einsatz (${einsatz.id}) to array`);
 
             fitty('.einsatz-einheit div h4', {
                 maxSize: 22.5
@@ -78,7 +77,7 @@ class EinsatzMonitorModel {
                 maxSize: 50
             });
         } else {
-            warn(`Einsatz already in array (${einsatz.id})`);
+            logger.warn(`Einsatz already in array (${einsatz.id})`);
         }
     };
 
@@ -189,19 +188,19 @@ class EinsatzMonitorModel {
 
 
     serialize () {
-        debug(this.board().gridsterInfo.serialize());
+        logger.debug(this.board().gridsterInfo.serialize());
     };
 
     saveWidgets() {
         var file = this.view() === "info" ? gridsterWidgetsFilePath : gridsterWidgetsOperationFilePath;
-        info(`View | Saving view ${this.view()} to ${file}`);
+        logger.info(`View | Saving view ${this.view()} to ${file}`);
 
         var to_save: any = [];
 
         this.board().gridsterInfo.serialize().forEach((widget: any) => {
             let wdg = this.board().get_by_id(this.board().widgets(), widget.id);
 
-            info(`View | Saving widget ${ko.toJSON(wdg.config.toJSON())}`);
+            logger.info(`View | Saving widget ${ko.toJSON(wdg.config.toJSON())}`);
 
             widget['config'] = wdg.config;
             widget['extra_config'] = wdg.extra_config;
@@ -210,29 +209,29 @@ class EinsatzMonitorModel {
 
         fs.writeFile(file, JSON.stringify(to_save), 'utf8', function (err: any) {
             if (err) {
-                error("An error occurred while writing JSON file");
-                return error(err);
+                logger.error("An error occurred while writing JSON file");
+                return logger.error(err);
             }
 
-            info(`View | JSON file has been written`);
+            logger.info(`View | JSON file has been written`);
         });
     };
 
     loadWidgets(path: any) {
-        info(`View | Loading view from ${path}`);
+        logger.info(`View | Loading view from ${path}`);
 
         fs.readFile(path, (err: any, data: any) => {
             var jsonParsed = JSON.parse(data);
 
             jsonParsed.forEach((widget: any) => {
-                debug(`View | Loaded widget: `, widget);
+                logger.debug(`View | Loaded widget: `, widget);
 
                 let WidgetClass = dynamicWidget(widget.config.template);
                 let wdg = new WidgetClass(this.board(), widget.config.template, widget.config.type, widget['row'], widget['col'], widget['size_x'], widget['size_y']);
 
                 for (let key in widget.config) {
                     if (widget.config.hasOwnProperty(key)) {
-                        debug(`View | Widget | Config | Set ${key} to ${widget.config[key]}`);
+                        logger.debug(`View | Widget | Config | Set ${key} to ${widget.config[key]}`);
                         wdg.config.push(key, widget.config[key])
                     }
                 }
@@ -285,16 +284,16 @@ class EinsatzMonitorModel {
     };
 
     loadView() {
-        info(`View | Switching view - Einsatz: ${this.is_einsatz()} - View: ${this.view()}`);
+        logger.info(`View | Switching view - Einsatz: ${this.is_einsatz()} - View: ${this.view()}`);
         if (this.is_einsatz() && this.view() !== "operation") {
             this.view("operation");
-            info(`View | Loading operation view`);
+            logger.info(`View | Loading operation view`);
             this.clearWidgets();
             this.loadWidgets(gridsterWidgetsOperationFilePath);
         }
         if (!this.is_einsatz() && this.view() !== "info") {
             this.view("info");
-            info(`View | Loading info view`);
+            logger.info(`View | Loading info view`);
             this.clearWidgets();
             this.loadWidgets(gridsterWidgetsFilePath);
         }
@@ -308,7 +307,7 @@ class EinsatzMonitorModel {
             this.loadView();
         });
 
-        info("Loaded EinsatzMonitorModel");
+        logger.info("Loaded EinsatzMonitorModel");
     }
 }
 
@@ -449,7 +448,7 @@ export class BoardViewModel {
     };
 
     constructor() {
-        info("Created BoardViewModel");
+        logger.info("Created BoardViewModel");
     }
 }
 
