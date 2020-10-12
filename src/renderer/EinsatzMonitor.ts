@@ -11,6 +11,7 @@ import InfoOperationWidget from "./widgets/info/InfoOperationWidget";
 import InfoAppointmentWidget from "./widgets/info/InfoAppointmentWidget";
 import dynamicWidget from "./widgets/DynamicWidget";
 import ClockWidget from "./widgets/info/ClockWidget";
+import SettingsModel from "./Settings";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
@@ -299,6 +300,8 @@ class EinsatzMonitorModel {
         }
     };
 
+    settingsModel: any;
+
     constructor() {
         this.loadView();
 
@@ -308,6 +311,13 @@ class EinsatzMonitorModel {
         });
 
         logger.info("Loaded EinsatzMonitorModel");
+
+        let settingsModel = new SettingsModel();
+        settingsModel.loadSettings();
+
+        this.settingsModel = settingsModel;
+
+        logger.info("Loaded SettingsModel");
     }
 }
 
@@ -372,6 +382,10 @@ export class BoardViewModel {
 
     openSettingsMenuModal() {
         ($('#settingsMenuModal').appendTo("body") as any).modal('show');
+    };
+
+    openSettingsModal() {
+        ($('#settingsModal').appendTo("body") as any).modal('show');
     };
 
     get_by_id(widgets: any, id: any) {
