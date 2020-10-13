@@ -60,6 +60,9 @@ class Widget {
             // initial value
             value: this.extra_config.get($(sliderSelector).attr("data-field"))(),
 
+            min: 0,
+            max: 300,
+
             slide: (event: any, ui: any) => {
                 this.extra_config.get($(sliderSelector).attr("data-field"))(ui.value);
             }
