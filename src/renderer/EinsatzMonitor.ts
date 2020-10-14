@@ -84,6 +84,7 @@ class EinsatzMonitorModel {
 
     testeinsatz_fe2_id: Observable = ko.observable();
     testeinsatz_adresse: Observable = ko.observable();
+
     addTesteinsatz() {
         this.add_einsatz({
             'id': 1,
@@ -127,7 +128,7 @@ class EinsatzMonitorModel {
     // Todo: Maybe: on widget loading check if default config keys are empty to set them to default value
 
     // Info
-    addInfoClock () {
+    addInfoClock() {
         this.board().widgets.push(new ClockWidget(this.board(), "clock-widget", this.getCurrentWidgetType()));
     };
 
@@ -155,6 +156,7 @@ class EinsatzMonitorModel {
     addOperationAddress() {
         this.board().widgets.push(new Widget(this.board(), "operation-address", this.getCurrentWidgetType()));
     };
+
     addOperationAdditionalInformation() {
         this.board().widgets.push(new Widget(this.board(), "operation-additionalInformation", this.getCurrentWidgetType()));
     };
@@ -188,7 +190,7 @@ class EinsatzMonitorModel {
     };
 
 
-    serialize () {
+    serialize() {
         logger.debug(this.board().gridsterInfo.serialize());
     };
 
@@ -208,46 +210,45 @@ class EinsatzMonitorModel {
             to_save.push(widget);
         });
 
-        fs.writeFile(file, JSON.stringify(to_save), 'utf8', function (err: any) {
-            if (err) {
-                logger.error("An error occurred while writing JSON file");
-                return logger.error(err);
-            }
-
+        try {
+            fs.writeFileSync(file, JSON.stringify(to_save), 'utf8');
             logger.info(`View | JSON file has been written`);
-        });
+        } catch (e) {
+            logger.error("An error occurred while writing JSON file");
+            logger.error(e);
+        }
+
     };
 
     loadWidgets(path: any) {
         logger.info(`View | Loading view from ${path}`);
 
-        fs.readFile(path, (err: any, data: any) => {
-            var jsonParsed = JSON.parse(data);
+        let data = fs.readFileSync(path)
+        let jsonParsed = JSON.parse(data);
 
-            jsonParsed.forEach((widget: any) => {
-                logger.debug(`View | Loaded widget: `, widget);
+        jsonParsed.forEach((widget: any) => {
+            logger.debug(`View | Loaded widget: `, widget);
 
-                let WidgetClass = dynamicWidget(widget.config.template);
-                let wdg = new WidgetClass(this.board(), widget.config.template, widget.config.type, widget['row'], widget['col'], widget['size_x'], widget['size_y']);
+            let WidgetClass = dynamicWidget(widget.config.template);
+            let wdg = new WidgetClass(this.board(), widget.config.template, widget.config.type, widget['row'], widget['col'], widget['size_x'], widget['size_y']);
 
-                for (let key in widget.config) {
-                    if (widget.config.hasOwnProperty(key)) {
-                        logger.debug(`View | Widget | Config | Set ${key} to ${widget.config[key]}`);
-                        wdg.config.push(key, widget.config[key])
-                    }
+            for (let key in widget.config) {
+                if (widget.config.hasOwnProperty(key)) {
+                    logger.debug(`View | Widget | Config | Set ${key} to ${widget.config[key]}`);
+                    wdg.config.push(key, widget.config[key])
                 }
+            }
 
-                //wdg.extra_config = widget.extra_config;
-                for (let key in widget.extra_config) {
-                    if (widget.extra_config.hasOwnProperty(key)) {
-                        wdg.extra_config.push(key, widget.extra_config[key])
-                    }
+            //wdg.extra_config = widget.extra_config;
+            for (let key in widget.extra_config) {
+                if (widget.extra_config.hasOwnProperty(key)) {
+                    wdg.extra_config.push(key, widget.extra_config[key])
                 }
+            }
 
-                wdg.loaded();
+            wdg.loaded();
 
-                this.board().widgets.push(wdg);
-            });
+            this.board().widgets.push(wdg);
         });
     };
 
@@ -303,8 +304,6 @@ class EinsatzMonitorModel {
     settingsModel: any;
 
     constructor() {
-        this.loadView();
-
         // Update view if "einsaetze" changes
         this.einsaetze.subscribe((newValue: any) => {
             this.loadView();
@@ -318,6 +317,11 @@ class EinsatzMonitorModel {
         this.settingsModel = settingsModel;
 
         logger.info("Loaded SettingsModel");
+
+    }
+
+    loaded() {
+        this.loadView();
     }
 }
 
@@ -373,8 +377,7 @@ export class BoardViewModel {
         }
     };
 
-    // Initialize the gridster plugin.
-    gridsterInfo = ($("#gridsterInfo ul") as any).gridster(this.gridsterConfig).data('gridster');
+    gridsterInfo: any;
 
     openWidgetAddModal() {
         ($('#addWidgetModal').appendTo("body") as any).modal('show');
@@ -407,9 +410,9 @@ export class BoardViewModel {
      * the correct gridster parameters on the widget.
      */
     addGridster = (node: any, index: any, obj: any) => {
-        var widget = $(node);
-        var column = widget.attr("data-col");
-        var row = widget.attr("data-row");
+        let widget = $(node);
+        let column = widget.attr("data-col");
+        let row = widget.attr("data-row");
 
         // only process the main tag which has "data-col" attr
         if (column) {
@@ -462,6 +465,9 @@ export class BoardViewModel {
     };
 
     constructor() {
+        // Initialize the gridster plugin.
+        this.gridsterInfo = ($("#gridsterInfo ul") as any).gridster(this.gridsterConfig).data('gridster');
+
         logger.info("Created BoardViewModel");
     }
 }

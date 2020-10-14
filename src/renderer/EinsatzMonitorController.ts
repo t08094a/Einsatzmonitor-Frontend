@@ -37,6 +37,8 @@ class EinsatzMonitorController {
         });
 
         ko.applyBindings(this.einsatzMonitorModel);
+
+        this.einsatzMonitorModel.loaded();
     }
 }
 
