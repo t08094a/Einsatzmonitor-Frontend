@@ -33,7 +33,7 @@
     <link href="./static/css/einsatzmonitor.css" rel="stylesheet">
 </head>
 
-<body class="h-100">
+<body class="h-100" data-bind="style: {'backgroundImage': 'url('+ backgroundUrl() +')', 'backgroundColor': backgroundColor }">
 
 <template id="gridstack-template">
     <li data-bind="attr: { 'id': id, 'data-row': dataRow, 'data-col': dataCol,'data-sizex': datasizex, 'data-sizey': datasizey }" class='gs-w' style='list-style-type: none; background:#99FF99;'>
@@ -120,7 +120,7 @@
 
                     <h4 class="mt-5">Ansicht</h4>
                     <button class="btn btn-success" data-bind='click: save'><i class="fal fa-save"></i> Widgets dieser Ansicht speichern</button>
-                    <button class="btn btn-success mt-2" data-bind='click: load'><i class="fal fa-download"></i> Widgets dieser Ansicht laden</button>
+                    <button class="btn btn-success mt-2" data-bind='click: loadView'><i class="fal fa-download"></i> Widgets dieser Ansicht laden</button>
 
                     <h4 class="mt-5">Widgets</h4>
                     <button class="btn btn-success" data-bind='click: board().openWidgetAddModal' data-dismiss="modal"><i class="fal fa-plus"></i> Widget hinzufügen</button>
@@ -154,10 +154,10 @@
 
                     <h5 class="card-subtitle mb-2 text-muted">Info</h5>
                     <div class="mb-4" data-bind="template: { name: 'button-template', foreach: $root.settingsModel.infoSettings() }"></div>
-
-                    <button class="btn btn-outline-success btn-sm" data-bind="click: $root.settingsModel.saveSettings, enable: !$root.settingsModel.saving() ">Speichern <i data-bind="visible: $root.settingsModel.saving()" class="fa fa-cog fa-spin fa-fw"></i></button>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-success" data-bind="click: $root.settingsModel.saveSettings, enable: !$root.settingsModel.saving() ">Speichern <i data-bind="visible: $root.settingsModel.saving()"
+                                                                                                                                                             class="fa fa-cog fa-spin fa-fw"></i></button>
                     <button type="button" class="btn btn-secondary" data-bind='click: board().openSettingsMenuModal' data-dismiss="modal">Zurück</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
                 </div>

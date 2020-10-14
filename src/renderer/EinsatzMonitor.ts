@@ -12,6 +12,7 @@ import InfoAppointmentWidget from "./widgets/info/InfoAppointmentWidget";
 import dynamicWidget from "./widgets/DynamicWidget";
 import ClockWidget from "./widgets/info/ClockWidget";
 import SettingsModel from "./Settings";
+import settings from "electron-settings";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
@@ -195,8 +196,8 @@ class EinsatzMonitorModel {
     };
 
     saveWidgets() {
-        var file = this.view() === "info" ? gridsterWidgetsFilePath : gridsterWidgetsOperationFilePath;
-        logger.info(`View | Saving view ${this.view()} to ${file}`);
+        var file = this.getCurrentWidgetType() === widgetTypes.INFO ? gridsterWidgetsFilePath : gridsterWidgetsOperationFilePath;
+        logger.info(`View | Saving view ${this.getCurrentWidgetType()} to ${file}`);
 
         var to_save: any = [];
 
@@ -252,10 +253,6 @@ class EinsatzMonitorModel {
         });
     };
 
-    load() {
-        this.loadWidgets(gridsterWidgetsFilePath);
-    };
-
     save() {
         this.saveWidgets();
     };
@@ -276,30 +273,33 @@ class EinsatzMonitorModel {
         this.board().widgets.removeAll();
     };
 
-    view: Observable = ko.observable("init");
-
     getCurrentWidgetType() {
-        if (this.view() === "info")
-            return widgetTypes.INFO;
+        if (this.is_einsatz())
+            return widgetTypes.OPERATION
 
-        return widgetTypes.OPERATION;
+        return widgetTypes.INFO;
     };
 
     loadView() {
-        logger.info(`View | Switching view - Einsatz: ${this.is_einsatz()} - View: ${this.view()}`);
-        if (this.is_einsatz() && this.view() !== "operation") {
-            this.view("operation");
+        if (this.getCurrentWidgetType() == widgetTypes.OPERATION) {
             logger.info(`View | Loading operation view`);
             this.clearWidgets();
             this.loadWidgets(gridsterWidgetsOperationFilePath);
         }
-        if (!this.is_einsatz() && this.view() !== "info") {
-            this.view("info");
+        if (this.getCurrentWidgetType() == widgetTypes.INFO) {
             logger.info(`View | Loading info view`);
             this.clearWidgets();
             this.loadWidgets(gridsterWidgetsFilePath);
         }
     };
+
+    backgroundUrl: Observable = ko.observable();
+    backgroundColor: Observable = ko.observable();
+
+    loadBackgroundSettings() {
+        this.backgroundUrl(settings.get('background.image'));
+        this.backgroundColor(settings.get('background.color'));
+    }
 
     settingsModel: any;
 
@@ -313,6 +313,8 @@ class EinsatzMonitorModel {
 
         let settingsModel = new SettingsModel();
         settingsModel.loadSettings();
+
+        this.loadBackgroundSettings();
 
         this.settingsModel = settingsModel;
 

@@ -9,11 +9,13 @@
 }
 
 body {
-    background: url('https://ff-ashausen.de/static/img/background-compressed.9e24a80e65f3.jpg') no-repeat fixed center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+
+    background-position-x: center;
+    background-position-y: center;
 
     /* padding-bottom: 20px; */
 

@@ -83,6 +83,9 @@ function createDefaultConfig() {
 
     setDefaultConfigValue("alamos.alarmInput.enabled", false);
     setDefaultConfigValue("alamos.alarmInput.password", "");
+
+    setDefaultConfigValue("background.image", "");
+    setDefaultConfigValue("background.color", "rgb(15 15 15)");
 }
 
 function setDefaultConfigValue(key, value) {
