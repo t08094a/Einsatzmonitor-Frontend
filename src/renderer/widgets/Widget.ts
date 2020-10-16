@@ -2,7 +2,7 @@ import {Observable, ObservableArray} from "knockout";
 import {BoardViewModel} from "../EinsatzMonitor";
 
 const ko = require('knockout');
-const textFit = require('textFit')
+const textFit = require('textfit')
 
 let ids = 1;
 
