@@ -11,7 +11,7 @@ class AlarmReceiverWebsocket {
         this.einsatzMonitorModel = einsatzMonitorModel;
 
         setTimeout(() => {
-            let einsatzWebsocket = new ReconnectingWebSocket((settings.get("einsatz.url")?.toString() as string)?.replace("{activeMinutes}", ((settings.get("einsatz.einsatzDisplayTime") as number) - 2).toString()));
+            let einsatzWebsocket = new ReconnectingWebSocket((settings.getSync("einsatz.url")?.toString() as string)?.replace("{activeMinutes}", ((settings.getSync("einsatz.einsatzDisplayTime") as number) - 2).toString()));
             einsatzWebsocket.reconnectDecay = 1.0;
 
             einsatzWebsocket.onmessage = (e: any) => {

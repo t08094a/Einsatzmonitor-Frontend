@@ -36,7 +36,7 @@ class DisplayManager {
                 let parsedData = JSON.parse(data);
 
                 if (parsedData['event'] === 'sensor_trigger') {
-                    if (parsedData['sensor'] === 'motion' && settings.get("motionDetector.enabled")) {
+                    if (parsedData['sensor'] === 'motion' && settings.getSync("motionDetector.enabled")) {
                         lastMovement = new Date().getTime();
                         turnOnDisplay();
                     }
@@ -76,7 +76,7 @@ class DisplayManager {
 
         function turnOffDisplay() {
             if (hdmiState !== 0) {
-                if (settings.get("displayAlwaysOn")) {
+                if (settings.getSync("displayAlwaysOn")) {
                     return;
                 }
 

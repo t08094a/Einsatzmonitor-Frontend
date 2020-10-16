@@ -3,9 +3,9 @@ import Widget from "../Widget";
 const ko = require('knockout');
 import {Computed, ObservableArray} from "knockout";
 import axios from "axios";
-import settings from "electron-settings";
 import {axiosConfigParams, logger, updateModel} from "../../../common/common";
 import InfoEinsatz from "../../../common/models/InfoEinsatz";
+import settings from "electron-settings";
 
 class InfoOperationWidget extends Widget {
     actionTimer: any;
@@ -67,7 +67,7 @@ class InfoOperationWidget extends Widget {
 
         this.actionTimer = window.setInterval(() => {
             this.loadOperations();
-        }, 1000 * (settings.get("info.httpFetchInterval") as number));
+        }, 1000 * (settings.getSync("info.httpFetchInterval") as number));
 
         console.log("Loaded InfoOperationWidget");
     }

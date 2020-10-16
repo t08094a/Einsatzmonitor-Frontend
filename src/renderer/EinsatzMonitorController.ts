@@ -15,15 +15,15 @@ class EinsatzMonitorController {
         this.einsatzMonitorModel = new EinsatzMonitorModel();
         this.displayManager = new DisplayManager(this.einsatzMonitorModel);
 
-        if (settings.get("einsatz.fetch") === "websocket") {
+        if (settings.getSync("einsatz.fetch") === "websocket") {
             new AlarmReceiverWebsocket(this.einsatzMonitorModel);
         }
 
-        if (settings.get("einsatz.fetch") === "http") {
+        if (settings.getSync("einsatz.fetch") === "http") {
             new AlarmReceiverHttp(this.einsatzMonitorModel);
         }
 
-        if (settings.get("alamos.alarmInput.enabled")) {
+        if (settings.getSync("alamos.alarmInput.enabled")) {
             new AlarmReceiverAlamos(this.einsatzMonitorModel);
         }
 

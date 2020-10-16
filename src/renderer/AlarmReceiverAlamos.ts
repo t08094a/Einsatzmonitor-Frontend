@@ -19,7 +19,7 @@ class AlarmReceiverAlamos {
         alarmReceiver.on('connection', (sock: any) => {
             sock.setEncoding('utf8')
             sock.on('data', (data: any) => {
-                sha256(settings.get("alamos.alarmInput.password")).then((passwordHash) => {
+                sha256(settings.getSync("alamos.alarmInput.password")).then((passwordHash) => {
                     let encodedPassword = passwordHash.substring(0, 32);
                     let decryptedData = aesEcb.decrypt(encodedPassword, data.toString());
 

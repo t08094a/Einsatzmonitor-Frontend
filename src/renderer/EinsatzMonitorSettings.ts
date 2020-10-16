@@ -28,13 +28,13 @@ class SettingsModel {
     };
 
     loadSettings = () => {
-        let all = this.dotNotate(settings.getAll(), null, null);
+        let all = this.dotNotate(settings.getSync(), null, null);
         logger.info('Loaded settings:', all);
 
         for (let key in all) {
             if (all.hasOwnProperty(key)) {
                 // console.log(key, all[key]);
-                let settings_obj = new Setting(key, all[key], this.get_type(key));
+                let settings_obj = new EinsatzMonitorSetting(key, all[key], this.get_type(key));
 
                 if (key.startsWith("einsatz.")) {
                     this.einsatzSettings().push(settings_obj);
@@ -94,7 +94,7 @@ class SettingsModel {
     }
 }
 
-class Setting {
+class EinsatzMonitorSetting {
     key = ko.observable();
     value = ko.observable();
     type = ko.observable();
@@ -117,7 +117,7 @@ class Setting {
 
     save = () => {
         logger.info(`Saving config entry ${this.key()} => ${this.value()}`);
-        settings.set(this.key(), this.value())
+        settings.setSync(this.key(), this.value());
     }
 
     get_id_name = (obj: any, id: any) => {

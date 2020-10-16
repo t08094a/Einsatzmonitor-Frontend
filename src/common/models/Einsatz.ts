@@ -3,8 +3,8 @@ import Person from './Person';
 import Functioning from './Functioning';
 import moment from "moment";
 import {alamosFeedbackUrl, axiosConfigParams, em, logger, str_pad_left} from "../common";
-import settings from "electron-settings";
 import axios from "axios";
+import settings from "electron-settings";
 
 const ko = require('knockout');
 const google = require('google');
@@ -71,7 +71,7 @@ ko.bindingHandlers.map = {
             let directionsService = new google.maps.DirectionsService();
             let directionsDisplay = new google.maps.DirectionsRenderer();
 
-            let feuerwehr = new google.maps.LatLng(settings.get("feuerwehrLat"), settings.get("feuerwehrLng"));
+            let feuerwehr = new google.maps.LatLng(settings.getSync("feuerwehrLat"), settings.getSync("feuerwehrLng"));
 
             directionsDisplay.setMap(mapObj.googleMap);
 
@@ -101,7 +101,7 @@ ko.bindingHandlers.map = {
                         '&path=enc:' + response.routes[0].overview_polyline +
                         '&markers=size:mid|color:green|' + feuerwehr.lat() + ',' + feuerwehr.lng() +
                         '&markers=size:mid|color:red|' + mapObj.lat() + ',' + mapObj.lng() +
-                        '&key=' + settings.get("googleMapsKey");
+                        '&key=' + settings.getSync("googleMapsKey");
 
                     logger.info(`StaticMap-URL: ${static_url}`)
                 }
@@ -225,7 +225,7 @@ class Einsatz {
 
         this.time_since_alarmierung(finalTime);
 
-        if (minutes >= (settings.get("einsatz.displayTime") as number)) {
+        if (minutes >= (settings.getSync("einsatz.displayTime") as number)) {
             this.stopTasks();
 
             // Trigger EinsatzRemove event
@@ -339,7 +339,7 @@ class Einsatz {
         });
 
         this.get_einheiten_sorted = ko.computed(() => {
-            let custom = (settings.get("einsatz.einheitenAlwaysTop") as string).split(",");
+            let custom = (settings.getSync("einsatz.einheitenAlwaysTop") as string).split(",");
 
             return this.einheiten().reduce((acc, element) => {
                 let found = false;
@@ -389,11 +389,11 @@ class Einsatz {
         });
 
         this.get_visible_einheiten_sorted = ko.computed(() => {
-            return this.get_einheiten_sorted().slice(0, settings.get("einsatz.showEinheitenLimit"));
+            return this.get_einheiten_sorted().slice(0, settings.getSync("einsatz.showEinheitenLimit"));
         });
 
         this.get_invisible_einheiten_count = ko.computed(() => {
-            return this.einheiten().length - (settings.get("einsatz.showEinheitenLimit") as number);
+            return this.einheiten().length - (settings.getSync("einsatz.showEinheitenLimit") as number);
         });
     }
 }

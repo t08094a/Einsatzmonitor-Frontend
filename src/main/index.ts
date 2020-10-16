@@ -39,8 +39,8 @@ function createWindow() {
             nodeIntegration: true,
             enableRemoteModule: true
         },
-        fullscreen: !settings.get("debug"),
-        autoHideMenuBar: !settings.get("debug")
+        fullscreen: !settings.getSync("debug"),
+        autoHideMenuBar: !settings.getSync("debug")
     });
 
     if (settings.get("debug"))
@@ -89,10 +89,10 @@ function createDefaultConfig() {
 }
 
 function setDefaultConfigValue(key, value) {
-    if (settings.has(key))
+    if (settings.hasSync(key))
         return;
 
-    settings.set(key, value);
+    settings.setSync(key, value);
     log.info(`Saved new config value ${key} => ${value}`);
 }
 

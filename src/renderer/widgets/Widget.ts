@@ -1,8 +1,8 @@
 import {Observable, ObservableArray} from "knockout";
-import fitty from "fitty";
 import {BoardViewModel} from "../EinsatzMonitor";
 
 const ko = require('knockout');
+const textFit = require('textFit')
 
 let ids = 1;
 
@@ -70,18 +70,12 @@ class Widget {
     };
 
     fitIfPossible() {
-        let max = 50;
-        let newmax = parseInt(($("[id ='" + this.id + "'] .fitty-element") as any).attr("data-maxfitty"));
-
-        if (newmax)
-            max = newmax;
+        let fittyElement = $("[id ='" + this.id + "'] .fitty-element");
+        let newMax = parseInt((fittyElement as any).attr("data-maxfitty"));
+        let max = newMax ? newMax : 50;
 
         if (this.extra_config.get('text-fitty')()) {
-            fitty("[id ='" + this.id + "'] .fitty-element", {
-                maxSize: max,
-                // fitHeight: false
-                // Todo: fix
-            });
+            textFit(fittyElement, {maxFontSize: max, alignHoriz: true, alignVert: true})
         }
     };
 

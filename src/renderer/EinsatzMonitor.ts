@@ -11,7 +11,7 @@ import InfoOperationWidget from "./widgets/info/InfoOperationWidget";
 import InfoAppointmentWidget from "./widgets/info/InfoAppointmentWidget";
 import dynamicWidget from "./widgets/DynamicWidget";
 import ClockWidget from "./widgets/info/ClockWidget";
-import SettingsModel from "./Settings";
+import SettingsModel from "./EinsatzMonitorSettings";
 import settings from "electron-settings";
 
 let html_content = require('./widget_templates/info/text_widget.html');
@@ -297,8 +297,8 @@ class EinsatzMonitorModel {
     backgroundColor: Observable = ko.observable();
 
     loadBackgroundSettings() {
-        this.backgroundUrl(settings.get('background.image'));
-        this.backgroundColor(settings.get('background.color'));
+        this.backgroundUrl(settings.getSync('background.image'));
+        this.backgroundColor(settings.getSync('background.color'));
     }
 
     settingsModel: any;

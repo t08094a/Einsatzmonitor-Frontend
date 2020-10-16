@@ -6,9 +6,9 @@
         <!-- ko if: $root.get_latest_einsatz() -->
         <div class="einsatz-einheiten" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }">
             <!-- ko foreach: $root.get_latest_einsatz().get_visible_einheiten_sorted() -->
-            <div class="einsatz-einheit bg-dark p-2 mb-1">
-                <div class="text-center"> <!-- needs a surrounding div for size calculation because of padding -->
-                    <h4 class="text-white m-0 fitty-element">
+            <div class="einsatz-einheit bg-dark p-2 mb-1" style="width: 100%; height: 45px">
+                <div class="text-center" style="width: 100%; height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
+                    <h4 class="text-white m-0 fitty-element" data-maxfitty="200" style="width: 100%; height: 100%">
                         <span data-bind="text: $data"></span>
                     </h4>
                 </div>
