@@ -12,6 +12,7 @@ import * as path from "path";
 const ElectronSampleAppLauncher = new AutoLaunch({
     name: 'Electron-sample-app',
     path: '/opt/einsatzmonitor/node_modules/electron/dist/electron /opt/einsatzmonitor'
+    // path: app.getPath('exe'),
 });
 
 ElectronSampleAppLauncher.enable();
@@ -28,6 +29,9 @@ ElectronSampleAppLauncher.isEnabled()
     });
 
 function createWindow() {
+    let splash = new BrowserWindow({webPreferences: {nodeIntegration: true, enableRemoteModule: true}, width: 500, height: 500, transparent: true, frame: false, alwaysOnTop: true});
+    splash.loadURL(`file://${path.join(__dirname, "../../renderer/splash.html")}`);
+
     // Create default config
     createDefaultConfig();
 
@@ -40,13 +44,19 @@ function createWindow() {
             enableRemoteModule: true
         },
         fullscreen: !settings.getSync("debug"),
-        autoHideMenuBar: !settings.getSync("debug")
+        autoHideMenuBar: !settings.getSync("debug"),
+        show: false
     });
 
     if (settings.get("debug"))
         win.webContents.openDevTools();
 
     win.loadURL(`file://${path.join(__dirname, "../../renderer/index.html")}`)
+
+    win.once('ready-to-show', () => {
+        splash.destroy();
+        win.show();
+    });
 
     // autoUpdater.checkForUpdates();
 }
