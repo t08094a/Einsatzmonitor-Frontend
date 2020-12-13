@@ -42,8 +42,21 @@ jobs:
 #          username: ${{ secrets.SSH_USER }}
 #          password: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v1.0.0
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v1.0.0
+#        with:
+#          name: EinsatzMonitor
+#          path: ./dist/
+
+      - run: mkdir einsatzmonitor-${{ matrix.os }}-${GITHUB_RUN_NUMBER}
+      - run: mv dist/* einsatzmonitor-${{ matrix.os }}-${GITHUB_RUN_NUMBER}
+      - run: ls
+
+      - name: Deploy with SCP
+        uses: i3h/deploy-with-scp@v1.0.2
         with:
-          name: EinsatzMonitor
-          path: ./dist/
+          src: einsatzmonitor-${{ matrix.os }}-${GITHUB_RUN_NUMBER}
+          dest: ${{ secrets.SSH_REMOTE_PATH }}
+          username: ${{ secrets.SSH_USER }}
+          server-ip: ${{ secrets.SSH_HOST }}
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
