@@ -1,0 +1,43 @@
+<template id="image-widget">
+    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }, style: { 'background-color': widget.extra_config.get('background-color') }" class='gs-w'
+        style='list-style-type: none'>
+        <div data-bind="template: { name: 'widget-buttons' }"></div>
+
+        <!-- ko if: $root.board().getWidgetById(id) -->
+        <img data-bind="class: widget.classes(), attr:{src: widget.extra_config.get('image-url'), width: widget.extra_config.get('image-width')}" alt="">
+        <!-- /ko -->
+
+        <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Widget - Bild</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="imageWidgetUrl" class="mb-1"><Strong>URL</Strong></label>
+                            <input type="text" class="form-control" id="imageWidgetUrl" aria-describedby="imageWidgetUrlHelp" data-bind="value: widget.extra_config.get('image-url'), valueUpdate: 'afterkeydown'">
+                            <small id="imageWidgetUrlHelp" class="form-text text-muted">Text, welcher angezeigt werden soll.</small>
+
+                            <label for="imageWidgetWidth" class="mb-1"><Strong>Breite</Strong></label>
+                            <div id="imageWidgetWidth" class="widget-slider" data-field="image-width"></div>
+                            <p data-bind="text: widget.extra_config.get('image-width')() + 'px'"></p>
+
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'width100', description: 'Bild auf 100% Breite skalieren' } }"></div>
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'heigth100', description: 'Bild auf 100% Höhe skalieren' } }"></div>
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'image-center', description: 'Horizontal zentrieren' } }"></div>
+
+                            <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</template>

@@ -13,6 +13,7 @@ import dynamicWidget from "./widgets/DynamicWidget";
 import ClockWidget from "./widgets/info/ClockWidget";
 import SettingsModel from "./EinsatzMonitorSettings";
 import settings from "electron-settings";
+import ImageWidget from "./widgets/info/ImageWidget";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
@@ -131,6 +132,10 @@ class EinsatzMonitorModel {
     // Info
     addInfoClock() {
         this.board().widgets.push(new ClockWidget(this.board(), "clock-widget", this.getCurrentWidgetType()));
+    };
+
+    addInfoImage() {
+        this.board().widgets.push(new ImageWidget(this.board(), "image-widget", this.getCurrentWidgetType()));
     };
 
     addInfoText() {
