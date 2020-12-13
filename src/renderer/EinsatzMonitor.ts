@@ -129,71 +129,11 @@ class EinsatzMonitorModel {
     // Todo: create default extra_config values and set to new widget
     // Todo: Maybe: on widget loading check if default config keys are empty to set them to default value
 
-    // Info
-    addInfoClock() {
-        this.board().widgets.push(new ClockWidget(this.board(), "clock-widget", this.getCurrentWidgetType()));
-    };
-
-    addInfoImage() {
-        this.board().widgets.push(new ImageWidget(this.board(), "image-widget", this.getCurrentWidgetType()));
-    };
-
-    addInfoText() {
-        this.board().widgets.push(new Widget(this.board(), "text-widget", this.getCurrentWidgetType()));
-    };
-
-    addInfoNews() {
-        this.board().widgets.push(new InfoNewsWidget(this.board(), "info-news-widget", this.getCurrentWidgetType()));
-    };
-
-    addInfoDienste() {
-        this.board().widgets.push(new InfoAppointmentWidget(this.board(), "info-dienste-widget", this.getCurrentWidgetType()));
-    };
-
-    addInfoOperations() {
-        this.board().widgets.push(new InfoOperationWidget(this.board(), "info-operations-widget", this.getCurrentWidgetType()));
-    };
-
-    // Operation
-    addOperationStichwort() {
-        this.board().widgets.push(new Widget(this.board(), "operation-stichwort", this.getCurrentWidgetType()));
-    };
-
-    addOperationAddress() {
-        this.board().widgets.push(new Widget(this.board(), "operation-address", this.getCurrentWidgetType()));
-    };
-
-    addOperationAdditionalInformation() {
-        this.board().widgets.push(new Widget(this.board(), "operation-additionalInformation", this.getCurrentWidgetType()));
-    };
-
-    addOperationRouteInformation() {
-        this.board().widgets.push(new Widget(this.board(), "operation-routeInformation", this.getCurrentWidgetType()));
-    };
-
-    addOperationUnits() {
-        this.board().widgets.push(new Widget(this.board(), "operation-units", this.getCurrentWidgetType()));
-    };
-
-    addOperationFeedback() {
-        this.board().widgets.push(new Widget(this.board(), "operation-feedback", this.getCurrentWidgetType()));
-    };
-
-    addOperationFeedbackCount() {
-        this.board().widgets.push(new Widget(this.board(), "operation-feedback-count", this.getCurrentWidgetType()));
-    };
-
-    addOperationAlarmMinutes() {
-        this.board().widgets.push(new Widget(this.board(), "operation-alarmMinutes", this.getCurrentWidgetType()));
-    };
-
-    addOperationOverviewMap() {
-        this.board().widgets.push(new Widget(this.board(), "operation-overviewMap", this.getCurrentWidgetType()));
-    };
-
-    addOperationRouteMap() {
-        this.board().widgets.push(new Widget(this.board(), "operation-routeMap", this.getCurrentWidgetType()));
-    };
+    addWidget(templateName: string) {
+        let WidgetClass = dynamicWidget(templateName);
+        let wdg = new WidgetClass(this.board(), templateName, this.getCurrentWidgetType());
+        this.board().widgets.push(wdg);
+    }
 
 
     serialize() {

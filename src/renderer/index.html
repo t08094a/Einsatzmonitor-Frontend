@@ -55,26 +55,26 @@
                 </div>
                 <div class="modal-body">
                     <h4>Info-Widgets</h4>
-                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoClock'><i class="fal fa-plus"></i> Uhr</button>
-                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoImage'><i class="fal fa-plus"></i> Bild</button>
-                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoText'><i class="fal fa-plus"></i> Text</button>
-                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoNews'><i class="fal fa-plus"></i> News</button>
-                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoDienste'><i class="fal fa-plus"></i> Dienste</button>
-                    <button class="btn btn-outline-success mt-1" data-bind='click: addInfoOperations'><i class="fal fa-plus"></i> Einsätze</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("clock-widget") }'><i class="fal fa-plus"></i> Uhr</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("image-widget") }'><i class="fal fa-plus"></i> Bild</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("text-widget") }'><i class="fal fa-plus"></i> Text</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("info-news-widget") }'><i class="fal fa-plus"></i> News</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("info-dienste-widget") }'><i class="fal fa-plus"></i> Dienste</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("info-operations-widget") }'><i class="fal fa-plus"></i> Einsätze</button>
 
                     <!-- <button class="btn btn-outline-success mt-1" data-bind='click: serialize'> Serialize </button> -->
 
                     <h4 class="mt-5">Einsatz-Widgets</h4>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationStichwort'><i class="fal fa-plus"></i> Stichwort</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationAddress'><i class="fal fa-plus"></i> Adresse</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationAdditionalInformation'><i class="fal fa-plus"></i> Zusatzinfos</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationRouteInformation'><i class="fal fa-plus"></i> Route - Informationen</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationUnits'><i class="fal fa-plus"></i> Einheiten</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationFeedback'><i class="fal fa-plus"></i> Rückmeldungen</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationFeedbackCount'><i class="fal fa-plus"></i> Anzahl Rückmeldungen</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationAlarmMinutes'><i class="fal fa-plus"></i> Minuten seit Alarmierung</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationOverviewMap'><i class="fal fa-plus"></i> Karte - Übersicht</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: addOperationRouteMap'><i class="fal fa-plus"></i> Karte - Anfahrtsweg</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-stichwort") }'><i class="fal fa-plus"></i> Stichwort</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-address") }'><i class="fal fa-plus"></i> Adresse</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-additionalInformation") }'><i class="fal fa-plus"></i> Zusatzinfos</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-routeInformation") }'><i class="fal fa-plus"></i> Route - Informationen</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-units") }'><i class="fal fa-plus"></i> Einheiten</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-feedback") }'><i class="fal fa-plus"></i> Rückmeldungen</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-feedback-count") }'><i class="fal fa-plus"></i> Anzahl Rückmeldungen</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-alarmMinutes") }'><i class="fal fa-plus"></i> Minuten seit Alarmierung</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-overviewMap") }'><i class="fal fa-plus"></i> Karte - Übersicht</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-routeMap") }'><i class="fal fa-plus"></i> Karte - Anfahrtsweg</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bind='click: board().openSettingsMenuModal' data-dismiss="modal">Zurück</button>
