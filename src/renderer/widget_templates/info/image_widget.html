@@ -22,9 +22,7 @@
                             <input type="text" class="form-control" id="imageWidgetUrl" aria-describedby="imageWidgetUrlHelp" data-bind="value: widget.extra_config.get('image-url'), valueUpdate: 'afterkeydown'">
                             <small id="imageWidgetUrlHelp" class="form-text text-muted">Text, welcher angezeigt werden soll.</small>
 
-                            <label for="imageWidgetWidth" class="mb-1"><Strong>Breite</Strong></label>
-                            <div id="imageWidgetWidth" class="widget-slider" data-field="image-width"></div>
-                            <p data-bind="text: widget.extra_config.get('image-width')() + 'px'"></p>
+                            <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'image-width', max: '600', title: 'Breite', description: 'Breite: ' } }"></div>
 
                             <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'width100', description: 'Bild auf 100% Breite skalieren' } }"></div>
                             <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'heigth100', description: 'Bild auf 100% Höhe skalieren' } }"></div>

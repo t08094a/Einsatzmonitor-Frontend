@@ -11,7 +11,7 @@
             <div class="pl-0 pr-0 pb-1" style="break-inside: avoid; position: relative; float: none;">
                 <div class="einsatz-einheit p-1" data-bind="class: $data.get_feedback_color()">
                     <div class=""> <!-- needs a surrounding div for size calculation because of padding -->
-                        <h4 class="text-white m-0 fitty-element">
+                        <h4 class="text-white m-0 fitty-element" data-bind="style: {'font-size': widget.extra_config.get('text-size')() + 'px'}">
                             <span data-bind="text: $data.name()"></span>
 
                             <!-- ko if: widget.extra_config.get('show-functions')() -->
@@ -62,6 +62,8 @@
                             <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'hide-absent', description: 'Rückmeldungen mit Status ABSENT ausblenden' } }"></div>
 
                             <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'show-functions', description: 'Funktionen anzeigen' } }"></div>
+
+                            <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'text-size', max: '300', title: 'Textgröße', description: 'Textgröße: ' } }"></div>
 
                             <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
                             <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
