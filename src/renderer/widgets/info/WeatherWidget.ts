@@ -8,10 +8,7 @@ const ko = require('knockout');
 class WeatherWidget extends Widget {
     actionTimer: number;
 
-    apiKey: Observable<string> = ko.observable();
-
     name: Observable<string> = ko.observable();
-    customName: Observable<string> = ko.observable();
     description: Observable<string> = ko.observable();
     temperature: Observable<string> = ko.observable();
     iconId: Observable<number> = ko.observable();
@@ -98,7 +95,12 @@ class WeatherWidget extends Widget {
             return;
         }
 
-        axios.get(`http://api.openweathermap.org/data/2.5/weather?zip=21435,de&lang=de&units=metric&appid=${this.extra_config.get('apiKey')()}`, axiosConfigParams)
+        if (!this.extra_config.get('zipCountry')()) {
+            logger.info("Keine PLZ für Wetterabruf konfiguriert.");
+            return;
+        }
+
+        axios.get(`http://api.openweathermap.org/data/2.5/weather?zip=${this.extra_config.get('zipCountry')()}&lang=de&units=metric&appid=${this.extra_config.get('apiKey')()}`, axiosConfigParams)
             .then((response) => {
                 if (response.status === 200) {
                     this.name(response.data.name);
