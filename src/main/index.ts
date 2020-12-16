@@ -48,7 +48,7 @@ function createWindow() {
         show: false
     });
 
-    if (settings.get("debug"))
+    if (settings.getSync("debug"))
         win.webContents.openDevTools();
 
     win.loadURL(`file://${path.join(__dirname, "../../renderer/index.html")}`)
