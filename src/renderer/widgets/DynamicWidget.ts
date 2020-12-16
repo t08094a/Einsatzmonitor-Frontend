@@ -4,6 +4,7 @@ import InfoAppointmentWidget from "./info/InfoAppointmentWidget";
 import InfoOperationWidget from "./info/InfoOperationWidget";
 import ClockWidget from "./info/ClockWidget";
 import ImageWidget from "./info/ImageWidget";
+import WeatherWidget from "./info/WeatherWidget";
 
 type tClassMapping = {
     [key: string]: any
@@ -14,7 +15,8 @@ const classMapping: tClassMapping = {
     'info-dienste-widget': InfoAppointmentWidget,
     'info-operations-widget': InfoOperationWidget,
     'clock-widget': ClockWidget,
-    'image-widget': ImageWidget
+    'image-widget': ImageWidget,
+    'weather-widget': WeatherWidget
 }
 
 let classMappingProxy = new Proxy(classMapping, {

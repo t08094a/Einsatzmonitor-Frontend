@@ -32,3 +32,8 @@
     <div class="widget-slider" data-bind="attr: { 'data-field': field, 'data-max': max}"></div>
     <small class="form-text text-muted" data-bind="text: description + ' ' + wdg.extra_config.get(field)() + 'px'"></small>
 </template>
+<template id="edit-text">
+    <label for="editText" class="mb-1 mt-3"><Strong data-bind="text: title"></Strong></label>
+    <input type="text" class="form-control" id="editText" data-bind="value: wdg.extra_config.get(value), valueUpdate: 'afterkeydown'">
+    <small class="form-text text-muted" data-bind="text: description"></small>
+</template>
