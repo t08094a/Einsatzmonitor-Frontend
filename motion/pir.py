@@ -14,16 +14,25 @@ data = {
 	'sensor': 'motion'
 }
 
+hosts = [
+    {
+        'ip': '127.0.0.1',
+        'port': 11000
+    }
+]
+
 def callback(channel):
     print('Motion detected.')
 
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect(('127.0.0.1', 11000))
-        s.sendall(json.dumps(data).encode("UTF-8"))
-        s.close()
-    except Exception:
-        print('Error sending motion event to TCP socket.')
+    for host in hosts:
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((host['ip'], host['port']))
+            s.sendall(json.dumps(data).encode("UTF-8"))
+            s.close()
+            print('Sent motion event to ' + host['ip'] + ':' + host['port'])
+        except Exception:
+            print('Error sending motion event to TCP socket. (' + host['ip'] + ':' + host['port'] + ')')
 
 try:
     GPIO.add_event_detect(SENSOR_PIN, GPIO.RISING, callback=callback)
