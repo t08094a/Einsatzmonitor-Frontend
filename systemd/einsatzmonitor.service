@@ -1,26 +1,22 @@
-# Save to /home/pi/.config/systemd/user/einsatzmonitor.service
+# Save to /etc/systemd/system/einsatzmonitor.service
 #
 [Unit]
 Description=EinsatzMonitor daemon
 PartOf=graphical-session.target
+After=graphical.target
 
 [Service]
 Environment=DISPLAY=:0
-ExecStart=/home/pi/linux-armv7l-unpacked/einsatzmonitor
+ExecStart=/opt/einsatzmonitor/einsatzmonitor
 Type=simple
+User=pi
 
 [Install]
-WantedBy=graphical-session.target
+WantedBy=graphical.target
 
 
-# Enable & Start
-#
-# su - pi
-#
-# export DISPLAY=:0
-# export XDG_RUNTIME_DIR="/run/user/$UID"
-# export DBUS_SESSION_BUS_ADDRESS="unix:path=${XDG_RUNTIME_DIR}/bus"
+# Enable & Start (run as root)
 #
 # systemctl daemon-reload
-# systemctl --user --no-block enable einsatzmonitor
-# systemctl --user --no-block start einsatzmonitor
+# systemctl enable einsatzmonitor
+# systemctl start einsatzmonitor
