@@ -5,6 +5,7 @@ import InfoOperationWidget from "./info/InfoOperationWidget";
 import ClockWidget from "./info/ClockWidget";
 import ImageWidget from "./info/ImageWidget";
 import WeatherWidget from "./info/WeatherWidget";
+import DateWidget from "./info/DateWidget";
 
 type tClassMapping = {
     [key: string]: any
@@ -15,6 +16,7 @@ const classMapping: tClassMapping = {
     'info-dienste-widget': InfoAppointmentWidget,
     'info-operations-widget': InfoOperationWidget,
     'clock-widget': ClockWidget,
+    'date-widget': DateWidget,
     'image-widget': ImageWidget,
     'weather-widget': WeatherWidget
 }
