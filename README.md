@@ -21,16 +21,16 @@
 ## :sparkles: Features
 
 - Lauffähig unter Windows und Linux
-- Für RaspberryPi optimiert
-- Darstellung von News, Terminen und ggf. einer Einsatz-Historie von einer REST-API in der Standbyansicht
-- Sollte der RaspberryPi während eines Einsatzes unerwartet neustarten, wechselt der Einsatzmonitor nach dem Hochfahren automatisch wieder in die Einsatzansicht
+- Für den Betrieb auf einem Raspberry Pi optimiert
+- Darstellung von News, Terminen und ggf. einer Einsatz-Historie durch Abfrage einer REST-API in der Standbyansicht
+- Sollte der Raspberry Pi während eines Einsatzes unerwartet neustarten, wechselt der Einsatzmonitor nach dem Hochfahren automatisch wieder in die Einsatzansicht
 - "Client/Server" Setup
-    - Geringer Resourcenbedarf auf dem RaspberryPi, da die Alarmauswertung von einem separaten Server ausgeführt werden kann
+    - Geringer Ressourcenbedarf auf dem Raspberry Pi, da die Alarmauswertung von einem separaten Server ausgeführt werden kann
     - Unbegrenzt viele Bildschirme sind einfach zu installieren
-- Einfache Anpassung des Layouts durch Widgets
-- Geringe Hardwarekosten auch für mehre Bildschirme
-- Darstellung der Route und Berechnung der Strecke mithilfe der Google Maps API
-- Ein/Ausschalten des Bildschirms mittels Bewegungsmelder am RaspberryPi möglich
+- Einfache und flexible Anpassung des Layouts durch Widgets
+- Geringe Hardwarekosten auch für mehrere Bildschirme
+- Darstellung der Route und Berechnung mithilfe der Google Maps API
+- Ein/Ausschalten des Bildschirms mittels Bewegungsmelder am Raspberry Pi möglich
 - Rückmeldungen von [Alamos aPager Pro](https://www.alamos-gmbh.com/service/apager-pro/) anzeigen
 
 
@@ -44,36 +44,36 @@
     - [jQuery](https://jquery.com/)
     - [Google Maps API](https://developers.google.com/maps/documentation/?hl=de)
     - [Gridster](https://github.com/dsmorse/gridster.js)
+    - [textFit](https://github.com/STRML/textFit)
+    - [Moment.js](https://momentjs.com/)
+    - [noUiSlider](https://refreshless.com/nouislider/)
+    - [webpack](https://webpack.js.org/)
 
 
-- Benötigte Software
-    - git
-    - node
+## :cloud: Installation auf einem Raspberry Pi 4 Model B
 
-## :cloud: Installation auf einem RaspberryPi 3 B+
-
-1. Git installieren
-    - ``$ apt install git``
-2. Ins verzeichnis `/opt/` wechseln
+1. Ins verzeichnis `/opt/` wechseln
     - ``$ cd /opt/``
-3. Einsatzmonitor - Frontend herunterladen
+2. Einsatzmonitor - Frontend herunterladen
     - ``$ mkdir einsatzmonitor && cd einsatzmonitor``
-    - ``$ git clone https://github.com/Finn0811/Einsatzmonitor.git .``
-4. NodeJS installieren
-    - ``$ apt update``
-    - ``$ curl -sL https://deb.nodesource.com/setup_12.x | bash -``
-    - ``$ apt install nodejs``
-5. Einsatzmonitor - Frontend Abhängigkeiten installieren
-    - ``$ npm install``
-6. Konfigurationsdatei aktivieren
-    - ``$ cp config.js.dist config.js``
-    - Durch das Umbenennen wird sichergestellt, dass die Konfigurationsdatei bei einem Update des Einsatzmonitors nicht überschrieben wird. Erklärungen zu den Optionen folgen in einem der nächsten Punkte.
-7. Installation testen
-    - ``$ npm start``
-    
-Es sollte sich nun ein Fenster des Einsatzmonitors öffnen. Dieses kann direkt mit ``STRG + c`` geschlossen werden.
+    - ``$ wget -O einsatzmonitor-latest.zip http://134.255.237.237/einsatzmonitor-frontend/einsatzmonitor-ubuntu-latest-43/EinsatzMonitor-2.0.0-linux-armv7l.zip``
+3. Zip-Archiv entpacken und entfernen
+    - ``$ unzip einsatzmonitor-latest.zip``
+    - ``$ rm einsatzmonitor-latest.zip``
+4. Systemd unit file anlegen und den Inhalt folgender Datei einfügen: [systemd unit file](https://github.com/Finn0811/Einsatzmonitor-Frontend/blob/master/systemd/einsatzmonitor.service)
+    - ``$ cd /etc/systemd/system/``
+    - ``$ nano einsatzmonitor.service``
+5. Dienst aktivieren und starten (Befehle als root ausführen!)
+    - ``$ systemctl daemon-reload`
+    - ``$ systemctl enable einsatzmonitor`
+    - ``$ systemctl start einsatzmonitor`
+6. Fertig!
 
-Bei der Installation wurde bereits der Autostart für diese Anwendung eingerichtet. (``/home/pi/.config/autostart/einsatzmonitor.desktop``)
+Die Installation ist nun abgeschlossen. Die Konfiguration kann direkt über die GUI erfolgen (Icon unten links in der Ecke).
+
+Die Konfigurationsdateien liegen unter `/home/pi/.config/einsatzmonitor/`
+
+`settings.json` - Grundeinstellungen der Applikation wie Alarmeingang, Startpunkt der Routenberechnung, Google Maps API-Key, Hintergrundbild, ...
 
 ## :rocket: Funktionsweise
 #### Abrufen von Einsätzen
@@ -95,7 +95,7 @@ Außerdem sollte die REST-API nur aktive Einsätze ausgeben, die innerhalb der e
 
 Alternativ kann ein Einsatz auch über ein Websocket-Event empfangen werden. Die Überlieferte Nachricht muss das Objekt "einsatz" mit der obengenannten Strutur aufweisen.
 
-## :gear: Konfigurationsdatei - Optionen
+## :gear: Konfigurationsdatei - Optionen  | ACHTUNG VERALTET - Update folgt
 - ``debug: <true|false>``
     - true: Starten im Fenstermodus
     - false: Starten im Vollbildmodus
@@ -162,7 +162,7 @@ Alternativ kann ein Einsatz auch über ein Websocket-Event empfangen werden. Die
         @xset -dpms
         @xset s noblank
         ```
-3. RaspberryPi neustarten
+3. Raspberry Pi neustarten
 4. Sollten diese Einstellungen noch keine Wirkung zeigen, gibt es hier weitere Informationen: https://raspberrypi.stackexchange.com/questions/752/how-do-i-prevent-the-screen-from-going-blank/753#753
 
 ## :eyes: Bewegungsmelder an RaspberryPi anschließen und Bildschirm ein/ausschalten
@@ -185,7 +185,7 @@ Für das Script zur Bewegungserkennung kann ein Systemd-Service angelegt werden.
     - ``$ systemctl start pir``
 4. Der Service sollte nun gestartet sein
     - ``$ systemctl status pir``
-![Standbyansicht](http://134.255.237.237/einsatzmonitor-pir.png "Bewegungsmelder service")
+![Bewegungsmelder](http://134.255.237.237/einsatzmonitor-pir.png "Bewegungsmelder service")
 
 Das Ein- und Ausschalten des Bildschirms geschieht intern über die Befehle ``$ vcgencmd display_power 1`` sowie ``$ vcgencmd display_power 0``, wodurch der HDMI-Port Ein- und Ausgeschaltet wird.
 
