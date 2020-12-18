@@ -21,6 +21,8 @@ class WeatherWidget extends Widget {
         return this.extra_config.get('customName')() ? this.extra_config.get('customName')() : this.name();
     });
 
+    isDay: Observable<boolean> = ko.observable();
+
     icon: Computed = ko.computed(() => {
         switch (this.iconId()) {
             case 200:
@@ -84,11 +86,6 @@ class WeatherWidget extends Widget {
         }
     });
 
-    isDay() {
-        let hours = new Date().getHours()
-        return hours > 6 && hours < 22
-    }
-
     updateWeather() {
         if (!this.extra_config.get('apiKey')()) {
             logger.info("Kein OWM API-Key für Wetterabruf konfiguriert.");
@@ -99,6 +96,9 @@ class WeatherWidget extends Widget {
             logger.info("Keine PLZ für Wetterabruf konfiguriert.");
             return;
         }
+
+        let hours = new Date().getHours()
+        this.isDay(hours > 6 && hours < 22);
 
         axios.get(`http://api.openweathermap.org/data/2.5/weather?zip=${this.extra_config.get('zipCountry')()}&lang=de&units=metric&appid=${this.extra_config.get('apiKey')()}`, axiosConfigParams)
             .then((response) => {
