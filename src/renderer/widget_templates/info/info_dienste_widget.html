@@ -7,11 +7,11 @@
 
         <!-- ko if: $root.board().getWidgetById(id) -->
         <div data-bind="foreach: $root.board().getWidgetById(id).sortedAppointments()">
-            <div class="dienst-wrapper bg-white shadow mb-2 custom-shadow" data-bind="css: { 'mb-3': is_today() }, style: { 'color': widget.extra_config.get('text-color') }">
+            <div class="dienst-wrapper shadow mb-2 custom-shadow" data-bind="css: { 'mb-3': is_today() }, style: { 'color': widget.extra_config.get('text-color'), 'background-color': widget.extra_config.get('item-bgcolor') }">
                 <table class="dienstplan-table" style="width: 100%">
                     <tr class="dienst-entry" data-bind="css: { 'dienst-today': is_today() }">
                         <td>
-                            <span class="dienst-date pull-left bg-info">
+                            <span class="dienst-date pull-left" style="background-color: #17a2b8" data-bind="style: { 'background-color': widget.extra_config.get('date-bgcolor') }">
                                 <span class="dienst-date-month text-center text-white" data-bind="text: startDate().toLocaleString('de-de', { month: 'long' }).substring(0, 3)"></span>
                                 <span class="dienst-date-day text-center text-white" data-bind="text: startDate().getDate()"></span>
                             </span>
@@ -49,6 +49,9 @@
                             <small id="infoDiensteWidgetUrlHelp" class="form-text text-muted">Schnittstelle zum Abrufen der Dienste</small>
 
                             <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'padding-x', max: '100',  title: 'Padding x', description: 'Abstand links und rechts: ' } }"></div>
+
+                            <div data-bind="template: { name: 'edit-color', data: { wdg: widget, field: 'date-bgcolor', title: 'Datum Hintergrundfarbe', description: 'Farbe der Datumsanzeige' } }"></div>
+                            <div data-bind="template: { name: 'edit-color', data: { wdg: widget, field: 'item-bgcolor', title: 'Termin Hintergrundfarbe', description: 'Hintergrundfarbe eines Termins' } }"></div>
 
                             <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
                             <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
