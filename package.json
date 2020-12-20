@@ -50,6 +50,7 @@
     "electron-settings": "^4.0.2",
     "electron-updater": "^4.0.6",
     "fitty": "^2.3.2",
+    "graceful-fs": "^4.2.4",
     "knockout": "^3.5.1",
     "moment": "^2.27.0",
     "nouislider": "^14.6.1",

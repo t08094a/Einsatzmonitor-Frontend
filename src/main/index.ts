@@ -5,6 +5,10 @@ import settings from 'electron-settings';
 import {autoUpdater} from 'electron-updater';
 import * as path from "path";
 
+let realFs = require('fs')
+let gracefulFs = require('graceful-fs')
+
+gracefulFs.gracefulify(realFs)
 
 // if (config.sentry.enabled)
 //     require('./sentry');
