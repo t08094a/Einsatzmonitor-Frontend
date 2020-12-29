@@ -43,6 +43,9 @@ ko.bindingHandlers.map = {
         var mapObj = ko.utils.unwrapObservable(valueAccessor());
         // console.log("update triggered (" + mapObj.lat() + ":" + mapObj.lng() + ")");
 
+        if (!mapObj)
+            return;
+
         if (!mapObj.lat() || !mapObj.lng())
             return;
 
