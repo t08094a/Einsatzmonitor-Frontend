@@ -69,7 +69,7 @@ class InfoAppointmentWidget extends Widget {
             this.loadAppointments();
         }, 1000 * (settings.getSync("info.httpFetchInterval") as number));
 
-        console.log("Loaded InfoAppointmentWidget");
+        logger.info("Loaded InfoAppointmentWidget");
     }
 }
 

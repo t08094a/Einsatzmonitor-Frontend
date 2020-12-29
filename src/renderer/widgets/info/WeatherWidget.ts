@@ -130,7 +130,7 @@ class WeatherWidget extends Widget {
             this.updateWeather();
         }, 1000 * 60);
 
-        console.log("Loaded WeatherWidget");
+        logger.info("Loaded WeatherWidget");
     }
 }
 

@@ -1,5 +1,6 @@
 import Widget from "../Widget";
 import {Computed} from "knockout";
+import {logger} from "../../../common/common";
 const ko = require('knockout');
 
 class ImageWidget extends Widget {
@@ -42,7 +43,7 @@ class ImageWidget extends Widget {
             this.updateImage();
         }, 1000 * 60 * 60);
 
-        console.log("Loaded ImageWidget");
+        logger.info("Loaded ImageWidget");
     }
 }
 

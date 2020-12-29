@@ -1,6 +1,6 @@
 import Widget from "../Widget";
 import {Computed, Observable} from "knockout";
-import {str_pad_left} from "../../../common/common";
+import {logger, str_pad_left} from "../../../common/common";
 
 const ko = require('knockout');
 
@@ -31,7 +31,7 @@ class ClockWidget extends Widget {
             this.updateClock();
         }, 1000 * 60);
 
-        console.log("Loaded DateWidget");
+        logger.info("Loaded DateWidget");
     }
 }
 

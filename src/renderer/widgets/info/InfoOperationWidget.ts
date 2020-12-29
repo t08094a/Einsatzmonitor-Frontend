@@ -69,7 +69,7 @@ class InfoOperationWidget extends Widget {
             this.loadOperations();
         }, 1000 * (settings.getSync("info.httpFetchInterval") as number));
 
-        console.log("Loaded InfoOperationWidget");
+        logger.info("Loaded InfoOperationWidget");
     }
 }
 

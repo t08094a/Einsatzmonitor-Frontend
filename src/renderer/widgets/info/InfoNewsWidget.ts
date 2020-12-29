@@ -70,7 +70,7 @@ class InfoNewsWidget extends Widget {
             this.loadNews();
         }, 1000 * (settings.getSync("info.httpFetchInterval") as number));
 
-        console.log("Loaded NewsWidget");
+        logger.info("Loaded NewsWidget");
     }
 }
 
