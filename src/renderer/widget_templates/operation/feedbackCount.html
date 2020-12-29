@@ -14,9 +14,9 @@
                 <div class="einsatz-einheit">
                     <div class=""> <!-- needs a surrounding div for size calculation because of padding -->
                         <h2 class="text-white m-0" style="line-height: 0.9" data-maxfitty="100" data-bind="style: {'font-size': widget.extra_config.get('text-size')() + 'px', class: 'text-' + widget.config.get('align')()}">
-                            <span data-bind="text: $root.get_latest_einsatz().get_function_count(widget.extra_config.get('function')(), 'YES')" class="text-success">20</span>
+                            <span data-bind="text: $root.get_latest_einsatz()?.get_function_count(widget.extra_config.get('function')(), 'YES')" class="text-success">20</span>
                             /
-                            <span data-bind="text: $root.get_latest_einsatz().get_function_count(widget.extra_config.get('function')(), 'NO')" class="text-danger">10</span>
+                            <span data-bind="text: $root.get_latest_einsatz()?.get_function_count(widget.extra_config.get('function')(), 'NO')" class="text-danger">10</span>
                         </h2>
                     </div>
                 </div>

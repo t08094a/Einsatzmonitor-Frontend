@@ -6,7 +6,7 @@
         <!-- ko if: $root.get_latest_einsatz() -->
         <div class="einsatz-einheiten ml-0 mr-0" style="height: 100%; columns: 2; column-gap: .25rem;"
              data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color'), columns: widget.extra_config.get('columns') }">
-            <!-- ko foreach: $root.get_latest_einsatz().get_feedback_persons_sorted() -->
+            <!-- ko foreach: $root.get_latest_einsatz()?.get_feedback_persons_sorted() -->
             <!-- ko if: !$data.isHidden(widget, $data.feedback()) -->
             <div class="pl-0 pr-0 pb-1" style="break-inside: avoid; position: relative; float: none;">
                 <div class="einsatz-einheit p-1" data-bind="class: $data.get_feedback_color()">
