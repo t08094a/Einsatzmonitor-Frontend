@@ -289,7 +289,7 @@ export class BoardViewModel {
         max_cols: 24,
         // extra_rows: 20,
         // min_rows: 30,
-        max_rows: 30,
+        max_rows: 60,
         shift_widgets_up: false,
         shift_larger_widgets_down: false,
         collision: {
