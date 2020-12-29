@@ -9,8 +9,8 @@
                 <tbody>
                 <!-- ko foreach: $root.get_latest_einsatz()?.zusatzinfos() -->
                 <tr>
-                    <td><h5><i class="fal fa-comment-alt-lines mr-1"></i> <strong>Zusatzinfo <span data-bind="text: name"></span>:</strong></h5></td>
-                    <td class="pl-4"><h5 data-bind="text: value"></h5></td>
+                    <td><h5><i class="fal fa-comment-alt-lines mr-1"></i> <strong>Zusatzinfo <span data-bind="text: $data.name"></span>:</strong></h5></td>
+                    <td class="pl-4"><h5 data-bind="text: $data.value"></h5></td>
                 </tr>
                 <!-- /ko -->
                 <!-- ko if: $root.get_latest_einsatz()?.alarmzeit_datetime() -->
