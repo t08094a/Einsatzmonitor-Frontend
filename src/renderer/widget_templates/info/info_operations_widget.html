@@ -6,7 +6,7 @@
         <h2 class="text-white" data-bind="text: widget.extra_config.get('title')"></h2>
 
         <!-- ko if: $root.board().getWidgetById(id) -->
-        <div data-bind="foreach: $root.board().getWidgetById(id).sortedOperations()">
+        <div data-bind="foreach: $root.board().getWidgetById(id)?.sortedOperations()">
             <div class="einsaetze-wrapper bg-white mb-2 custom-shadow" style="border: 1px solid #c9c9c9">
                 <a data-bind="style: { 'border-left-color': color(), 'color': widget.extra_config.get('text-color')} " class="list-group-item p-2" style="border-left: 6px solid; border-radius: 0; border-top: 0; border-bottom: 0;">
                     <div class="pl-1 mb-0">

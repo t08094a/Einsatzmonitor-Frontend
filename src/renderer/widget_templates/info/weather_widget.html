@@ -5,12 +5,12 @@
 
         <!-- ko if: $root.board().getWidgetById(id) -->
         <div style="height: 100%; display: flex; align-items: center">
-            <img data-bind="attr:{src: './static/img/weather/' + $root.board().getWidgetById(id).icon() + '.png'}" alt="" style="height: 100%">
+            <img data-bind="attr:{src: './static/img/weather/' + $root.board().getWidgetById(id)?.icon() + '.png'}" alt="" style="height: 100%">
             <div style="margin-left: 30px">
                 <h1 class="big-text m-0"
-                    data-bind="text: $root.board().getWidgetById(id).getDisplayName, style: { 'color': widget.extra_config.get('text-color'), 'font-size': widget.extra_config.get('text-size')() + 'px' }, class: 'text-' + widget.config.get('align')(), css: { 'vert-center': widget.extra_config.get('vert-center') }"></h1>
+                    data-bind="text: $root.board().getWidgetById(id)?.getDisplayName, style: { 'color': widget.extra_config.get('text-color'), 'font-size': widget.extra_config.get('text-size')() + 'px' }, class: 'text-' + widget.config.get('align')(), css: { 'vert-center': widget.extra_config.get('vert-center') }"></h1>
                 <h1 class="big-text m-0"
-                    data-bind="text: $root.board().getWidgetById(id).descriptionWithText(), style: { 'color': widget.extra_config.get('text-color'), 'font-size': widget.extra_config.get('text-size')() + 'px' }, class: 'text-' + widget.config.get('align')(), css: { 'vert-center': widget.extra_config.get('vert-center') }"></h1>
+                    data-bind="text: $root.board().getWidgetById(id)?.descriptionWithText(), style: { 'color': widget.extra_config.get('text-color'), 'font-size': widget.extra_config.get('text-size')() + 'px' }, class: 'text-' + widget.config.get('align')(), css: { 'vert-center': widget.extra_config.get('vert-center') }"></h1>
             </div>
         </div>
         <!-- /ko -->
