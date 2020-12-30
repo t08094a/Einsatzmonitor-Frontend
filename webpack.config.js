@@ -56,6 +56,7 @@ let common_config = {
 
 module.exports = [
     Object.assign({}, common_config, {
+        devtool: 'inline-source-map',
         target: 'electron-main',
         entry: {
             renderrer: './src/main/index.ts',
@@ -66,6 +67,7 @@ module.exports = [
         },
     }),
     Object.assign({}, common_config, {
+        devtool: 'inline-source-map',
         target: 'electron-renderer',
         entry: {
             ui: './src/renderer/index.ts',
