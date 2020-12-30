@@ -4,7 +4,7 @@
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
         <!-- ko if: $root.get_latest_einsatz() -->
-        <div class="map bg-dark" data-bind="map:$root.get_latest_einsatz()?.route_map"></div>
+        <div class="map bg-dark" data-bind="map:$root.get_latest_einsatz()?.route_map, style: { 'zoom': widget.extra_config.get('zoom') }"></div>
         <!-- /ko -->
 
         <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
@@ -18,7 +18,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-
+                            <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'zoom', title: 'Zoom', description: 'Zusätzlicher Zoom zum Vergrößern der Karte. Default: 1.0' } }"></div>
                         </div>
                     </div>
                     <div class="modal-footer">

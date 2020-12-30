@@ -287,7 +287,7 @@ class Einsatz {
         lng: ko.observable(),
 
         mapOptions: ko.observable({
-            zoom: 14,
+            zoom: 18,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         }),
 
