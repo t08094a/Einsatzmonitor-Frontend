@@ -12,7 +12,7 @@
     "dev:electron_old": "webpack --config webpack.config.js --mode development && electron .",
     "dev:webpack": "webpack-dev-server --progress --colors --hot --inline --mode development",
     "dev:electron": "set NODE_ENV=dev && electron .",
-    "dist:webpack": "webpack --mode production"
+    "dist:webpack": "webpack --mode development"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
