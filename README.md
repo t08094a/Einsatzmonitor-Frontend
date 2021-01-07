@@ -15,7 +15,8 @@
 ## :camera: Bilder
 | Standbyansicht | Einsatzansicht |
 |:-------------:|:-------------:|
-|![Standbyansicht](http://134.255.237.237/einsatzmonitor/1.2.0/info.png "Standbyansicht")|![Alarmansicht](http://134.255.237.237/einsatzmonitor/1.2.0/einsatz.png "Alarmansicht")|
+|![Standbyansicht](http://134.255.237.237/einsatzmonitor/2.1.0/info.png "Standbyansicht")|![Alarmansicht 1](http://134.255.237.237/einsatzmonitor/2.1.0/einsatz-1.png "Alarmansicht 1")|
+| |![Alarmansicht 2](http://134.255.237.237/einsatzmonitor/2.1.0/einsatz-2.png "Alarmansicht 2")|
 
 
 ## :sparkles: Features
