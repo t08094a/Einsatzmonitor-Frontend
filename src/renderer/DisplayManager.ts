@@ -55,7 +55,9 @@ class DisplayManager {
             let currentTimestamp = new Date().getTime();
             let diffSeconds = (currentTimestamp - lastMovement) / 1000;
 
-            if (diffSeconds < 600) {
+            let displayOnMinutes = parseInt((settings.getSync("motionDetector.displayOnTimeMinutes") as any).toString())
+
+            if (diffSeconds < (60 * displayOnMinutes)) {
                 logger.info(`Last movement: ${diffSeconds}s ago.`);
                 return;
             }

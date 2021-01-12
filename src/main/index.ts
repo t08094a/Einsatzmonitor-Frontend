@@ -91,6 +91,7 @@ function createDefaultConfig() {
 
     setDefaultConfigValue("motionDetector.enabled", false);
     setDefaultConfigValue("motionDetector.filePath", "/opt/einsatzmonitor/motion/motion");
+    setDefaultConfigValue("motionDetector.displayOnTimeMinutes", 10);
 
 
     setDefaultConfigValue("displayAlwaysOn", false);
