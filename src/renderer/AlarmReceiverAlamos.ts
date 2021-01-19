@@ -2,9 +2,9 @@ import EinsatzMonitorModel from "./EinsatzMonitor";
 import settings from "electron-settings";
 import {logger, replaceAll, sha256} from "../common/common";
 
-const aesEcb = require('aes-ecb');
 const net = require('net');
 const alarmReceiver = net.createServer();
+const CryptoJS = require("crypto-js");
 
 class AlarmReceiverAlamos {
     einsatzMonitorModel: EinsatzMonitorModel;
@@ -21,10 +21,18 @@ class AlarmReceiverAlamos {
             sock.on('data', (data: any) => {
                 sha256(settings.getSync("alamos.alarmInput.password")).then((passwordHash) => {
                     let encodedPassword = passwordHash.substring(0, 32);
-                    let decryptedData = aesEcb.decrypt(encodedPassword, data.toString());
 
-                    let finalData = replaceAll(decodeURIComponent(decodeURI(decryptedData.toString())), "+", " ");
-                    let alarmJson = JSON.parse(finalData.substring(0, finalData.lastIndexOf("}") + 1));
+                    let key = CryptoJS.enc.Utf8.parse(encodedPassword)
+                    let cipherParams = CryptoJS.lib.CipherParams.create({
+                        ciphertext: CryptoJS.enc.Base64.parse(data.toString())
+                    });
+
+                    let decrypted = CryptoJS.AES.decrypt(cipherParams, key, {mode: CryptoJS.mode.ECB, keySize: 256});
+                    let decryptedString = CryptoJS.enc.Utf8.stringify(decrypted)
+                    let encodedPlus = replaceAll(decryptedString, "+", "%20")
+
+                    let urlDecodedData = decodeURIComponent(encodedPlus);
+                    let alarmJson = JSON.parse(urlDecodedData);
 
                     let einsatz = {
                         'id': 0,
