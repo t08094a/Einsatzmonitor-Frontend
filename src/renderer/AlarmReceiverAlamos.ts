@@ -13,7 +13,7 @@ class AlarmReceiverAlamos {
         this.einsatzMonitorModel = einsatzMonitorModel;
 
         alarmReceiver.listen(10000, '0.0.0.0', () => {
-            logger.info('AlarmReceiver TCP Server is running on port 10000.');
+            logger.info('AlarmReceiverAlamos | AlarmReceiver TCP Server is running on port 10000.');
         });
 
         alarmReceiver.on('connection', (sock: any) => {
@@ -34,17 +34,37 @@ class AlarmReceiverAlamos {
                     let urlDecodedData = decodeURIComponent(encodedPlus);
                     let alarmJson = JSON.parse(urlDecodedData);
 
-                    let einsatz = {
-                        'id': 0,
-                        'stichwort': alarmJson['keyword'],
-                        'description': alarmJson['keyword_description'],
-                        'adresse': alarmJson['location_dest'],
-                        'alarmzeit_seconds': alarmJson['timestamp'] / 1000,
-                        'einheiten': [],
-                        'zusatzinfos': [],
-                    }
+                    logger.debug("AlarmReceiverAlamos | Received alarmJson:")
+                    logger.debug(alarmJson)
 
-                    this.einsatzMonitorModel.add_einsatz(einsatz);
+                    switch (alarmJson['alarmType']) {
+                        case "ALARM": {
+                            logger.info("Received ALARM")
+
+                            let einsatz = {
+                                'id': 0,
+                                'stichwort': alarmJson['keyword'],
+                                'description': alarmJson['keyword_description'],
+                                'adresse': alarmJson['location_dest'],
+                                'alarmzeit_seconds': alarmJson['timestamp'] / 1000,
+                                'einheiten': [],
+                                'zusatzinfos': [],
+                            }
+
+                            this.einsatzMonitorModel.add_einsatz(einsatz);
+                            break;
+                        }
+
+                        case "STATUS": {
+                            logger.info("AlarmReceiverAlamos | Received STATUS")
+                            break;
+                        }
+
+                        default: {
+                            logger.info(`AlarmReceiverAlamos | Received unknown alarmType (${alarmJson['alarmType']})`)
+                            break;
+                        }
+                    }
                 });
             });
         });
