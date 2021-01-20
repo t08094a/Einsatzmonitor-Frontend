@@ -7,8 +7,10 @@
 </h1>
 
 <p align="center">
+  <a href="https://github.com/Finn0811/Einsatzmonitor-Frontend/actions"><img src="https://img.shields.io/github/workflow/status/Finn0811/Einsatzmonitor-Frontend/build" alt="Build status"></a>
   <a href="https://github.com/Finn0811/Einsatzmonitor-Frontend/releases/latest"><img src="https://img.shields.io/github/release/Finn0811/Einsatzmonitor-Frontend" alt="Current Release"></a>
-  <a href="https://github.com/Finn0811/Einsatzmonitor-Frontend/releases/latest"><img src="https://img.shields.io/github/commits-since/Finn0811/Einsatzmonitor-Frontend/latest.svg" alt="Commits since last release"></a>
+  <a href="https://github.com/Finn0811/Einsatzmonitor-Frontend/commits/master"><img src="https://img.shields.io/github/commits-since/Finn0811/Einsatzmonitor-Frontend/latest.svg" alt="Commits since last release"></a>
+  <a href="https://github.com/Finn0811/Einsatzmonitor-Frontend/releases"><img src="https://img.shields.io/github/downloads/Finn0811/Einsatzmonitor-Frontend/latest/total.svg" alt="Downloads"></a>
   <a href="https://github.com/Finn0811/Einsatzmonitor-Frontend/issues"><img src="http://isitmaintained.com/badge/open/Finn0811/Einsatzmonitor-Frontend.svg" alt="Open issues"></a>
 </p>
 
