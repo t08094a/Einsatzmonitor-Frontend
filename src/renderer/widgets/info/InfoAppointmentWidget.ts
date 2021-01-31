@@ -47,7 +47,7 @@ class InfoAppointmentWidget extends Widget {
                 });
 
                 this.appointments().forEach((item: any) => {
-                    if (dienste.includes(item.id)) {
+                    if (!dienste.includes(item.id())) {
                         this.appointments.remove(item);
                     }
                 });

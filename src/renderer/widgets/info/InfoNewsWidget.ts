@@ -48,7 +48,7 @@ class InfoNewsWidget extends Widget {
                 });
 
                 this.news().forEach((item: any) => {
-                    if (news.includes(item.id)) {
+                    if (!news.includes(item.id())) {
                         this.news.remove(item);
                     }
                 });

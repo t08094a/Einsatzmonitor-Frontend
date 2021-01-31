@@ -47,7 +47,7 @@ class InfoOperationWidget extends Widget {
                 });
 
                 this.operations().forEach((item: any) => {
-                    if (einsaetze.includes(item.id)) {
+                    if (!einsaetze.includes(item.id())) {
                         this.operations.remove(item);
                     }
                 })
