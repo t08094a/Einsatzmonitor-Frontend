@@ -1,8 +1,10 @@
 import {Observable, ObservableArray} from "knockout";
-import {BoardViewModel} from "../EinsatzMonitor";
+import EinsatzMonitorModel, {BoardViewModel} from "../EinsatzMonitor";
 
 const ko = require('knockout');
-const textFit = require('textfit')
+// const customTextFit = require('customTextFit');
+// const textFit = require('textfit')
+
 
 let ids = 1;
 
@@ -12,6 +14,7 @@ export const widgetTypes = {
 };
 
 class Widget {
+    main: EinsatzMonitorModel;
     board: BoardViewModel;
     id: number;
     datasizex: number;
@@ -75,7 +78,8 @@ class Widget {
         let max = newMax ? newMax : 50;
 
         if (this.extra_config.get('text-fitty')()) {
-            textFit(fittyElement, {maxFontSize: max, alignHoriz: true, alignVert: true})
+            // @ts-ignore
+            customTextFit(fittyElement, {maxFontSize: max, alignHoriz: true, alignVert: true})
         }
     };
 
@@ -87,7 +91,8 @@ class Widget {
 
     }
 
-    constructor(board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
+    constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
+        this.main = main;
         this.board = board;
         this.id = ids++;
 

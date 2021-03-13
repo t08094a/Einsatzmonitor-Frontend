@@ -59,6 +59,7 @@
                     <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("date-widget") }'><i class="fal fa-plus"></i> Datum</button>
                     <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("image-widget") }'><i class="fal fa-plus"></i> Bild</button>
                     <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("weather-widget") }'><i class="fal fa-plus"></i> Wetter</button>
+                    <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("vehicle-widget") }'><i class="fal fa-plus"></i> Fahrzeuge</button>
                     <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("text-widget") }'><i class="fal fa-plus"></i> Text</button>
                     <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("info-news-widget") }'><i class="fal fa-plus"></i> News</button>
                     <button class="btn btn-outline-success mt-1" data-bind='click: function(data, event) { addWidget("info-dienste-widget") }'><i class="fal fa-plus"></i> Dienste</button>
@@ -120,6 +121,9 @@
                     <button class="btn btn-success" data-bind='click: board().openWidgetAddModal' data-dismiss="modal"><i class="fal fa-plus"></i> Widget hinzufügen</button>
                     <button class="btn btn-danger" data-bind='click: clearWidgets'><i class="fal fa-trash"></i> Alle Widgets entfernen</button>
 
+                    <h4 class="mt-5">Fahrzeugeinstellungen</h4>
+                    <button class="btn btn-secondary" data-bind='click: board().openVehicleModal' data-dismiss="modal"><i class="fal fa-cogs"></i> Fahrzeugeinstellungen öffnen</button>
+
                     <h4 class="mt-5">EinsatzMonitor Einstellungen</h4>
                     <button class="btn btn-secondary" data-bind='click: board().openSettingsModal' data-dismiss="modal"><i class="fal fa-cogs"></i> Einstellungen öffnen</button>
                 </div>
@@ -180,6 +184,72 @@
         </div>
     </script>
 
+    <!-- Vehicle settings -->
+    <div id="vehiclesModel" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Fahrzeugeinstellungen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button class="btn btn-success" data-bind="click: $root.vehicleModel.loadVehiclesFromDisk">Aus Einstellungen laden</button>
+
+                    <h5 class="mt-3"><strong>Fahrzeuge</strong></h5>
+                    <table class="table table-sm">
+                        <thead>
+                        <tr>
+                            <th scope="col">Status</th>
+                            <th scope="col">Wache</th>
+                            <th scope="col">ISSI</th>
+                            <th scope="col">Name</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody data-bind="foreach: $root.vehicleModel.vehicles">
+                        <tr>
+                            <th scope="row" data-bind="text: statusCode"></th>
+                            <td data-bind="text: station"></td>
+                            <td data-bind="text: identification"></td>
+                            <td data-bind="text: name"></td>
+                            <td><button class="btn btn-sm btn-danger" data-bind="click:$root.vehicleModel.removeVehicle" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-trash-alt"></i></button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <h5 class="mt-3"><strong>Fahrzeug hinzufügen</strong></h5>
+                    <form>
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="vehicleStationInput">Wache</label>
+                                <input id="vehicleStationInput" type="text" class="form-control" data-bind="textInput: $root.vehicleModel.newVehicle.station" placeholder="Wache"/>
+                            </div>
+                            <div class="col">
+                                <label for="vehicleIdentificationInput">ISSI</label>
+                                <input id="vehicleIdentificationInput" type="text" class="form-control" data-bind="textInput: $root.vehicleModel.newVehicle.identification" placeholder="ISSI"/>
+                            </div>
+                            <div class="col">
+                                <label for="vehicleNameInput">Name</label>
+                                <input id="vehicleNameInput" type="text" class="form-control" data-bind="textInput: $root.vehicleModel.newVehicle.name" placeholder="Bezeichnung"/>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-block btn-primary" style="bottom: 0; position: absolute;" data-bind="click: $root.vehicleModel.addNewVehicle">Hinzufügen </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" data-bind="click: $root.vehicleModel.saveVehiclesToDisk, enable: !$root.vehicleModel.saving() ">Speichern <i data-bind="visible: $root.vehicleModel.saving()"
+                                                                                                                                                                 class="fa fa-cog fa-spin fa-fw"></i></button>
+                    <button type="button" class="btn btn-secondary" data-bind='click: board().openSettingsMenuModal' data-dismiss="modal">Zurück</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="window-buttons-wrapper version-info mr-2 mb-2 p-1" style="position:fixed; right:0; bottom:0;">
         <small id="app-version" class="text-muted text-white">EinsatzMonitor V0.0.0 Beta</small>
@@ -228,6 +298,9 @@
 
 <!-- gridster.js -->
 <script src="./static/js/gridster.with-extras.js"></script>
+
+<!-- custom textFit -->
+<script src="./static/js/customTextFit.js"></script>
 
 <!-- sentry -->
 <!-- Todo: move sentry code to the top -->

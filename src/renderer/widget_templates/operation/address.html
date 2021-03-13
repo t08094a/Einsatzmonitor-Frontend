@@ -4,11 +4,14 @@
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
         <!-- ko if: $root.get_latest_einsatz() -->
-        <div class="text-center vert-center" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }" style="height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
-            <h2 class="m-0 fitty-element" data-maxfitty="200" style="height: 100%">
-                <span><i class="fal fa-map-marker-alt"></i></span>
-                <span data-bind="text: $root.get_latest_einsatz().adresse"></span>
-                <span data-bind="text: $root.get_latest_einsatz().objekt"></span>
+        <div class="text-center vert-center" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }" style="height: 100%">
+            <!-- needs a surrounding div for size calculation because of padding -->
+            <h2 class="m-0 fitty-element h-100" data-maxfitty="200" style="height: 100%">
+                <div class="wrapper">
+                    <span><i class="fal fa-map-marker-alt"></i></span>
+                    <span data-bind="text: $root.get_latest_einsatz().adresse"></span>
+                    <span data-bind="text: $root.get_latest_einsatz().objekt"></span>
+                </div>
             </h2>
         </div>
         <!-- /ko -->

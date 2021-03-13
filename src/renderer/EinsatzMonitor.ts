@@ -14,6 +14,8 @@ import ClockWidget from "./widgets/info/ClockWidget";
 import SettingsModel from "./EinsatzMonitorSettings";
 import settings from "electron-settings";
 import ImageWidget from "./widgets/info/ImageWidget";
+import Vehicle from "../common/models/Vehicle";
+import VehicleModel from "./VehicleModel";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
@@ -131,7 +133,7 @@ class EinsatzMonitorModel {
 
     addWidget(templateName: string) {
         let WidgetClass = dynamicWidget(templateName);
-        let wdg = new WidgetClass(this.board(), templateName, this.getCurrentWidgetType());
+        let wdg = new WidgetClass(this, this.board(), templateName, this.getCurrentWidgetType());
         this.board().widgets.push(wdg);
     }
 
@@ -169,14 +171,25 @@ class EinsatzMonitorModel {
     loadWidgets(path: any) {
         logger.info(`View | Loading view from ${path}`);
 
-        let data = fs.readFileSync(path)
+        let data;
+
+        try {
+            data = fs.readFileSync(path)
+        } catch (e) {
+            logger.warn("No widget file found.")
+        }
+
+        if (!data) {
+            return;
+        }
+
         let jsonParsed = JSON.parse(data);
 
         jsonParsed.forEach((widget: any) => {
             logger.debug(`View | Loaded widget: `, widget);
 
             let WidgetClass = dynamicWidget(widget.config.template);
-            let wdg = new WidgetClass(this.board(), widget.config.template, widget.config.type, widget['row'], widget['col'], widget['size_x'], widget['size_y']);
+            let wdg = new WidgetClass(this, this.board(), widget.config.template, widget.config.type, widget['row'], widget['col'], widget['size_x'], widget['size_y']);
 
             for (let key in widget.config) {
                 if (widget.config.hasOwnProperty(key)) {
@@ -247,6 +260,7 @@ class EinsatzMonitorModel {
     }
 
     settingsModel: any;
+    vehicleModel: VehicleModel;
 
     constructor() {
         // Update view if "einsaetze" changes
@@ -263,8 +277,10 @@ class EinsatzMonitorModel {
 
         this.settingsModel = settingsModel;
 
-        logger.info("Loaded SettingsModel");
+        this.vehicleModel = new VehicleModel();
+        this.vehicleModel.loadVehiclesFromDisk();
 
+        logger.info("Loaded SettingsModel");
     }
 
     loaded() {
@@ -328,6 +344,10 @@ export class BoardViewModel {
 
     openWidgetAddModal() {
         ($('#addWidgetModal').appendTo("body") as any).modal('show');
+    };
+
+    openVehicleModal() {
+        ($('#vehiclesModel').appendTo("body") as any).modal('show');
     };
 
     openSettingsMenuModal() {

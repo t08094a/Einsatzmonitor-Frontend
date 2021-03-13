@@ -100,7 +100,7 @@ class EinsatzMonitorSetting {
     type = ko.observable();
 
     booleanValues = ko.observableArray([new BooleanSetting(false, "false"), new BooleanSetting(true, "true")]);
-    fetchValues = ko.observableArray([new FetchSetting(0, "http"), new FetchSetting(1, "websocket")]);
+    fetchValues = ko.observableArray([new FetchSetting(0, "http"), new FetchSetting(1, "websocket"), new FetchSetting(99, "disabled")]);
 
     get_value = ko.computed(() => {
         var value = null;

@@ -68,7 +68,7 @@ function createWindow() {
 function createDefaultConfig() {
     setDefaultConfigValue("debug", true);
 
-    setDefaultConfigValue("einsatz.fetch", "websocket");
+    setDefaultConfigValue("einsatz.fetch", "disabled");
     setDefaultConfigValue("einsatz.url", "ws://127.0.0.1:8000/ws/einsatzmonitor/?token={api_key}&active_minutes={activeMinutes}");
     setDefaultConfigValue("einsatz.httpFetchInterval", 1);
     setDefaultConfigValue("einsatz.displayTime", 30);

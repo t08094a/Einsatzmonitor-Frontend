@@ -123,8 +123,8 @@ class WeatherWidget extends Widget {
         clearInterval(this.actionTimer);
     }
 
-    constructor(board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
-        super(board, template_name, type, row, col, x, y);
+    constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
+        super(main, board, template_name, type, row, col, x, y);
 
         this.actionTimer = window.setInterval(() => {
             this.updateWeather();
