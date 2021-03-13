@@ -56,7 +56,8 @@ class AlarmReceiverAlamos {
                         }
 
                         case "STATUS": {
-                            logger.info("AlarmReceiverAlamos | Received STATUS")
+                            logger.info("AlarmReceiverAlamos | Received STATUS");
+                            this.einsatzMonitorModel.vehicleModel.updateStatusForVehicle(alarmJson['address'], alarmJson['status']);
                             break;
                         }
 

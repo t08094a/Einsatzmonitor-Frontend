@@ -22,7 +22,7 @@
         <!-- ko if: !widget.isSingleMode() -->
         <div class="einsatz-einheiten" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }">
             <!-- ko foreach: $root.vehicleModel.vehicles() -->
-            <div class="einsatz-einheit p-2 mb-1" style="width: 100%; height: 45px" data-bind="style: { 'background-color': statusColor }">
+            <div class="einsatz-einheit mb-1" style="width: 100%; height: 45px" data-bind="style: { 'background-color': statusColor }">
                 <div class="" style="width: 100%; height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
                     <h4 class="text-white m-0 fitty-element h-100" data-maxfitty="200" style="width: 100%; height: 100%">
                         <span class="d-flex justify-content-between">
