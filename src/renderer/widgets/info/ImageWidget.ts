@@ -1,7 +1,7 @@
 import Widget from "../Widget";
 import {Computed} from "knockout";
 import {logger} from "../../../common/common";
-const ko = require('knockout');
+import * as ko from "knockout";
 
 class ImageWidget extends Widget {
     actionTimer: number;

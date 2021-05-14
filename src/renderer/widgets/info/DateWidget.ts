@@ -1,14 +1,13 @@
 import Widget from "../Widget";
 import {Computed, Observable} from "knockout";
 import {logger, str_pad_left} from "../../../common/common";
-
-const ko = require('knockout');
+import * as ko from "knockout";
 
 class ClockWidget extends Widget {
     actionTimer: any;
 
     date: Observable<Date> = ko.observable(new Date());
-    parsed_date: Computed = ko.computed(() => {
+    parsedDate: Computed = ko.computed(() => {
         return str_pad_left(this.date().getDate(), '0', 2) + "." + str_pad_left(this.date().getMonth() + 1, '0', 2) + "." + this.date().getFullYear()
     });
 

@@ -1,15 +1,14 @@
 import Widget from "../Widget";
-
-const ko = require('knockout');
 import {Computed, ObservableArray} from "knockout";
 import axios from "axios";
 import {axiosConfigParams, logger, updateModel} from "../../../common/common";
 import Dienst from "../../../common/models/Dienst";
 import settings from "electron-settings";
+import * as ko from "knockout";
 
 class InfoAppointmentWidget extends Widget {
     actionTimer: any;
-    appointments: ObservableArray = ko.observableArray([]);
+    appointments: ObservableArray = ko.observableArray<any>([]);
 
     sortedAppointments: Computed = ko.computed(() => {
         return this.appointments ? this.appointments().sort(function (a, b) {

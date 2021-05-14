@@ -22,7 +22,7 @@ class AlarmReceiverWebsocket {
                     logger.info(`Einsatz from WebSocket: ${data.einsatz}`);
 
                     var einsatz = JSON.parse(data.einsatz);
-                    this.einsatzMonitorModel.add_einsatz(einsatz);
+                    this.einsatzMonitorModel.addOperation(einsatz);
                 }
 
                 if (data.type === "command") {
@@ -30,7 +30,7 @@ class AlarmReceiverWebsocket {
 
                     if (data.command === "clear") {
                         logger.info(`Clearing display now...`);
-                        this.einsatzMonitorModel.einsaetze.removeAll();
+                        this.einsatzMonitorModel.operations.removeAll();
                     }
                 }
 
@@ -39,8 +39,8 @@ class AlarmReceiverWebsocket {
 
                     let id = data.feedbackId.id;
 
-                    if (this.einsatzMonitorModel.is_einsatz()) {
-                        this.einsatzMonitorModel.get_latest_einsatz().feedback_fe2_id(id);
+                    if (this.einsatzMonitorModel.hasActiveOperation()) {
+                        this.einsatzMonitorModel.getLatestOperation().feedbackFe2Id(id);
                     }
                 }
             };

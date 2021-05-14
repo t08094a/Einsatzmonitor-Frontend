@@ -3,11 +3,11 @@
         style='list-style-type: none; overflow: hidden;'>
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
-        <!-- ko if: $root.get_latest_einsatz() -->
+        <!-- ko if: $root.getLatestOperation() -->
         <div class="p-2 text-center vert-center" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }">
             <h5 class="m-0">
                 <span><i class="fal fa-route fa-pull-left"></i></span>
-                <span data-bind="text: $root.get_latest_einsatz()?.distDuration()"></span>
+                <span data-bind="text: $root.getLatestOperation()?.distDuration()"></span>
                 <span><i class="fal fa-clock fa-pull-right"></i></span>
             </h5>
         </div>

@@ -4,8 +4,8 @@ import DisplayManager from "./DisplayManager";
 import AlarmReceiverWebsocket from "./AlarmReceiverWebsocket";
 import AlarmReceiverHttp from "./AlarmReceiverHttp";
 import AlarmReceiverAlamos from "./AlarmReceiverAlamos";
-
-const ko = require('knockout');
+import mapBindingHandler from "../knockoutBindingHandlers/mapBindingHandler";
+import * as ko from 'knockout';
 
 class EinsatzMonitorController {
     einsatzMonitorModel: EinsatzMonitorModel;
@@ -36,10 +36,15 @@ class EinsatzMonitorController {
             }, 250);
         });
 
+        (<any>ko.bindingHandlers).map = mapBindingHandler;
         ko.applyBindings(this.einsatzMonitorModel);
 
         this.einsatzMonitorModel.loaded();
     }
+}
+
+interface KnockoutBindingHandlers {
+    map: KnockoutBindingHandler;
 }
 
 export default EinsatzMonitorController

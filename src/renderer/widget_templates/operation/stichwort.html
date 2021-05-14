@@ -5,10 +5,10 @@
 
         <div class="text-center vert-center" data-bind="class: 'text-' + widget.config.get('align')()" style="height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
             <h1 class="text-white m-0 fitty-element h-100" data-maxfitty="200" style="height: 100%">
-                <!-- ko if: $root.get_latest_einsatz() -->
+                <!-- ko if: $root.getLatestOperation() -->
                 <div class="wrapper">
-                    <span class="badge p-1 pl-2 pr-2" style="margin-top: -14px; vertical-align: middle;" data-bind="text: $root.get_latest_einsatz()?.stichwort, class: $root.get_latest_einsatz()?.stichwort_color_badge"></span>
-                    <span class="description" data-bind="text: $root.get_latest_einsatz()?.get_description, style: { 'color': widget.extra_config.get('text-color') }"></span>
+                    <span class="badge p-1 pl-2 pr-2" style="margin-top: -14px; vertical-align: middle;" data-bind="text: $root.getLatestOperation()?.keyword, class: $root.getLatestOperation()?.keywordColorBadge"></span>
+                    <span class="description" data-bind="text: $root.getLatestOperation()?.getDescription, style: { 'color': widget.extra_config.get('text-color') }"></span>
                 </div>
                 <!-- /ko -->
             </h1>

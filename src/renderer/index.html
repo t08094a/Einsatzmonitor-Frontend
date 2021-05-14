@@ -68,7 +68,7 @@
                     <!-- <button class="btn btn-outline-success mt-1" data-bind='click: serialize'> Serialize </button> -->
 
                     <h4 class="mt-5">Einsatz-Widgets</h4>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-stichwort") }'><i class="fal fa-plus"></i> Stichwort</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-keyword") }'><i class="fal fa-plus"></i> Stichwort</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-address") }'><i class="fal fa-plus"></i> Adresse</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-additionalInformation") }'><i class="fal fa-plus"></i> Zusatzinfos</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-routeInformation") }'><i class="fal fa-plus"></i> Route - Informationen</button>
@@ -100,13 +100,13 @@
                     <h4>Funktionen</h4>
 
                     <label for="inputAlamosDbId"><strong>Alamos Feedback-ID für Testeinsatz</strong></label>
-                    <input type="text" class="form-control mb-2" id="inputAlamosDbId" data-bind="textInput: testeinsatz_fe2_id">
+                    <input type="text" class="form-control mb-2" id="inputAlamosDbId" data-bind="textInput: testOperationFe2Id">
 
                     <label for="inputAdresse"><strong>Adresse für Testeinsatz</strong></label>
-                    <input type="text" class="form-control mb-2" id="inputAdresse" data-bind="textInput: testeinsatz_adresse">
+                    <input type="text" class="form-control mb-2" id="inputAdresse" data-bind="textInput: testOperationAddress">
                     <div class="row">
                         <div class="col">
-                            <button class="btn btn-warning btn-block" data-bind='click: addTesteinsatz'><i class="fal fa-play"></i> Testeinsatz starten</button>
+                            <button class="btn btn-warning btn-block" data-bind='click: addTestOperation'><i class="fal fa-play"></i> Testeinsatz starten</button>
                         </div>
                         <div class="col">
                             <button class="btn btn-outline-danger btn-block" data-bind='click: clearOperations'><i class="fal fa-stop"></i> Einsatz beenden</button>

@@ -103,7 +103,7 @@ class EinsatzMonitorSetting {
     fetchValues = ko.observableArray([new FetchSetting(0, "http"), new FetchSetting(1, "websocket"), new FetchSetting(99, "disabled")]);
 
     get_value = ko.computed(() => {
-        var value = null;
+        let value = null;
 
         if (this.type() === "Boolean")
             value = this.get_id_name(this.booleanValues(), this.value());
@@ -121,7 +121,7 @@ class EinsatzMonitorSetting {
     }
 
     get_id_name = (obj: any, id: any) => {
-        var name = null;
+        let name = null;
         obj.forEach((o: any) => {
             if (o.id() === id) {
                 name = o.name();

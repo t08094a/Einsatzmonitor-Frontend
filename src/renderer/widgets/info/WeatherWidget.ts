@@ -2,16 +2,15 @@ import Widget from "../Widget";
 import axios from "axios";
 import {axiosConfigParams, logger} from "../../../common/common";
 import {Computed, Observable} from "knockout";
-
-const ko = require('knockout');
+import * as ko from "knockout";
 
 class WeatherWidget extends Widget {
     actionTimer: number;
 
-    name: Observable<string> = ko.observable();
-    description: Observable<string> = ko.observable();
-    temperature: Observable<string> = ko.observable();
-    iconId: Observable<number> = ko.observable();
+    name: Observable<string> = ko.observable("");
+    description: Observable<string> = ko.observable("");
+    temperature: Observable<string> = ko.observable("");
+    iconId: Observable<number|undefined> = ko.observable();
 
     descriptionWithText: Computed = ko.computed(() => {
         return this.description() + ", " + this.temperature() + "°C";
@@ -21,7 +20,7 @@ class WeatherWidget extends Widget {
         return this.extra_config.get('customName')() ? this.extra_config.get('customName')() : this.name();
     });
 
-    isDay: Observable<boolean> = ko.observable();
+    isDay: Observable<boolean> = ko.observable(false);
 
     icon: Computed = ko.computed(() => {
         switch (this.iconId()) {
@@ -100,7 +99,7 @@ class WeatherWidget extends Widget {
         let hours = new Date().getHours()
         this.isDay(hours > 6 && hours < 22);
 
-        axios.get(`http://api.openweathermap.org/data/2.5/weather?zip=${this.extra_config.get('zipCountry')()}&lang=de&units=metric&appid=${this.extra_config.get('apiKey')()}`, axiosConfigParams)
+        axios.get(`https://api.openweathermap.org/data/2.5/weather?zip=${this.extra_config.get('zipCountry')()}&lang=de&units=metric&appid=${this.extra_config.get('apiKey')()}`, axiosConfigParams)
             .then((response) => {
                 if (response.status === 200) {
                     this.name(response.data.name);

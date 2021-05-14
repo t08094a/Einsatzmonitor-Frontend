@@ -6,17 +6,17 @@ class Person {
     functions: ObservableArray = ko.observableArray([]);
     feedback: Observable = ko.observable();
 
-    get_feedback_color: Computed;
+    getFeedbackColor: Computed;
 
     isHidden(widget: any, fb: any) {
         return widget.extra_config.get('hide-' + fb.toLowerCase())()
     }
 
     constructor(name: string, feedback: string) {
-        this.name = ko.observable(name);
-        this.feedback = ko.observable(feedback);
+        this.name(name);
+        this.feedback(feedback);
 
-        this.get_feedback_color = ko.computed(() => {
+        this.getFeedbackColor = ko.computed(() => {
             if (this.feedback() === "YES")
                 return "bg-success";
 

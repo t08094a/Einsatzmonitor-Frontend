@@ -3,20 +3,20 @@
         style='list-style-type: none; overflow: hidden;'>
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
-        <!-- ko if: $root.get_latest_einsatz() -->
+        <!-- ko if: $root.getLatestOperation() -->
         <div class="p-2" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }">
             <table>
                 <tbody>
-                <!-- ko foreach: $root.get_latest_einsatz()?.zusatzinfos() -->
+                <!-- ko foreach: $root.getLatestOperation()?.zusatzinfos() -->
                 <tr>
                     <td><h5><i class="fal fa-comment-alt-lines mr-1"></i> <strong>Zusatzinfo <span data-bind="text: $data.name"></span>:</strong></h5></td>
                     <td class="pl-4"><h5 data-bind="text: $data.value"></h5></td>
                 </tr>
                 <!-- /ko -->
-                <!-- ko if: $root.get_latest_einsatz()?.alarmzeit_datetime() -->
+                <!-- ko if: $root.getLatestOperation()?.alarmTimeDatetime() -->
                 <tr>
                     <td><h5><i class="fal fa-clock mr-1"></i> <strong>Alarmzeit:</strong></h5></td>
-                    <td class="pl-4"><h5 data-bind="text: $root.get_latest_einsatz()?.alarmzeit_datetime()"></h5></td>
+                    <td class="pl-4"><h5 data-bind="text: $root.getLatestOperation()?.alarmTimeDatetime()"></h5></td>
                 </tr>
                 <!-- /ko -->
                 </tbody>

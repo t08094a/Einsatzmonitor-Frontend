@@ -1,15 +1,14 @@
 import Widget from "../Widget";
-
-const ko = require('knockout');
 import {Computed, ObservableArray} from "knockout";
 import axios from "axios";
 import {axiosConfigParams, logger, updateModel} from "../../../common/common";
 import NewsPost from "../../../common/models/NewsPost";
 import settings from "electron-settings";
+import * as ko from "knockout";
 
 class InfoNewsWidget extends Widget {
     actionTimer: any;
-    news: ObservableArray = ko.observableArray([]);
+    news: ObservableArray = ko.observableArray<any>([]);
 
     sortedNews: Computed = ko.computed(() => {
         return this.news ? this.news().sort(function (a, b) {
@@ -34,7 +33,7 @@ class InfoNewsWidget extends Widget {
 
                     let new_newsPost = new NewsPost(news_post.id, news_post.title, news_post.images[0].image_url, news_post.description_truncated, news_post.date_formatted);
 
-                    var match = ko.utils.arrayFirst(this.news(), (item: any) => {
+                    let match = ko.utils.arrayFirst(this.news(), (item: any) => {
                         return new_newsPost.id() === item.id();
                     });
 

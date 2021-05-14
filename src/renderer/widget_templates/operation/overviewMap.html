@@ -3,8 +3,8 @@
         style='list-style-type: none; overflow: hidden;'>
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
-        <!-- ko if: $root.get_latest_einsatz() -->
-        <div class="map bg-dark" data-bind="map:$root.get_latest_einsatz()?.overview_map"></div>
+        <!-- ko if: $root.getLatestOperation() -->
+        <div class="map bg-dark" data-bind="map:$root.getLatestOperation()?.googleOverviewMap"></div>
         <!-- /ko -->
 
         <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">

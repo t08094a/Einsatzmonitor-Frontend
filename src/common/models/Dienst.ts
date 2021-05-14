@@ -7,17 +7,17 @@ class Dienst {
     title: Observable = ko.observable();
     description: Observable = ko.observable();
     start: Observable = ko.observable();
-    is_today: Observable = ko.observable();
+    isToday: Observable = ko.observable();
 
     startDate: Computed;
     startUhrzeit: Computed;
 
-    constructor(id: number, title: string, description: string, start: string, is_today: boolean) {
-        this.id = ko.observable(id);
-        this.title = ko.observable(title);
-        this.description = ko.observable(description);
-        this.start = ko.observable(start);
-        this.is_today = ko.observable(is_today);
+    constructor(id: number, title: string, description: string, start: string, isToday: boolean) {
+        this.id(id);
+        this.title(title);
+        this.description(description);
+        this.start(start);
+        this.isToday(isToday);
 
         this.startDate = ko.computed(() => {
             return new Date(this.start());

@@ -1,15 +1,14 @@
 import Widget from "../Widget";
-
-const ko = require('knockout');
 import {Computed, ObservableArray} from "knockout";
 import axios from "axios";
 import {axiosConfigParams, logger, updateModel} from "../../../common/common";
 import InfoEinsatz from "../../../common/models/InfoEinsatz";
 import settings from "electron-settings";
+import * as ko from "knockout";
 
 class InfoOperationWidget extends Widget {
     actionTimer: any;
-    operations: ObservableArray = ko.observableArray([]);
+    operations: ObservableArray = ko.observableArray<any>([]);
 
     sortedOperations: Computed = ko.computed(() => {
         return this.operations ? this.operations().sort(function (a, b) {
@@ -34,11 +33,11 @@ class InfoOperationWidget extends Widget {
 
                     let new_einsatz = new InfoEinsatz(einsatz.id, einsatz.title, einsatz.alarmzeit, einsatz.alarmzeit_formatted, einsatz.color);
 
-                    var match = ko.utils.arrayFirst(this.operations(), (item: any) => {
+                    let match = ko.utils.arrayFirst(this.operations(), (item: any) => {
                         return new_einsatz.id() === item.id();
                     });
 
-                    // Einsatz not in array, add it
+                    // Operation not in array, add it
                     if (!match) {
                         this.operations.push(new_einsatz);
                     } else {

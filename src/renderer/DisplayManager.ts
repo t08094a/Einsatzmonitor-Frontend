@@ -1,6 +1,7 @@
 import settings from "electron-settings";
 import EinsatzMonitorModel from "./EinsatzMonitor";
 import {em, execute, logger} from "../common/common";
+import Operation from "../common/models/Operation";
 
 const ko = require('knockout');
 const net = require('net');
@@ -15,16 +16,9 @@ class DisplayManager {
     constructor(einsatzMonitorModel: EinsatzMonitorModel) {
         this.einsatzMonitorModel = einsatzMonitorModel;
 
-        em.on('EinsatzAdd', (data: any) => {
-            logger.info(`EinsatzAdd event fired (${data})`);
+        em.on('EinsatzAdd', (operation: Operation) => {
+            logger.info(`EinsatzAdd event fired (${operation})`);
             turnOnDisplay();
-        });
-
-        em.on('EinsatzRemove', (operation: any) => {
-            logger.info('EinsatzRemove event fired');
-
-            // Todo: move outside since it has nothing to do with display
-            this.einsatzMonitorModel.einsaetze.splice(einsatzMonitorModel.einsaetze().indexOf(operation), 1);
         });
 
         controlServer.listen(11000, '0.0.0.0', () => {
@@ -47,7 +41,7 @@ class DisplayManager {
         // Task every minute to check if we should turn the display off
         // We won't turn it off if there currently is an einsatz
         window.setInterval(function () {
-            if (ko.unwrap(einsatzMonitorModel.is_einsatz())) {
+            if (ko.unwrap(einsatzMonitorModel.hasActiveOperation())) {
                 return;
             }
 

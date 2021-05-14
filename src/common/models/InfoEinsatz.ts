@@ -9,11 +9,11 @@ class InfoEinsatz {
     color: Observable = ko.observable();
 
     constructor(id: number, title: string, alarmzeit: string, alarmzeit_formatted: string, color: string) {
-        this.id = ko.observable(id);
-        this.title = ko.observable(title);
-        this.alarmzeit = ko.observable(alarmzeit);
-        this.alarmzeit_formatted = ko.observable(alarmzeit_formatted);
-        this.color = ko.observable(color);
+        this.id(id);
+        this.title(title);
+        this.alarmzeit(alarmzeit);
+        this.alarmzeit_formatted(alarmzeit_formatted);
+        this.color(color);
     }
 }
 

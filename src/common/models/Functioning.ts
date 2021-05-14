@@ -6,8 +6,8 @@ class Functioning {
     color: Observable = ko.observable();
 
     constructor(name: string, color: string) {
-        this.name = ko.observable(name);
-        this.color = ko.observable(color);
+        this.name(name);
+        this.color(color);
     }
 }
 

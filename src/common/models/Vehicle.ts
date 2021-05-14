@@ -1,5 +1,5 @@
 const ko = require('knockout');
-import {Computed, Observable, ObservableArray} from 'knockout';
+import {Computed, Observable} from 'knockout';
 
 class Vehicle {
     station: Observable = ko.observable();
@@ -9,10 +9,10 @@ class Vehicle {
     statusColor: Computed;
 
     constructor(station: string, identification: string, name: string, statusCode: number) {
-        this.station = ko.observable(station);
-        this.identification = ko.observable(identification);
-        this.name = ko.observable(name);
-        this.statusCode = ko.observable(statusCode);
+        this.station(station);
+        this.identification(identification);
+        this.name(name);
+        this.statusCode(statusCode);
 
         this.statusColor = ko.computed(() => {
             switch (this.statusCode()) {

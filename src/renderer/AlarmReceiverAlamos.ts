@@ -39,7 +39,7 @@ class AlarmReceiverAlamos {
 
                     switch (alarmJson['alarmType']) {
                         case "ALARM": {
-                            logger.info("Received ALARM")
+                            logger.info("AlarmReceiverAlamos | Received ALARM")
 
                             let einsatz = {
                                 'id': 0,
@@ -51,7 +51,7 @@ class AlarmReceiverAlamos {
                                 'zusatzinfos': [],
                             }
 
-                            this.einsatzMonitorModel.add_einsatz(einsatz);
+                            this.einsatzMonitorModel.addOperation(einsatz);
                             break;
                         }
 

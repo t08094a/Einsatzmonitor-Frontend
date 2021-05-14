@@ -1,7 +1,7 @@
 import {Observable, ObservableArray} from "knockout";
 import EinsatzMonitorModel, {BoardViewModel} from "../EinsatzMonitor";
+import * as ko from "knockout";
 
-const ko = require('knockout');
 // const customTextFit = require('customTextFit');
 // const textFit = require('textfit')
 
@@ -21,7 +21,7 @@ class Widget {
     datasizey: number;
     dataRow: Observable = ko.observable();
     dataCol: Observable = ko.observable();
-    availableAlignments: ObservableArray;
+    availableAlignments: ObservableArray = ko.observableArray<string>([]);
 
     removeSelected = () => {
         this.board.removeWidget(this);
@@ -29,6 +29,7 @@ class Widget {
     };
 
     config: any;
+    // @ts-ignore
     extra_config: any = ko.observableDictionary();
 
     edit = () => {
@@ -99,16 +100,17 @@ class Widget {
         this.datasizex = x;
         this.datasizey = y;
 
-        this.dataRow = ko.observable(row);
-        this.dataCol = ko.observable(col);
+        this.dataRow(row);
+        this.dataCol(col);
 
+        // @ts-ignore
         this.config = ko.observableDictionary({
             template: template_name,
             type: type,
             align: 'left'
         });
 
-        this.availableAlignments = ko.observableArray(['left', 'center', 'right']);
+        this.availableAlignments(['left', 'center', 'right']);
     }
 }
 

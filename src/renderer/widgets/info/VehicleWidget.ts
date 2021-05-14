@@ -1,10 +1,9 @@
 import Widget from "../Widget";
 import {Computed, ObservableArray} from "knockout";
 import {logger} from "../../../common/common";
-
-const ko = require('knockout');
 import "../../EinsatzMonitor";
 import Vehicle from "../../../common/models/Vehicle";
+import * as ko from "knockout";
 
 class VehicleWidget extends Widget {
     availableModes: ObservableArray = ko.observableArray(['Einzelfahrzeug', 'Liste'])

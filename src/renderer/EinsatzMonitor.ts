@@ -1,20 +1,14 @@
 import {Computed, Observable, ObservableArray} from 'knockout';
 
-import Einsatz from "../common/models/Einsatz";
+import Operation from "../common/models/Operation";
 import moment from "moment";
 import fitty from "fitty";
 import toastr from "toastr";
-import Widget, {widgetTypes} from "./widgets/Widget";
+import {widgetTypes} from "./widgets/Widget";
 import {em, logger} from "../common/common";
-import InfoNewsWidget from "./widgets/info/InfoNewsWidget";
-import InfoOperationWidget from "./widgets/info/InfoOperationWidget";
-import InfoAppointmentWidget from "./widgets/info/InfoAppointmentWidget";
 import dynamicWidget from "./widgets/DynamicWidget";
-import ClockWidget from "./widgets/info/ClockWidget";
 import SettingsModel from "./EinsatzMonitorSettings";
 import settings from "electron-settings";
-import ImageWidget from "./widgets/info/ImageWidget";
-import Vehicle from "../common/models/Vehicle";
 import VehicleModel from "./VehicleModel";
 
 let html_content = require('./widget_templates/info/text_widget.html');
@@ -30,50 +24,49 @@ const gridsterWidgetsOperationFilePath = path.join(userDataPath, "gridster_widge
 
 
 class EinsatzMonitorModel {
-    einsatz: Observable = ko.observable();
-    einsaetze: ObservableArray = ko.observableArray([]);
+    operations: ObservableArray = ko.observableArray([]);
 
-    is_einsatz: Computed = ko.computed(() => {
-        return this.einsaetze().length > 0;
+    hasActiveOperation: Computed = ko.computed(() => {
+        return this.operations().length > 0;
     });
 
-    sortedEinsaetze = ko.computed(() => {
-        return this.einsaetze().sort(function (a, b) {
+    sortedOperations = ko.computed(() => {
+        return this.operations().sort(function (a, b) {
             return b.id() - a.id();
         });
     });
 
-    get_latest_einsatz() {
-        return this.sortedEinsaetze()[0];
+    getLatestOperation() {
+        return this.sortedOperations()[0];
     };
 
-    is_saved(einsatz: any) {
-        return ko.utils.arrayFirst(this.einsaetze(), (item: any) => {
-            return einsatz.id === item.id();
+    isOperationSaved(operationJson: any) {
+        return ko.utils.arrayFirst(this.operations(), (operation: Operation) => {
+            return operationJson.id === operation.id();
         });
     };
 
-    add_einsatz(einsatz: any) {
-        if (!this.is_saved(einsatz)) {
-            let einsatz_obj = new Einsatz(einsatz.id, einsatz.stichwort, einsatz.stichwort_color, einsatz.description, einsatz.alarmzeit_seconds, einsatz.adresse, einsatz.objekt);
+    addOperation(operationJson: any) {
+        if (!this.isOperationSaved(operationJson)) {
+            let operation = new Operation(operationJson.id, operationJson.stichwort, operationJson.stichwort_color, operationJson.description, operationJson.alarmzeit_seconds, operationJson.adresse, operationJson.objekt);
 
-            einsatz.einheiten.forEach((einheit: any) => {
-                einsatz_obj.einheiten.push(einheit.name);
+            operationJson.einheiten.forEach((einheit: any) => {
+                operation.units.push(einheit.name);
             });
 
-            einsatz.zusatzinfos.forEach((zusatzinfo: any) => {
-                einsatz_obj.zusatzinfos.push({
+            operationJson.zusatzinfos.forEach((zusatzinfo: any) => {
+                operation.zusatzinfos.push({
                     'name': zusatzinfo.name,
                     'value': zusatzinfo.value
                 })
             });
 
-            this.einsaetze.push(einsatz_obj);
+            this.operations.push(operation);
 
             // Trigger EinsatzAdd event
-            em.emit('EinsatzAdd', einsatz.id);
+            em.emit('EinsatzAdd', operationJson.id);
 
-            logger.info(`Added new einsatz (${einsatz.id}) to array`);
+            logger.info(`Added new einsatz (${operationJson.id}) to array`);
 
             fitty('.einsatz-einheit div h4', {
                 maxSize: 22.5
@@ -82,21 +75,21 @@ class EinsatzMonitorModel {
                 maxSize: 50
             });
         } else {
-            logger.warn(`Einsatz already in array (${einsatz.id})`);
+            logger.warn(`Einsatz already in array (${operationJson.id})`);
         }
     };
 
-    testeinsatz_fe2_id: Observable = ko.observable();
-    testeinsatz_adresse: Observable = ko.observable();
+    testOperationFe2Id: Observable = ko.observable();
+    testOperationAddress: Observable = ko.observable();
 
-    addTesteinsatz() {
-        this.add_einsatz({
+    addTestOperation() {
+        this.addOperation({
             'id': 1,
             'stichwort': "F1",
             'stichwort_color': "danger",
             'description': "Testalarm",
             'alarmzeit_seconds': moment().unix(),
-            'adresse': this.testeinsatz_adresse(),
+            'adresse': this.testOperationAddress(),
             'objekt': "(Testobjekt)",
             'einheiten': [
                 {
@@ -114,15 +107,15 @@ class EinsatzMonitorModel {
             ]
         });
 
-        if (this.testeinsatz_fe2_id())
-            this.get_latest_einsatz().feedback_fe2_id(this.testeinsatz_fe2_id());
+        if (this.testOperationFe2Id())
+            this.getLatestOperation().feedbackFe2Id(this.testOperationFe2Id());
     };
 
     clearOperations() {
-        this.einsaetze().forEach(function (einsatz) {
-            einsatz.stopTasks();
+        this.operations().forEach((operation: Operation) => {
+            operation.stopTasks();
         });
-        this.einsaetze.removeAll();
+        this.operations.removeAll();
     };
 
     board: Observable = ko.observable(new BoardViewModel());
@@ -137,16 +130,15 @@ class EinsatzMonitorModel {
         this.board().widgets.push(wdg);
     }
 
-
     serialize() {
         logger.debug(this.board().gridsterInfo.serialize());
     };
 
     saveWidgets() {
-        var file = this.getCurrentWidgetType() === widgetTypes.INFO ? gridsterWidgetsFilePath : gridsterWidgetsOperationFilePath;
+        let file = this.getCurrentWidgetType() === widgetTypes.INFO ? gridsterWidgetsFilePath : gridsterWidgetsOperationFilePath;
         logger.info(`View | Saving view ${this.getCurrentWidgetType()} to ${file}`);
 
-        var to_save: any = [];
+        let to_save: any = [];
 
         this.board().gridsterInfo.serialize().forEach((widget: any) => {
             let wdg = this.board().get_by_id(this.board().widgets(), widget.id);
@@ -198,7 +190,7 @@ class EinsatzMonitorModel {
                 }
             }
 
-            //wdg.extra_config = widget.extra_config;
+            // wdg.extra_config = widget.extra_config;
             for (let key in widget.extra_config) {
                 if (widget.extra_config.hasOwnProperty(key)) {
                     wdg.extra_config.push(key, widget.extra_config[key])
@@ -232,7 +224,7 @@ class EinsatzMonitorModel {
     };
 
     getCurrentWidgetType() {
-        if (this.is_einsatz())
+        if (this.hasActiveOperation())
             return widgetTypes.OPERATION
 
         return widgetTypes.INFO;
@@ -259,12 +251,12 @@ class EinsatzMonitorModel {
         this.backgroundColor(settings.getSync('background.color'));
     }
 
-    settingsModel: any;
+    settingsModel: SettingsModel;
     vehicleModel: VehicleModel;
 
     constructor() {
-        // Update view if "einsaetze" changes
-        this.einsaetze.subscribe((newValue: any) => {
+        // Update view if "operations" changes
+        this.operations.subscribe((newValue: any) => {
             this.loadView();
         });
 
@@ -281,6 +273,11 @@ class EinsatzMonitorModel {
         this.vehicleModel.loadVehiclesFromDisk();
 
         logger.info("Loaded SettingsModel");
+
+        em.on('EinsatzRemove', (operation: Operation) => {
+            logger.info('EinsatzRemove event fired. Removing Operation from list.');
+            this.operations.splice(this.operations().indexOf(operation), 1);
+        });
     }
 
     loaded() {
@@ -382,13 +379,13 @@ export class BoardViewModel {
         let row = widget.attr("data-row");
 
         // only process the main tag which has "data-col" attr
-        if (column) {
-            var sizeX = obj.datasizex;
-            var sizeY = obj.datasizey;
+        if (column && row) {
+            let sizeX = obj.datasizex;
+            let sizeY = obj.datasizey;
             // var sizeY = (obj.state() === "Minimized" || obj.state() === "Closed") ? 1 : obj.datasizey;
 
             // add the widget to the next position
-            this.gridsterInfo.add_widget(widget, sizeX, sizeY, column, row);
+            this.gridsterInfo.add_widget(widget, sizeX, sizeY, parseInt(column), parseInt(row));
 
             // trigger fitty to properly scale font size
             this.get_by_id(this.widgets(), parseInt(widget.attr('id') as string)).fitIfPossible();
@@ -401,7 +398,7 @@ export class BoardViewModel {
      * that the node should be removed if it is an li.
      */
     removeGridster = (node: any, index: any, widget: any, gridster = this.gridsterInfo) => {
-        var wdg = $("#" + widget.id);
+        let wdg = $("#" + widget.id);
 
         if (wdg.attr("data-col")) {
             this.gridsterInfo.remove_widget(wdg);

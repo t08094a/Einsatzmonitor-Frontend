@@ -7,16 +7,16 @@
             <span class="badge badge-primary p-1 pl-2 pr-2" style="font-size: 18px;" data-bind="text: widget.extra_config.get('function')"></span>
         </div>
 
-        <!-- ko if: $root.get_latest_einsatz() -->
+        <!-- ko if: $root.getLatestOperation() -->
         <div class="einsatz-einheiten ml-0 mr-0" style="position: absolute; bottom: 0; left: 0; right: 0;"
              data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }, css: { 'vert-center': widget.extra_config.get('vert-center') }">
             <div class="pl-0" style="/*position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%);*/">
                 <div class="einsatz-einheit">
                     <div class=""> <!-- needs a surrounding div for size calculation because of padding -->
                         <h2 class="text-white m-0" style="line-height: 0.9" data-maxfitty="100" data-bind="style: {'font-size': widget.extra_config.get('text-size')() + 'px', class: 'text-' + widget.config.get('align')()}">
-                            <span data-bind="text: $root.get_latest_einsatz()?.get_function_count(widget.extra_config.get('function')(), 'YES')" class="text-success">20</span>
+                            <span data-bind="text: $root.getLatestOperation()?.getFunctionCount(widget.extra_config.get('function')(), 'YES')" class="text-success">20</span>
                             /
-                            <span data-bind="text: $root.get_latest_einsatz()?.get_function_count(widget.extra_config.get('function')(), 'NO')" class="text-danger">10</span>
+                            <span data-bind="text: $root.getLatestOperation()?.getFunctionCount(widget.extra_config.get('function')(), 'NO')" class="text-danger">10</span>
                         </h2>
                     </div>
                 </div>
