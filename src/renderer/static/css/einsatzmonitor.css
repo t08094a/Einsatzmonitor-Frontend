@@ -121,3 +121,35 @@ h1, h2, h3, h4, h5, h6 {
 .bg-transparent {
     background: #fff0;
 }
+
+.blink-bg {
+    background-color: #343a40;
+    /*animation: blinkingBackground 2s linear infinite;*/
+    animation: blink 1s ease-in-out infinite alternate;
+}
+
+@keyframes blinkingBackground {
+    0% {
+        background-color: #343a40;
+    }
+    25% {
+        /*background-color: #1056c0;*/
+        background-color: #343a40;
+    }
+    50% {
+        /*background-color: #ef0a1a;*/
+        background-color: #dc3545;
+    }
+    75% {
+        background-color: #dc3545;
+    }
+    /*50% {*/
+    /*    background-color: #dc3545;*/
+    /*}*/
+}
+
+@keyframes blink {
+    to {
+        background-color: #dc3545;
+    }
+}

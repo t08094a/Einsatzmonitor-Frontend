@@ -22,6 +22,7 @@ class Operation {
 
     alarmTime: Observable = ko.observable();
     alarmTimeDatetime: Observable = ko.observable();
+    secondsSinceAlarm: Observable = ko.observable(0);
     timeSinceAlarm: Observable = ko.observable("00:00");
 
     street: Observable = ko.observable();
@@ -122,6 +123,7 @@ class Operation {
 
         let finalTime = str_pad_left(minutes, '0', 2) + ':' + str_pad_left(seconds | 0, '0', 2);
 
+        this.secondsSinceAlarm(diff)
         this.timeSinceAlarm(finalTime);
 
         if (minutes >= (settings.getSync("einsatz.displayTime") as number)) {

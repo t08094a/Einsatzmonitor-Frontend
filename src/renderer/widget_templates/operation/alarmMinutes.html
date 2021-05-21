@@ -1,12 +1,19 @@
 <template id="operation-alarmMinutes">
-    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }, style: { 'background-color': widget.extra_config.get('background-color') }" class='gs-w'
+    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }, style: { 'background-color': $root.board().getWidgetById(id)?.backgroundColor }, css: {'blink-bg': $root.board().getWidgetById(id)?.blinking }"
+        class='gs-w'
         style='list-style-type: none; overflow: hidden;'>
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
         <!-- ko if: $root.getLatestOperation() -->
-        <div class="einsatz-minutes text-center vert-center p-2" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }">
-            <h1 class="m-0" data-bind="text: $root.getLatestOperation()?.timeSinceAlarm"></h1>
-            <h5 class="m-0">Minuten seit Alarmierung</h5>
+        <div class="einsatz-minutes text-center vert-center p-2" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }" style="height: 100%">
+            <h2 class="m-0 fitty-element h-100" data-maxfitty="200" style="height: 100%">
+                <div class="wrapper">
+                    <span class="m-0" data-bind="text: $root.getLatestOperation()?.timeSinceAlarm"></span>
+                    <!-- ko if: widget.extra_config.get('show-subtext') -->
+                    <span class="m-0 d-block">Minuten seit Alarmierung</span>
+                    <!-- /ko -->
+                </div>
+            </h2>
         </div>
         <!-- /ko -->
 
@@ -21,8 +28,12 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'text-fitty', description: 'Textgröße automatisch anpassen' } }"></div>
+
                             <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
                             <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
+
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'show-subtext', description: 'Text (Minuten seit Alarmierung) anzeigen' } }"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
