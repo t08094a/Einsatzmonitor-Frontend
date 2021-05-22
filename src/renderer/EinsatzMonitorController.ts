@@ -6,6 +6,7 @@ import AlarmReceiverHttp from "./AlarmReceiverHttp";
 import AlarmReceiverAlamos from "./AlarmReceiverAlamos";
 import mapBindingHandler from "../knockoutBindingHandlers/mapBindingHandler";
 import * as ko from 'knockout';
+import AlarmReceiverHttpServer from "./AlarmReceiverHttpServer";
 
 class EinsatzMonitorController {
     einsatzMonitorModel: EinsatzMonitorModel;
@@ -25,6 +26,10 @@ class EinsatzMonitorController {
 
         if (settings.getSync("alamos.alarmInput.enabled")) {
             new AlarmReceiverAlamos(this.einsatzMonitorModel);
+        }
+
+        if (settings.getSync("webserver.alarmInput.enabled")) {
+            new AlarmReceiverHttpServer(this.einsatzMonitorModel);
         }
 
         let resizeTimer: NodeJS.Timeout;
