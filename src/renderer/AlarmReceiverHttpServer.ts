@@ -1,64 +1,105 @@
 import EinsatzMonitorModel from "./EinsatzMonitor";
 import {logger} from "../common/common";
 
-const express = __non_webpack_require__('express');
-const app = express();
-
-app.use((req: any, res: any, next: any) => {
-    delete req.headers['content-encoding'];
-    req.headers['content-type'] = "application/json; charset=utf-8";
-    next();
-});
-
-app.use(express.json())
+const http = require("http");
 
 class AlarmReceiverHttpServer {
     einsatzMonitorModel: EinsatzMonitorModel;
 
+    // Todo: refactor into reusable module
+    handleAlarmData(data: any) {
+        switch (data['alarmType']) {
+            case "ALARM": {
+                logger.info("AlarmReceiverHttpServer | Received ALARM")
+
+                let einsatz = {
+                    'id': 0,
+                    'stichwort': data['keyword'],
+                    'description': data['keyword_description'],
+                    'adresse': data['location_dest'],
+                    'alarmzeit_seconds': data['timestamp'] / 1000,
+                    'einheiten': [],
+                    'zusatzinfos': [],
+                }
+
+                this.einsatzMonitorModel.addOperation(einsatz);
+                break;
+            }
+
+            case "STATUS": {
+                logger.info("AlarmReceiverHttpServer | Received STATUS");
+                this.einsatzMonitorModel.vehicleModel.updateStatusForVehicle(data['address'], data['status']);
+                break;
+            }
+
+            default: {
+                logger.info(`AlarmReceiverHttpServer | Received unknown alarmType (${data['alarmType']})`)
+                break;
+            }
+        }
+    }
+
     constructor(einsatzMonitorModel: EinsatzMonitorModel) {
         this.einsatzMonitorModel = einsatzMonitorModel;
 
-        app.get('/', (req: any, res: any) => {
-            res.send(`EinsatzMonitor V${process.env.npm_package_version}`);
-        });
+        function processPost(request: any, response: any, callback: any) {
+            let data = "";
+            if (typeof callback !== 'function')
+                return null;
 
-        app.post('/alarm/new', (req: any, res: any) => {
-            logger.debug("AlarmReceiverHttpServer | Received alarmJson:")
-            logger.debug(req.body)
+            if (request.method == 'POST') {
+                request.on('data', function (chunk: any) {
+                    data += chunk;
+                });
 
-            switch (req.body['alarmType']) {
-                case "ALARM": {
-                    logger.info("AlarmReceiverHttpServer | Received ALARM")
-
-                    let einsatz = {
-                        'id': 0,
-                        'stichwort': req.body['keyword'],
-                        'description': req.body['keyword_description'],
-                        'adresse': req.body['location_dest'],
-                        'alarmzeit_seconds': req.body['timestamp'] / 1000,
-                        'einheiten': [],
-                        'zusatzinfos': [],
+                request.on('end', function () {
+                    try {
+                        request.post = JSON.parse(data);
+                    } catch (err) {
+                        console.error("request body was not JSON");
                     }
+                    callback();
+                });
 
-                    this.einsatzMonitorModel.addOperation(einsatz);
-                    break;
-                }
+            } else {
+                response.writeHead(405, {'Content-Type': 'text/plain'});
+                response.end();
+            }
+        }
 
-                case "STATUS": {
-                    logger.info("AlarmReceiverHttpServer | Received STATUS");
-                    this.einsatzMonitorModel.vehicleModel.updateStatusForVehicle(req.body['address'], req.body['status']);
+        let requestListener = async (req: any, res: any) => {
+            res.setHeader("Content-Type", "application/json");
+            switch (req.url) {
+                case "/alarm/new": {
+                    if (req.method == 'POST') {
+                        processPost(req, res, () => {
+                            this.handleAlarmData(req.post);
+                            res.writeHead(200);
+                            res.end(`{"status": "OK"}`);
+                        });
+                    } else {
+                        res.writeHead(200);
+                        res.end(`{"status": "Alarm route"}`);
+                    }
                     break;
                 }
 
                 default: {
-                    logger.info(`AlarmReceiverHttpServer | Received unknown alarmType (${req.body['alarmType']})`)
+                    res.writeHead(200);
+                    res.end(`{"status": "Route not found"}`);
                     break;
                 }
             }
-            res.status(200).json({'status': 'OK'});
+
+        };
+
+        let server = http.createServer(requestListener);
+
+        server.on("connection", function (socket: any) {
+            socket.setNoDelay(true);
         });
 
-        app.listen(3000, () => {
+        server.listen(3000, '0.0.0.0', () => {
             logger.info('AlarmReceiverHttpServer | AlarmReceiver HTTP Server is running on port 3000.');
         });
     }
