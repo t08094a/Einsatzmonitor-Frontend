@@ -1,16 +1,15 @@
 import EinsatzMonitorModel from "./EinsatzMonitor";
 import settings from "electron-settings";
 import {logger, replaceAll, sha256} from "../common/common";
+import AlarmReceiver from "./AlarmReceiver";
 
 const net = require('net');
 const alarmReceiver = net.createServer();
 const CryptoJS = require("crypto-js");
 
-class AlarmReceiverAlamos {
-    einsatzMonitorModel: EinsatzMonitorModel;
-
+class AlarmReceiverAlamos extends AlarmReceiver {
     constructor(einsatzMonitorModel: EinsatzMonitorModel) {
-        this.einsatzMonitorModel = einsatzMonitorModel;
+        super(einsatzMonitorModel);
 
         alarmReceiver.listen(10000, '0.0.0.0', () => {
             logger.info('AlarmReceiverAlamos | AlarmReceiver TCP Server is running on port 10000.');
@@ -37,35 +36,7 @@ class AlarmReceiverAlamos {
                     logger.debug("AlarmReceiverAlamos | Received alarmJson:")
                     logger.debug(alarmJson)
 
-                    switch (alarmJson['alarmType']) {
-                        case "ALARM": {
-                            logger.info("AlarmReceiverAlamos | Received ALARM")
-
-                            let einsatz = {
-                                'id': 0,
-                                'stichwort': alarmJson['keyword'],
-                                'description': alarmJson['keyword_description'],
-                                'adresse': alarmJson['location_dest'],
-                                'alarmzeit_seconds': alarmJson['timestamp'] / 1000,
-                                'einheiten': [],
-                                'zusatzinfos': [],
-                            }
-
-                            this.einsatzMonitorModel.addOperation(einsatz);
-                            break;
-                        }
-
-                        case "STATUS": {
-                            logger.info("AlarmReceiverAlamos | Received STATUS");
-                            this.einsatzMonitorModel.vehicleModel.updateStatusForVehicle(alarmJson['address'], alarmJson['status']);
-                            break;
-                        }
-
-                        default: {
-                            logger.info(`AlarmReceiverAlamos | Received unknown alarmType (${alarmJson['alarmType']})`)
-                            break;
-                        }
-                    }
+                    this.handleAlarmData(alarmJson);
                 });
             });
         });
