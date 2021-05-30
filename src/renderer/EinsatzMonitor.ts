@@ -40,14 +40,14 @@ class EinsatzMonitorModel {
         return this.sortedOperations()[0];
     };
 
-    isOperationSaved(operationJson: any) {
+    isOperationSaved(id: any) {
         return ko.utils.arrayFirst(this.operations(), (operation: Operation) => {
-            return operationJson.id === operation.id();
+            return id === operation.id();
         });
     };
 
-    addOperation(operationJson: any) {
-        if (!this.isOperationSaved(operationJson)) {
+    addOperationJson(operationJson: any) {
+        if (!this.isOperationSaved(operationJson.id)) {
             let operation = new Operation(operationJson.id, operationJson.stichwort, operationJson.stichwort_color, operationJson.description, operationJson.alarmzeit_seconds, operationJson.adresse, operationJson.objekt);
 
             operationJson.einheiten.forEach((einheit: any) => {
@@ -61,29 +61,38 @@ class EinsatzMonitorModel {
                 })
             });
 
-            this.operations.push(operation);
-
-            // Trigger EinsatzAdd event
-            em.emit('EinsatzAdd', operationJson.id);
-
-            logger.info(`Added new einsatz (${operationJson.id}) to array`);
-
-            fitty('.einsatz-einheit div h4', {
-                maxSize: 22.5
-            });
-            fitty('.einsatz-stichwort h1', {
-                maxSize: 50
-            });
+            this.addOperation(operation);
         } else {
             logger.warn(`Einsatz already in array (${operationJson.id})`);
         }
+    };
+
+    addOperation(operation: Operation) {
+        if (this.isOperationSaved(operation.id())) {
+            logger.warn(`Operation is already active (${operation.id()})`);
+            return;
+        }
+
+        this.operations.push(operation);
+
+        // Trigger EinsatzAdd event
+        em.emit('EinsatzAdd', operation.id());
+
+        logger.info(`Added new operation (${operation.id()}) to array`);
+
+        fitty('.einsatz-einheit div h4', {
+            maxSize: 22.5
+        });
+        fitty('.einsatz-stichwort h1', {
+            maxSize: 50
+        });
     };
 
     testOperationFe2Id: Observable = ko.observable();
     testOperationAddress: Observable = ko.observable();
 
     addTestOperation() {
-        this.addOperation({
+        this.addOperationJson({
             'id': 1,
             'stichwort': "F1",
             'stichwort_color': "danger",

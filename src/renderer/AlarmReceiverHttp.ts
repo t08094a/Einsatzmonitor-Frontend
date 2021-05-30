@@ -11,7 +11,7 @@ class AlarmReceiverHttp {
         axios.get(settings.getSync("einsatz.url")?.toString()?.replace("{activeMinutes}", ((settings.getSync("einsatz.einsatzDisplayTime") as number) - 2).toString()) as string, axiosConfig)
             .then((response) => {
                 response.data.forEach((einsatz: any) => {
-                    this.einsatzMonitorModel.addOperation(einsatz);
+                    this.einsatzMonitorModel.addOperationJson(einsatz);
                 })
             })
             .catch((error) => {

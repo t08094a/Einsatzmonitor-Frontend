@@ -24,8 +24,12 @@ class AlarmReceiverMqtt extends AlarmReceiver {
         client.on('message', (topic: string, message: any) => {
             logger.info(`AlarmReceiverMqtt | New message on ${topic}:`, message.toString('utf8'))
 
-            let alarmJson = JSON.parse(message.toString('utf8'));
-            this.handleAlarmData(alarmJson);
+            try {
+                let alarmJson = JSON.parse(message.toString('utf8'));
+                this.handleAlarmData(alarmJson);
+            } catch (e) {
+                logger.error(e);
+            }
         });
 
         client.on('error', function (error: any) {

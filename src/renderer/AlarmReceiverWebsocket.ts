@@ -22,7 +22,7 @@ class AlarmReceiverWebsocket {
                     logger.info(`Einsatz from WebSocket: ${data.einsatz}`);
 
                     var einsatz = JSON.parse(data.einsatz);
-                    this.einsatzMonitorModel.addOperation(einsatz);
+                    this.einsatzMonitorModel.addOperationJson(einsatz);
                 }
 
                 if (data.type === "command") {

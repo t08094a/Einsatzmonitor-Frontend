@@ -1,5 +1,6 @@
 import EinsatzMonitorModel from "./EinsatzMonitor";
 import {logger} from "../common/common";
+import Operation from "../common/models/Operation";
 
 abstract class AlarmReceiver {
     private einsatzMonitorModel: EinsatzMonitorModel;
@@ -16,20 +17,14 @@ abstract class AlarmReceiver {
         logger.debug(alarmData);
 
         switch (alarmData['alarmType']) {
+            case "MANUAL":
             case "ALARM": {
                 logger.info("AlarmReceiver | Received ALARM")
 
-                let einsatz = {
-                    'id': alarmId,
-                    'stichwort': alarmData['keyword'],
-                    'description': alarmData['keyword_description'],
-                    'adresse': alarmData['location_dest'],
-                    'alarmzeit_seconds': alarmData['timestamp'] / 1000,
-                    'einheiten': [],
-                    'zusatzinfos': [],
-                }
+                let operation = new Operation(alarmId, alarmData['keyword'], "danger", alarmData['keyword_description'], (alarmData['timestamp'] / 1000).toString(), alarmData['location_dest'], alarmData['object']);
+                operation.feedbackFe2Id(alarmData['dbId']);
 
-                this.einsatzMonitorModel.addOperation(einsatz);
+                this.einsatzMonitorModel.addOperation(operation);
                 break;
             }
 
