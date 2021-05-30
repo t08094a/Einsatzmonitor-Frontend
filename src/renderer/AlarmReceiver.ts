@@ -9,16 +9,22 @@ abstract class AlarmReceiver {
     }
 
     protected handleAlarmData(data: any) {
-        switch (data['alarmType']) {
+        let alarmId = data.hasOwnProperty('alarmId') ? data['alarmId'] : Math.random().toString().substr(2, 9);
+        let alarmData = data.hasOwnProperty('parameters') ? data['parameters'] : data;
+
+        logger.debug(alarmId);
+        logger.debug(alarmData);
+
+        switch (alarmData['alarmType']) {
             case "ALARM": {
                 logger.info("AlarmReceiver | Received ALARM")
 
                 let einsatz = {
-                    'id': 0,
-                    'stichwort': data['keyword'],
-                    'description': data['keyword_description'],
-                    'adresse': data['location_dest'],
-                    'alarmzeit_seconds': data['timestamp'] / 1000,
+                    'id': alarmId,
+                    'stichwort': alarmData['keyword'],
+                    'description': alarmData['keyword_description'],
+                    'adresse': alarmData['location_dest'],
+                    'alarmzeit_seconds': alarmData['timestamp'] / 1000,
                     'einheiten': [],
                     'zusatzinfos': [],
                 }
@@ -29,12 +35,12 @@ abstract class AlarmReceiver {
 
             case "STATUS": {
                 logger.info("AlarmReceiver | Received STATUS");
-                this.einsatzMonitorModel.vehicleModel.updateStatusForVehicle(data['address'], data['status']);
+                this.einsatzMonitorModel.vehicleModel.updateStatusForVehicle(alarmData['address'], alarmData['status']);
                 break;
             }
 
             default: {
-                logger.info(`AlarmReceiver | Received unknown alarmType (${data['alarmType']})`)
+                logger.info(`AlarmReceiver | Received unknown alarmType (${alarmData['alarmType']})`)
                 break;
             }
         }

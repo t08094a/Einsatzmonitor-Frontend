@@ -101,6 +101,12 @@ function createDefaultConfig() {
 
     setDefaultConfigValue("webserver.alarmInput.enabled", false);
 
+    setDefaultConfigValue("mqtt.alarmInput.enabled", false);
+    setDefaultConfigValue("mqtt.alarmInput.host", "");
+    setDefaultConfigValue("mqtt.alarmInput.user", "");
+    setDefaultConfigValue("mqtt.alarmInput.password", "");
+    setDefaultConfigValue("mqtt.alarmInput.topics", "");
+
     setDefaultConfigValue("background.image", "");
     setDefaultConfigValue("background.color", "rgb(15 15 15)");
 }
