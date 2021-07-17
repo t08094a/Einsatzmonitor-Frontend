@@ -37,6 +37,9 @@ class Operation {
 
     zusatzinfos: KnockoutObservableArray<any> = ko.observableArray([]);
 
+    // @ts-ignore
+    parameters: any = ko.observableDictionary();
+
     private isFeedbackPersonSaved = (feedback: any): boolean => {
         return ko.utils.arrayFirst(this.feedbackPersons(), (item: any) => {
             return feedback.name === item.name();
