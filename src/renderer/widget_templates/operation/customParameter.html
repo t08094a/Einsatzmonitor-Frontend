@@ -7,7 +7,7 @@
             <h1 class="text-white m-0 fitty-element h-100" data-maxfitty="200" style="height: 100%">
                 <!-- ko if: $root.getLatestOperation() -->
                 <div class="wrapper">
-                    <span class="description" data-bind="text: $root.getLatestOperation()?.parameters.get(widget.extra_config.get('parameter')()), style: { 'color': widget.extra_config.get('text-color') }"></span>
+                    <span class="description" data-bind="text: $root.getLatestOperation()?.parameters.get(widget.extra_config.get('parameter')()), style: { 'color': widget.textColor }"></span>
                 </div>
                 <!-- /ko -->
             </h1>
@@ -29,7 +29,17 @@
                             <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'parameter', title: 'Parameter', description: 'Parameter, der angezeigt werden soll.' } }"></div>
 
                             <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
+
+
+                            <!-- ko if: !widget.extra_config.get('textColorFromParameter')() -->
                             <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
+                            <!-- /ko -->
+
+                            <!-- ko if: widget.extra_config.get('textColorFromParameter')() -->
+                            <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'textColorParameter', title: 'Parameter', description: 'Parameter für die Textfarbe' } }"></div>
+                            <!-- /ko -->
+
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'textColorFromParameter', description: 'Textfarbe aus einem Parameter beziehen' } }"></div>
                         </div>
                     </div>
                     <div class="modal-footer">

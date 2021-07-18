@@ -1,11 +1,19 @@
 import Widget from "../Widget";
 import {logger} from "../../../common/common";
-import {Computed, Observable} from "knockout";
-import ko from "knockout";
+import ko, {Computed} from "knockout";
 import EinsatzMonitorModel from "../../EinsatzMonitor";
 
 class CustomParameterWidget extends Widget {
     main: EinsatzMonitorModel;
+
+    textColor: Computed = ko.computed(() => {
+        if (this.extra_config.get("textColorFromParameter")()) {
+            let parameter =  this.extra_config.get("textColorParameter")();
+            return this.main.getLatestOperation()?.parameters.get(parameter)();
+        }
+
+        return this.extra_config.get("text-color")();
+    });
 
     loaded() {
     }

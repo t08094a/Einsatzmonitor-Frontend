@@ -3,8 +3,8 @@
         style='list-style-type: none; overflow: hidden;'>
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
-        <div style="position: absolute; left: 0; /*bottom: 0;*/ z-index: -1000;" class="ml-1 mb-1 mt-1">
-            <span class="badge badge-primary p-1 pl-2 pr-2" style="font-size: 18px;" data-bind="text: widget.extra_config.get('function')"></span>
+        <div style="position: absolute; left: 0; /*bottom: 0;*/ z-index: -1000; width: 100%" class="mb-1 mt-1">
+            <span class="badge badge-primary p-1 pl-2 pr-2" style="font-size: 18px; width: 100%" data-bind="text: widget.extra_config.get('function')"></span>
         </div>
 
         <!-- ko if: $root.getLatestOperation() -->
