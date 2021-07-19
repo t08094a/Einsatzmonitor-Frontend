@@ -46,6 +46,10 @@ class Operation {
         });
     };
 
+    private getParameter = (parameter: string): string => {
+        return this.parameters.get(parameter)();
+    }
+
     loadAlamosFeedback = () => {
         axios.get(alamosFeedbackUrl(this.feedbackFe2Id()), axiosConfigParams)
             .then((response) => {
@@ -152,23 +156,35 @@ class Operation {
     };
 
     /* Google Maps Karten */
-
-    loadGoogleMap() {
+    loadGoogleMap = () => {
         logger.info("Loading google map")
+
+        if (this.getParameter("lat") && this.getParameter("lng")) {
+            logger.info("Using lat/lng from alarm parameters.")
+            this.loadCoordinates(this.getParameter("lat"), this.getParameter("lng"));
+            return;
+        }
+
+        logger.info("Using google geocoder to get lat/lng from provided address.")
+
         let geocoder = new google.maps.Geocoder();
         geocoder.geocode({'address': this.street()}, (results: any, status: any) => {
             if (status === google.maps.GeocoderStatus.OK) {
                 let latitude = results[0].geometry.location.lat();
                 let longitude = results[0].geometry.location.lng();
 
-                this.googleOverviewMap().lat(latitude);
-                this.googleOverviewMap().lng(longitude);
-
-                this.googleRouteMap().lat(latitude);
-                this.googleRouteMap().lng(longitude);
+                this.loadCoordinates(latitude, longitude);
             }
         });
     };
+
+    loadCoordinates(lat: string, lng: string) {
+        this.googleOverviewMap().lat(lat);
+        this.googleOverviewMap().lng(lng);
+
+        this.googleRouteMap().lat(lat);
+        this.googleRouteMap().lng(lng);
+    }
 
     googleOverviewMap: Observable = ko.observable({
         lat: ko.observable(),
@@ -203,7 +219,7 @@ class Operation {
         return this.googleRouteMap().distance() + " - " + this.googleRouteMap().duration();
     });
 
-    constructor(id: number, keyword: string, keywordColor: string, description: string, alarmTime: string, adresse: string, objekt: string) {
+    constructor(id: number, keyword: string, keywordColor: string, description: string, alarmTime: string, adresse: string, objekt: string, alarmData?: any) {
         this.id(id);
         this.keyword(keyword);
         this.keywordColor(keywordColor);
@@ -211,6 +227,12 @@ class Operation {
         this.alarmTime(alarmTime);
         this.street(adresse);
         this.object(objekt);
+
+        if (alarmData) {
+            Object.keys(alarmData).forEach(key => {
+                this.parameters.set(key, alarmData[key]);
+            })
+        }
 
         this.loadGoogleMap();
 

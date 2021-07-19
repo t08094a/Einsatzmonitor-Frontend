@@ -21,12 +21,8 @@ abstract class AlarmReceiver {
             case "ALARM": {
                 logger.info("AlarmReceiver | Received ALARM")
 
-                let operation = new Operation(alarmId, alarmData['keyword'], "danger", alarmData['keyword_description'], (alarmData['timestamp'] / 1000).toString(), alarmData['location_dest'], alarmData['object']);
+                let operation = new Operation(alarmId, alarmData['keyword'], "danger", alarmData['keyword_description'], (alarmData['timestamp'] / 1000).toString(), alarmData['location_dest'], alarmData['object'], alarmData);
                 operation.feedbackFe2Id(alarmData['dbId']);
-
-                Object.keys(alarmData).forEach(key => {
-                    operation.parameters.set(key, alarmData[key]);
-                })
 
                 this.einsatzMonitorModel.addOperation(operation);
                 break;
