@@ -153,3 +153,19 @@ h1, h2, h3, h4, h5, h6 {
         background-color: #dc3545;
     }
 }
+
+.editMode {
+    /*border: 4px dashed rgb(209, 0, 0);*/
+    /*box-sizing: border-box;*/
+    outline: 4px dashed rgb(209, 0, 0);
+}
+
+.gridster .dragging,
+.gridster .resizing {
+    z-index: 10 !important;
+    -webkit-transition: all 0s !important;
+    -moz-transition: all 0s !important;
+    -o-transition: all 0s !important;
+    transition: all 0s !important;
+    background-color: rgba(209, 0, 0, 0.47) !important;
+}

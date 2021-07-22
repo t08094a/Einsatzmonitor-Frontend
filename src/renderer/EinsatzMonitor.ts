@@ -364,6 +364,10 @@ export class BoardViewModel {
         ($('#settingsModal').appendTo("body") as any).modal('show');
     };
 
+    toggleEditMode() {
+        $('li').toggleClass('editMode')
+    }
+
     get_by_id(widgets: any, id: any) {
         return ko.utils.arrayFirst(widgets, (item: any) => {
             return id === item.id;
