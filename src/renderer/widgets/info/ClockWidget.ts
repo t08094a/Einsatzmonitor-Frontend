@@ -8,7 +8,10 @@ class ClockWidget extends Widget {
 
     date: Observable<Date> = ko.observable(new Date());
     parsedClock: Computed = ko.computed(() => {
-        return str_pad_left(this.date().getHours(), '0', 2) + ":" + str_pad_left(this.date().getMinutes(), '0', 2) + ":" + str_pad_left(this.date().getSeconds(), '0', 2)
+        if (this.extra_config.get("hide-seconds")())
+            return str_pad_left(this.date().getHours(), '0', 2) + ":" + str_pad_left(this.date().getMinutes(), '0', 2)
+        else
+            return str_pad_left(this.date().getHours(), '0', 2) + ":" + str_pad_left(this.date().getMinutes(), '0', 2) + ":" + str_pad_left(this.date().getSeconds(), '0', 2)
     });
 
     updateClock() {
