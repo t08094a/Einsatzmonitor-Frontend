@@ -45,7 +45,9 @@ function createWindow() {
         height: 1080,
         webPreferences: {
             nodeIntegration: true,
-            enableRemoteModule: true
+            contextIsolation: false,
+            enableRemoteModule: true,
+            // preload: path.join(__dirname, "../../renderer/static/js/preload.js")
         },
         fullscreen: !settings.getSync("debug"),
         autoHideMenuBar: !settings.getSync("debug"),
@@ -57,7 +59,7 @@ function createWindow() {
 
     win.loadURL(`file://${path.join(__dirname, "../../renderer/index.html")}`)
 
-    win.once('ready-to-show', () => {
+    win.webContents.once('did-finish-load', () => {
         splash.destroy();
         win.show();
     });
