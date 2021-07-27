@@ -36,6 +36,10 @@ class AlarmReceiverMqtt extends AlarmReceiver {
             logger.error(error);
         });
 
+        client.on('close', function () {
+            logger.info("AlarmReceiverMqtt | Connection closed");
+        })
+
         logger.info('AlarmReceiverMqtt | AlarmReceiver MQTT loaded.');
     }
 }
