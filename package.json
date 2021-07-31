@@ -38,7 +38,7 @@
   "dependencies": {
     "@sentry/browser": "^6.10.0",
     "@sentry/electron": "^0.17.0",
-    "@types/auto-launch": "^5.0.1",
+    "@types/auto-launch": "^5.0.2",
     "@types/bootstrap-colorpicker": "^2.5.2",
     "@types/electron-settings": "^4.0.0",
     "@types/jquery": "^3.5.1",
