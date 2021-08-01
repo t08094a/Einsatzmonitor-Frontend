@@ -55,7 +55,7 @@
     "knockout": "^3.5.1",
     "moment": "^2.27.0",
     "mqtt": "^4.2.8",
-    "nouislider": "^14.6.1",
+    "nouislider": "^15.2.0",
     "reconnectingwebsocket": "^1.0.0",
     "toastr": "^2.1.4"
   },
