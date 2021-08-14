@@ -58,6 +58,7 @@
     "mqtt": "^4.2.8",
     "nouislider": "^15.2.0",
     "reconnectingwebsocket": "^1.0.0",
+    "sortablejs": "^1.14.0",
     "toastr": "^2.1.4"
   },
   "build": {
