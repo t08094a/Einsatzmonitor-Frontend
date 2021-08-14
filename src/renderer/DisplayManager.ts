@@ -17,7 +17,7 @@ class DisplayManager {
         this.einsatzMonitorModel = einsatzMonitorModel;
 
         em.on('EinsatzAdd', (operation: Operation) => {
-            logger.info(`EinsatzAdd event fired (${operation})`);
+            logger.info(`EinsatzAdd event fired (${operation.id()})`);
             turnOnDisplay();
         });
 

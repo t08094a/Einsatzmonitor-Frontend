@@ -2,14 +2,13 @@ import {logger} from "../common/common";
 import toastr from "toastr";
 import settings from "electron-settings";
 import Vehicle from "../common/models/Vehicle";
-
-const ko = require('knockout');
+import * as ko from "knockout";
 
 class VehicleModel {
-    vehicles = ko.observableArray([]);
+    vehicles: KnockoutObservableArray<Vehicle> = ko.observableArray([]);
 
-    saving = ko.observable(false);
-    newVehicle = new Vehicle("", "", "", 2);
+    saving: KnockoutObservable<boolean> = ko.observable(false);
+    newVehicle: Vehicle = new Vehicle("", "", "", 2);
 
     constructor() {
         logger.info("Loaded VehiclesModel")
@@ -22,6 +21,12 @@ class VehicleModel {
     removeVehicle = (item: Vehicle) => {
         this.vehicles.remove(item);
     }
+
+    getVehicleById(id: any) {
+        return ko.utils.arrayFirst(this.vehicles(), (item: any) => {
+            return id === item.identification();
+        });
+    };
 
     loadVehiclesFromDisk = () => {
         try {

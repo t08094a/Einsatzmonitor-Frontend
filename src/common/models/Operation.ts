@@ -5,6 +5,7 @@ import moment from "moment";
 import {alamosFeedbackUrl, axiosConfigParams, em, logger, str_pad_left} from "../common";
 import axios from "axios";
 import settings from "electron-settings";
+import AAO from "./AAO";
 import * as ko from "knockout";
 
 const google = require('google');
@@ -40,13 +41,15 @@ class Operation {
     // @ts-ignore
     parameters: any = ko.observableDictionary();
 
+    matchedAao: Observable<AAO | undefined> = ko.observable();
+
     private isFeedbackPersonSaved = (feedback: any): boolean => {
         return ko.utils.arrayFirst(this.feedbackPersons(), (item: any) => {
             return feedback.name === item.name();
         });
     };
 
-    private getParameter = (parameter: string): string => {
+    public getParameter = (parameter: string): string => {
         return this.parameters.get(parameter)();
     }
 
@@ -227,6 +230,13 @@ class Operation {
         this.alarmTime(alarmTime);
         this.street(adresse);
         this.object(objekt);
+
+        // Backwards compatibility
+        this.parameters.set("keyword", keyword);
+        this.parameters.set("keyword_color", keywordColor);
+        this.parameters.set("keyword_description", description);
+        this.parameters.set("location_dest", adresse);
+        this.parameters.set("object", objekt);
 
         if (alarmData) {
             Object.keys(alarmData).forEach(key => {

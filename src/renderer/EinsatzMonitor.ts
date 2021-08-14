@@ -10,6 +10,7 @@ import dynamicWidget from "./widgets/DynamicWidget";
 import SettingsModel from "./EinsatzMonitorSettings";
 import settings from "electron-settings";
 import VehicleModel from "./VehicleModel";
+import AAOModel from "./AAOModel";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
@@ -76,7 +77,7 @@ class EinsatzMonitorModel {
         this.operations.push(operation);
 
         // Trigger EinsatzAdd event
-        em.emit('EinsatzAdd', operation.id());
+        em.emit('EinsatzAdd', operation);
 
         logger.info(`Added new operation (${operation.id()}) to array`);
 
@@ -262,6 +263,7 @@ class EinsatzMonitorModel {
 
     settingsModel: SettingsModel;
     vehicleModel: VehicleModel;
+    aaoModel: AAOModel;
 
     constructor() {
         // Update view if "operations" changes
@@ -280,6 +282,9 @@ class EinsatzMonitorModel {
 
         this.vehicleModel = new VehicleModel();
         this.vehicleModel.loadVehiclesFromDisk();
+
+        this.aaoModel = new AAOModel(this);
+        this.aaoModel.loadAaoFromDisk();
 
         logger.info("Loaded SettingsModel");
 
@@ -354,6 +359,10 @@ export class BoardViewModel {
 
     openVehicleModal() {
         ($('#vehiclesModel').appendTo("body") as any).modal('show');
+    };
+
+    openAAOModal() {
+        ($('#aaoModal').appendTo("body") as any).modal('show');
     };
 
     openSettingsMenuModal() {

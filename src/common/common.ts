@@ -1,3 +1,5 @@
+import Time from "./models/Time";
+
 export function str_pad_left(string: number, pad: string, length: number) {
     return (new Array(length + 1).join(pad) + string).slice(-length);
 }
@@ -52,6 +54,11 @@ export const alamosFeedbackUrl = (dbId: string) => `https://apager-firemergency-
 
 export function extractArguments(arg: string) {
     return arg.includes(";") ? arg.split(";") : [arg];
+}
+
+export function timeIsBetween(start: Time, end: Time, check: Time) {
+    return (start.hour <= end.hour) ? check.isBiggerThan(start) && !check.isBiggerThan(end)
+        : (check.isBiggerThan(start) && check.isBiggerThan(end)) || (!check.isBiggerThan(start) && !check.isBiggerThan(end));
 }
 
 export default {}

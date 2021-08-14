@@ -9,6 +9,7 @@ import DateWidget from "./info/DateWidget";
 import VehicleWidget from "./info/VehicleWidget";
 import AlarmMinutesWidget from "./operation/AlarmMinutesWidget";
 import CustomParameterWidget from "./operation/CustomParameterWidget";
+import AaoWidget from "./operation/AaoWidget";
 
 type tClassMapping = {
     [key: string]: any
@@ -25,7 +26,8 @@ const classMapping: tClassMapping = {
     'vehicle-widget': VehicleWidget,
 
     'operation-alarmMinutes': AlarmMinutesWidget,
-    'operation-customParameter': CustomParameterWidget
+    'operation-customParameter': CustomParameterWidget,
+    'operation-aao': AaoWidget
 }
 
 let classMappingProxy = new Proxy(classMapping, {

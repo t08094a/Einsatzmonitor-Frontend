@@ -79,6 +79,7 @@
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-overviewMap") }'><i class="fal fa-plus"></i> Karte - Übersicht</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-routeMap") }'><i class="fal fa-plus"></i> Karte - Anfahrtsweg</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-customParameter") }'><i class="fal fa-plus"></i> Eigener Parameter</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-aao") }'><i class="fal fa-plus"></i> AAO</button>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bind='click: board().openSettingsMenuModal' data-dismiss="modal">Zurück</button>
@@ -122,8 +123,9 @@
                     <button class="btn btn-success" data-bind='click: board().openWidgetAddModal' data-dismiss="modal"><i class="fal fa-plus"></i> Widget hinzufügen</button>
                     <button class="btn btn-danger" data-bind='click: clearWidgets'><i class="fal fa-trash"></i> Alle Widgets entfernen</button>
 
-                    <h4 class="mt-5">Fahrzeugeinstellungen</h4>
+                    <h4 class="mt-5">Fahrzeuge und AAO</h4>
                     <button class="btn btn-secondary" data-bind='click: board().openVehicleModal' data-dismiss="modal"><i class="fal fa-cogs"></i> Fahrzeugeinstellungen öffnen</button>
+                    <button class="btn btn-secondary mt-2" data-bind='click: board().openAAOModal' data-dismiss="modal"><i class="fal fa-cogs"></i> AAO-Einstellungen öffnen</button>
 
                     <h4 class="mt-5">EinsatzMonitor Einstellungen</h4>
                     <button class="btn btn-secondary" data-bind='click: board().openSettingsModal' data-dismiss="modal"><i class="fal fa-cogs"></i> Einstellungen öffnen</button>
@@ -245,6 +247,304 @@
                     <button class="btn btn-success" data-bind="click: $root.vehicleModel.saveVehiclesToDisk, enable: !$root.vehicleModel.saving() ">Speichern <i data-bind="visible: $root.vehicleModel.saving()"
                                                                                                                                                                  class="fa fa-cog fa-spin fa-fw"></i></button>
                     <button type="button" class="btn btn-secondary" data-bind='click: board().openSettingsMenuModal' data-dismiss="modal">Zurück</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AAO settings -->
+    <div id="aaoModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">AAO-Einstellungen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5><strong>Aktive AAOs</strong></h5>
+
+                    <table class="table table-hover table-sm">
+                        <thead>
+                        <tr>
+                            <th style="width: 10%">Name</th>
+                            <th style="width: 15%">Stichwörter</th>
+                            <th style="width: 20%">Meldebilder</th>
+                            <th style="width: 13%">Orte</th>
+                            <th style="width: 15%">Objekte</th>
+                            <th style="width: 5%">Fahrzeuge</th>
+                            <th style="width: 15%">Zeitraum</th>
+                            <th style="width: 7%"></th>
+                        </tr>
+                        </thead>
+                        <tbody data-bind="foreach: $root.aaoModel.aaos">
+                        <tr>
+                            <th scope="row" data-bind="text: name"></th>
+
+                            <td data-bind="text: keywords, visible: keywords().length > 0"></td>
+                            <td data-bind="visible: keywords().length == 0"><code>alle</code></td>
+
+                            <td data-bind="text: keywordDescriptions, visible: keywordDescriptions().length > 0"></td>
+                            <td data-bind="visible: keywordDescriptions().length == 0"><code>alle</code></td>
+
+                            <td data-bind="text: cities, visible: cities().length > 0"></td>
+                            <td data-bind="visible: cities().length == 0"><code>alle</code></td>
+
+                            <td data-bind="text: objects, visible: objects().length > 0"></td>
+                            <td data-bind="visible: objects().length == 0"><code>alle</code></td>
+<!--                            <td data-bind="text: enabledTimeFrameDisplay"></td>-->
+                            <td><span data-bind="text: assignedVehicles" class="badge badge-pill badge-danger">Danger</span></td>
+                            <td>
+                                <div>
+                                    <i class="fal fa-calendar-alt"></i>
+                                    <span class="text-success" data-bind="visible: monday()"><strong>M</strong></span>
+                                    <span class="text-danger" data-bind="visible: !monday()"><strong>M</strong></span>
+                                    <span class="text-success" data-bind="visible: tuesday()"><strong>D</strong></span>
+                                    <span class="text-danger" data-bind="visible: !tuesday()"><strong>D</strong></span>
+                                    <span class="text-success" data-bind="visible: wednesday()"><strong>M</strong></span>
+                                    <span class="text-danger" data-bind="visible: !wednesday()"><strong>M</strong></span>
+                                    <span class="text-success" data-bind="visible: thursday()"><strong>D</strong></span>
+                                    <span class="text-danger" data-bind="visible: !thursday()"><strong>D</strong></span>
+                                    <span class="text-success" data-bind="visible: friday()"><strong>F</strong></span>
+                                    <span class="text-danger" data-bind="visible: !friday()"><strong>F</strong></span>
+                                    <span class="text-success" data-bind="visible: saturday()"><strong>S</strong></span>
+                                    <span class="text-danger" data-bind="visible: !saturday()"><strong>S</strong></span>
+                                    <span class="text-success" data-bind="visible: sunday()"><strong>S</strong></span>
+                                    <span class="text-danger" data-bind="visible: !sunday()"><strong>S</strong></span>
+
+                                </div>
+
+                                <div style="font-size: 13px; display: inline;">
+                                    <i class="fal fa-clock"></i>
+                                    <span class="" data-bind="text: startTime"></span>
+                                    <span> - </span>
+                                    <span class="" data-bind="text: endTime"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-warning" data-bind="click:$root.aaoModel.editAao" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-pen"></i></button>
+                                <button class="btn btn-sm btn-danger" data-bind="click:$root.aaoModel.removeAao" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <hr>
+
+                    <h5 class="mt-3"><strong>AAO hinzufügen</strong></h5>
+                    <form>
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="aaoNameInput"><strong>Name</strong></label>
+                                <input id="aaoNameInput" type="text" class="form-control" data-bind="textInput: $root.aaoModel.newAao().name" placeholder="Name"/>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning" role="alert">
+                            Stichwörter, Meldebilder, Orte und Objekte sind <strong>oder</strong>-verknüpft. Sobald also einer der Einträge gefunden wird, wird die AAO als gültig angesehen.
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="aaoKeywords"><strong>Stichwörter</strong> <span class="badge badge-light">keyword</span></label>
+
+                                <ul class="list-group mb-2" data-bind="foreach: $root.aaoModel.newAao().keywords">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem;">
+                                        <span data-bind="text: $data"></span>
+                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeKeyword" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-minus"></i></button>
+                                    </li>
+                                </ul>
+
+                                <div class="input-group input-group-sm">
+                                    <input id="aaoKeywords" type="text" class="form-control" data-bind="textInput: $root.aaoModel.newKeyword" placeholder="F1"/>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="button-addon1" data-bind="click: $root.aaoModel.addNewKeyword">Hinzufügen</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="aaoKeywordDescriptions"><strong>Meldebilder</strong> <span class="badge badge-light">keyword_description</span></label>
+
+                                <ul class="list-group mb-2" data-bind="foreach: $root.aaoModel.newAao().keywordDescriptions">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem;">
+                                        <span data-bind="text: $data"></span>
+                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeKeywordDescription" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-minus"></i></button>
+                                    </li>
+                                </ul>
+
+                                <div class="input-group input-group-sm">
+                                    <input id="aaoKeywordDescriptions" type="text" class="form-control" data-bind="textInput: $root.aaoModel.newKeywordDescription" placeholder="Brennt Mülleimer"/>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="button-addon2" data-bind="click: $root.aaoModel.addNewKeywordDescription">Hinzufügen</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="aaoCities"><strong>Orte</strong> <span class="badge badge-light">city</span></label>
+
+                                <ul class="list-group mb-2" data-bind="foreach: $root.aaoModel.newAao().cities">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem;">
+                                        <span data-bind="text: $data"></span>
+                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeCity" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-minus"></i></button>
+                                    </li>
+                                </ul>
+
+                                <div class="input-group input-group-sm">
+                                    <input id="aaoCities" type="text" class="form-control" data-bind="textInput: $root.aaoModel.newCity" placeholder="Winsen"/>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="button-addon3" data-bind="click: $root.aaoModel.addNewCity">Hinzufügen</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="aaoObjects"><strong>Objekte</strong> <span class="badge badge-light">object</span></label>
+
+                                <ul class="list-group mb-2" data-bind="foreach: $root.aaoModel.newAao().objects">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem;">
+                                        <span data-bind="text: $data"></span>
+                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeObject" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-minus"></i></button>
+                                    </li>
+                                </ul>
+
+                                <div class="input-group input-group-sm">
+                                    <input id="aaoObjects" type="text" class="form-control" data-bind="textInput: $root.aaoModel.newObject" placeholder="Kreishaus Winsen (Luhe)"/>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="button" id="button-addon4" data-bind="click: $root.aaoModel.addNewObject">Hinzufügen</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-8">
+                                <label><strong>Wochentage</strong></label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input id="aaoMonday" type="checkbox" class="form-check-input" data-bind="checked: $root.aaoModel.newAao().monday" placeholder="Montag"/>
+                                        <label class="form-check-label" for="aaoMonday">
+                                            Montag
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input id="aaoTuesday" type="checkbox" class="form-check-input" data-bind="checked: $root.aaoModel.newAao().tuesday" placeholder="Montag"/>
+                                        <label class="form-check-label" for="aaoTuesday">
+                                            Dienstag
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input id="aaoWednesday" type="checkbox" class="form-check-input" data-bind="checked: $root.aaoModel.newAao().wednesday" placeholder="Montag"/>
+                                        <label class="form-check-label" for="aaoWednesday">
+                                            Mittwoch
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input id="aaoThursday" type="checkbox" class="form-check-input" data-bind="checked: $root.aaoModel.newAao().thursday" placeholder="Montag"/>
+                                        <label class="form-check-label" for="aaoThursday">
+                                            Donnerstag
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input id="aaoFriday" type="checkbox" class="form-check-input" data-bind="checked: $root.aaoModel.newAao().friday" placeholder="Montag"/>
+                                        <label class="form-check-label" for="aaoFriday">
+                                            Freitag
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input id="aaoSaturday" type="checkbox" class="form-check-input" data-bind="checked: $root.aaoModel.newAao().saturday" placeholder="Montag"/>
+                                        <label class="form-check-label" for="aaoSaturday">
+                                            Samstag
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input id="aaoSunday" type="checkbox" class="form-check-input" data-bind="checked: $root.aaoModel.newAao().sunday" placeholder="Montag"/>
+                                        <label class="form-check-label" for="aaoSunday">
+                                            Sonntag
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="aaoStartTime"><strong>Start-Uhrzeit</strong></label>
+                                <input id="aaoStartTime" type="text" class="form-control" data-bind="textInput: $root.aaoModel.newAao().startTime" placeholder="00:00"/>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="aaoEndTime"><strong>End-Uhrzeit</strong></label>
+                                <input id="aaoEndTime" type="text" class="form-control" data-bind="textInput: $root.aaoModel.newAao().endTime" placeholder="24:00"/>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <button class="btn btn-block btn-outline-success" data-bind="click: $root.aaoModel.openVehicleSelectModal">
+                                    Fahrzeuge auswählen (<strong><span data-bind="text: $root.aaoModel.newAao().assignedVehicles"></span></strong> zugeordnet)</button>
+                                <button class="btn btn-block btn-primary" data-bind="click: $root.aaoModel.addNewAao">AAO hinzufügen</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" data-bind="click: $root.aaoModel.loadAaoFromDisk">Aus Einstellungen laden</button>
+
+                    <button class="btn btn-success" data-bind="click: $root.aaoModel.saveAaoToDisk, enable: !$root.aaoModel.saving() ">Speichern <i data-bind="visible: $root.aaoModel.saving()"
+                                                                                                                                                                 class="fa fa-cog fa-spin fa-fw"></i></button>
+                    <button type="button" class="btn btn-secondary" data-bind='click: board().openSettingsMenuModal' data-dismiss="modal">Zurück</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AAO settings - VehicleSelect -->
+    <div id="aaoModalVehicleSelect" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">AAO-Einstellungen Fahrzeugauswahl</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning mb-0" role="alert">
+                        Fahrzeuge per Drag & Drop zuordnen.
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="mt-3"><strong>Verfügbare Fahrzeuge</strong></h4>
+                            <ul id="sourceAaoVehicles" class="list-group mb-2" data-bind="sortable: {foreach: $root.aaoModel.newAao().availableVehiclesList, options: {group: {pull: true, put: true}}}">
+                                <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem; cursor: pointer">
+                                    <span data-bind="text: name"></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mt-3"><strong>Prio 1 Fahrzeuge</strong></h4>
+                            <ul id="vehicles1" class="list-group mb-2" data-bind="sortable: {foreach: $root.aaoModel.newAao().vehicles1, options: {pull: true, put: true}}">
+                                <li class="list-group-item d-flex justify-content-between align-items-center" data-bind="attr: {'data-id': identification}" style="padding: .25rem .50rem; cursor: pointer">
+                                    <span data-bind="text: name"></span>
+                                </li>
+                            </ul>
+
+                            <h4 class="mt-3"><strong>Prio 2 Fahrzeuge</strong></h4>
+                            <ul id="vehicles2" class="list-group mb-2" data-bind="sortable: {foreach: $root.aaoModel.newAao().vehicles2, options: {pull: true, put: true}}">
+                                <li class="list-group-item d-flex justify-content-between align-items-center" data-bind="attr: {'data-id': identification}" style="padding: .25rem .50rem; cursor: pointer">
+                                    <span data-bind="text: name"></span>
+                                </li>
+                            </ul>
+
+                            <h4 class="mt-3"><strong>Prio 3 Fahrzeuge</strong></h4>
+                            <ul id="vehicles3" class="list-group mb-2" data-bind="sortable: {foreach: $root.aaoModel.newAao().vehicles3, options: {pull: true, put: true}}">
+                                <li class="list-group-item d-flex justify-content-between align-items-center" data-bind="attr: {'data-id': identification}" style="padding: .25rem .50rem; cursor: pointer">
+                                    <span data-bind="text: name"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
                 </div>
             </div>
