@@ -1,4 +1,7 @@
 import Time from "./models/Time";
+import {Client} from "@googlemaps/google-maps-services-js";
+import {Loader} from '@googlemaps/js-api-loader';
+import settings from "electron-settings";
 
 export function str_pad_left(string: number, pad: string, length: number) {
     return (new Array(length + 1).join(pad) + string).slice(-length);
@@ -60,5 +63,12 @@ export function timeIsBetween(start: Time, end: Time, check: Time) {
     return (start.hour <= end.hour) ? check.isBiggerThan(start) && !check.isBiggerThan(end)
         : (check.isBiggerThan(start) && check.isBiggerThan(end)) || (!check.isBiggerThan(start) && !check.isBiggerThan(end));
 }
+
+export const client = new Client({});
+export const loader = new Loader({
+    apiKey: settings.getSync("googleMapsKey") as string,
+    version: "weekly",
+    libraries: ["geometry"]
+});
 
 export default {}

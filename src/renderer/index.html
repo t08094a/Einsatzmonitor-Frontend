@@ -617,21 +617,6 @@
 
 <!-- google maps -->
 <script>
-    function loadMaps(doLoadBundle) {
-        let script = document.createElement('script');
-        script.id = "googleMapsAPI";
-        script.type = 'text/javascript';
-        script.src = 'https://maps.googleapis.com/maps/api/js?key=' + settings.getSync("googleMapsKey") + '&language=de&region=de&callback=initMap';
-        document.body.appendChild(script);
-        log.info("Loaded Google Maps API");
-
-        window.initMap = function () {
-            // JS MAPS API is loaded and available
-            if (doLoadBundle)
-                loadBundle();
-        };
-    }
-
     function isDev() {
         log.info(`Environment: ${process.env?.NODE_ENV?.trim()}`);
         return process.env?.NODE_ENV?.trim() === 'dev';
@@ -649,15 +634,8 @@
     }
 
     window.onload = () => {
-        loadMaps(true);
+        loadBundle();
     };
-
-    let refreshTimer = window.setInterval(function () {
-        let oldScript = document.getElementById("googleMapsAPI");
-        oldScript.parentNode.removeChild(oldScript);
-        log.info("Removed old Google Maps API Javascript code");
-        loadMaps(false);
-    }, 1000 * 60 * 60 * 23);
 
 </script>
 

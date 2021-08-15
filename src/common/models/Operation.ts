@@ -2,13 +2,11 @@ import {Computed, Observable, PureComputed} from 'knockout';
 import Person from './Person';
 import Functioning from './Functioning';
 import moment from "moment";
-import {alamosFeedbackUrl, axiosConfigParams, em, logger, str_pad_left} from "../common";
+import {alamosFeedbackUrl, axiosConfigParams, client, em, logger, str_pad_left} from "../common";
 import axios from "axios";
 import settings from "electron-settings";
 import AAO from "./AAO";
 import * as ko from "knockout";
-
-const google = require('google');
 
 class Operation {
     id: Observable = ko.observable();
@@ -170,15 +168,20 @@ class Operation {
 
         logger.info("Using google geocoder to get lat/lng from provided address.")
 
-        let geocoder = new google.maps.Geocoder();
-        geocoder.geocode({'address': this.street()}, (results: any, status: any) => {
-            if (status === google.maps.GeocoderStatus.OK) {
-                let latitude = results[0].geometry.location.lat();
-                let longitude = results[0].geometry.location.lng();
+        client
+            .geocode({
+                params: {
+                    address: this.street(),
+                    key: settings.getSync("googleMapsKey") as string
+                }
+            })
+            .then(r => {
+                let latitude = r.data.results[0].geometry.location.lat;
+                let longitude = r.data.results[0].geometry.location.lng;
 
-                this.loadCoordinates(latitude, longitude);
-            }
-        });
+                this.loadCoordinates(latitude.toString(), longitude.toString());
+            })
+            .catch(e => logger.error(e));
     };
 
     loadCoordinates(lat: string, lng: string) {
@@ -195,7 +198,7 @@ class Operation {
 
         mapOptions: ko.observable({
             zoom: 18,
-            mapTypeId: google.maps.MapTypeId.SATELLITE
+            mapTypeId: 'satellite'
         }),
 
         einsatzOrtMarker: true,
@@ -208,7 +211,7 @@ class Operation {
 
         mapOptions: ko.observable({
             zoom: 18,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
+            mapTypeId: 'roadmap'
         }),
 
         einsatzOrtMarker: false,
