@@ -7,6 +7,15 @@ import Operation from "../common/models/Operation";
 import AaoWidget from "./widgets/operation/AaoWidget";
 import Widget from "./widgets/Widget";
 import * as ko from "knockout";
+import * as electron from "electron";
+import path from "path";
+import {JSONFile, Low} from "lowdb/lib";
+
+
+const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+const file = path.join(userDataPath, 'aao_db.json');
+const adapter = new JSONFile(file);
+const aaoDb = new Low(adapter);
 
 
 class AAOModel {
@@ -121,22 +130,24 @@ class AAOModel {
 
     loadAaoFromDisk = () => {
         try {
-            let aaos = settings.getSync("aao.definitions") as string
-            let parsedAaos = JSON.parse(aaos);
+            aaoDb.read().then(() => {
+                let aaos = aaoDb.data as [AAO];
 
-            this.aaos.removeAll();
+                if (aaos) {
+                    this.aaos.removeAll();
 
-            parsedAaos.forEach((aao: any) => {
-                this.addAao(aao)
+                    aaos.forEach((aao: AAO) => {
+                        this.addAao(aao)
+                    })
+                }
             })
+
         } catch (e) {
             logger.debug(e);
             logger.debug("No AAOs saved yet.")
         }
     };
 
-    // Todo: Better data storage than saving AAOs in settings json file
-    // Todo: lowdb? https://github.com/typicode/lowdb
     saveAaoToDisk = () => {
         this.saving(true);
 
@@ -154,7 +165,9 @@ class AAOModel {
 
             // @ts-ignore
             let json = ko.toJSON(this.aaos, fieldsToSave);
-            settings.setSync("aao.definitions", json);
+
+            aaoDb.data = JSON.parse(json);
+            aaoDb.write();
 
             toastr.success("AAO erfolgreich gespeichert", "Alarm- und Ausrückeordnung");
             this.saving(false);

@@ -56,6 +56,7 @@
     "fitty": "^2.3.5",
     "graceful-fs": "^4.2.6",
     "knockout": "^3.5.1",
+    "lowdb": "^2.1.0",
     "moment": "^2.27.0",
     "mqtt": "^4.2.8",
     "nouislider": "^15.2.0",
