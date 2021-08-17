@@ -4,10 +4,12 @@ import Operation from "./Operation";
 import Time from "./Time";
 import Vehicle from "./Vehicle";
 import VehicleModel from "../../renderer/VehicleModel";
+import settings from "electron-settings";
 
 class AAO {
     name: Observable<string> = ko.observable("Neue AAO");
 
+    customParameter: Observable<string | undefined> = ko.observable();
     keywords: ObservableArray<string> = ko.observableArray<string>([]);
     keywordDescriptions: ObservableArray<string> = ko.observableArray<string>([]);
     cities: ObservableArray<string> = ko.observableArray<string>([]);
@@ -38,6 +40,8 @@ class AAO {
     // Underlying array needed for knockout-sortablejs
     availableVehiclesList: ObservableArray = ko.observableArray<any>([]);
 
+    private customParameterName: Computed<string>;
+
     removeKeyword = (item: string) => {
         this.keywords.remove(item);
     }
@@ -58,6 +62,16 @@ class AAO {
         if (!operation) {
             logger.debug(`No operation passed to AAO ${this.name()}`);
             return false;
+        }
+
+        if (this.customParameter()) {
+            let parameterName = settings.getSync("aao.customParameter") as string;
+            let parameter = operation.getParameter(parameterName);
+
+            if (this.customParameter() !== parameter) {
+                logger.debug(`Custom parameter ${parameterName} (${parameter}) is not valid for AAO ${this.name()} (required: ${this.customParameter()})`)
+                return false;
+            }
         }
 
         let keyword = operation.getParameter("keyword");
@@ -231,6 +245,10 @@ class AAO {
         this.assignedVehicles = ko.computed(() => {
             return this.vehicles1().length + this.vehicles2().length + this.vehicles3().length;
         })
+
+        this.customParameterName = ko.computed(() => {
+           return settings.getSync("aao.customParameter") as string
+        });
     }
 }
 

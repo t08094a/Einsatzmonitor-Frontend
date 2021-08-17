@@ -111,6 +111,8 @@ function createDefaultConfig() {
 
     setDefaultConfigValue("background.image", "");
     setDefaultConfigValue("background.color", "rgb(15 15 15)");
+
+    setDefaultConfigValue("aao.customParameter", "unit");
 }
 
 function setDefaultConfigValue(key, value) {

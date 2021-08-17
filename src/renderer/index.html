@@ -271,12 +271,12 @@
                         <tr>
                             <th style="width: 10%">Name</th>
                             <th style="width: 15%">Stichwörter</th>
-                            <th style="width: 20%">Meldebilder</th>
+                            <th style="width: 19%">Meldebilder</th>
                             <th style="width: 13%">Orte</th>
                             <th style="width: 15%">Objekte</th>
                             <th style="width: 5%">Fahrzeuge</th>
                             <th style="width: 15%">Zeitraum</th>
-                            <th style="width: 7%"></th>
+                            <th style="width: 8%"></th>
                         </tr>
                         </thead>
                         <tbody data-bind="foreach: $root.aaoModel.aaos">
@@ -336,9 +336,13 @@
                     <h5 class="mt-3"><strong>AAO hinzufügen</strong></h5>
                     <form>
                         <div class="form-row">
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-8">
                                 <label for="aaoNameInput"><strong>Name</strong></label>
                                 <input id="aaoNameInput" type="text" class="form-control" data-bind="textInput: $root.aaoModel.newAao().name" placeholder="Name"/>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="aaoCustomField"><strong>Eigener Parameter</strong> <span class="badge badge-light" data-bind="text: $root.aaoModel.newAao().customParameterName"></span></label>
+                                <input id="aaoCustomField" type="text" class="form-control" data-bind="textInput: $root.aaoModel.newAao().customParameter" placeholder="Eigener Parameter"/>
                             </div>
                         </div>
 

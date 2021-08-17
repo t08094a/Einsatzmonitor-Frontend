@@ -1,7 +1,6 @@
 import AAO from "../common/models/AAO";
 import {em, logger} from "../common/common";
 import EinsatzMonitorModel from "./EinsatzMonitor";
-import settings from "electron-settings";
 import toastr from "toastr";
 import Operation from "../common/models/Operation";
 import AaoWidget from "./widgets/operation/AaoWidget";
@@ -30,7 +29,7 @@ class AAOModel {
     newCity: KnockoutObservable<string> = ko.observable("");
     newObject: KnockoutObservable<string> = ko.observable("");
 
-    private ignoreFields = ["enabledTimeFrameDisplay", "isValid", "assignedVehicles", "availableVehicles", "availableVehiclesList", "vehicleModel"];
+    private ignoreFields = ["enabledTimeFrameDisplay", "isValid", "assignedVehicles", "availableVehicles", "availableVehiclesList", "vehicleModel", "customParameterName"];
 
     constructor(einsatzMonitorModel: EinsatzMonitorModel) {
         logger.info("Loaded AAOModel");
