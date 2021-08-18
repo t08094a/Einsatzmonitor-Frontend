@@ -1,8 +1,16 @@
 import {logger} from "../common/common";
 import toastr from "toastr";
-import settings from "electron-settings";
 import Vehicle from "../common/models/Vehicle";
 import * as ko from "knockout";
+import electron from "electron";
+import path from "path";
+import {JSONFile, Low} from "lowdb/lib";
+
+
+const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+const file = path.join(userDataPath, 'vehicles_db.json');
+const adapter = new JSONFile(file);
+const vehiclesDb = new Low(adapter);
 
 class VehicleModel {
     vehicles: KnockoutObservableArray<Vehicle> = ko.observableArray([]);
@@ -30,13 +38,16 @@ class VehicleModel {
 
     loadVehiclesFromDisk = () => {
         try {
-            let vehicles = settings.getSync("vehicles") as string
-            let parsedVehicles = JSON.parse(vehicles);
+            vehiclesDb.read().then(() => {
+                let vehicles = vehiclesDb.data as [Vehicle];
 
-            this.vehicles.removeAll();
+                if (vehicles) {
+                    this.vehicles.removeAll();
 
-            parsedVehicles.forEach((vehicle: any) => {
-                this.vehicles.push(new Vehicle(vehicle.station, vehicle.identification, vehicle.name, vehicle.statusCode))
+                    vehicles.forEach((vehicle: any) => {
+                        this.vehicles.push(new Vehicle(vehicle.station, vehicle.identification, vehicle.name, vehicle.statusCode))
+                    })
+                }
             })
         } catch (e) {
             logger.debug("No vehicles saved yet.")
@@ -55,7 +66,8 @@ class VehicleModel {
         this.saving(true);
 
         setTimeout(() => {
-            settings.setSync("vehicles", ko.toJSON(this.vehicles));
+            vehiclesDb.data = ko.toJS(this.vehicles);
+            vehiclesDb.write();
 
             toastr.success("Einstellungen erfolgreich gespeichert", "Einstellungen");
             this.saving(false);

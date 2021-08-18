@@ -16,7 +16,6 @@ const file = path.join(userDataPath, 'aao_db.json');
 const adapter = new JSONFile(file);
 const aaoDb = new Low(adapter);
 
-
 class AAOModel {
     private main: EinsatzMonitorModel;
     aaos: KnockoutObservableArray<AAO> = ko.observableArray([]);
