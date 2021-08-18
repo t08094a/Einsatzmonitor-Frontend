@@ -20,14 +20,14 @@
 
 
         <!-- ko if: !widget.isSingleMode() -->
-        <div class="einsatz-einheiten" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }">
-            <!-- ko foreach: $root.vehicleModel.vehicles() -->
-            <div class="einsatz-einheit mb-1" style="width: 100%; height: 45px" data-bind="style: { 'background-color': statusColor }">
-                <div class="" style="width: 100%; height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
-                    <h4 class="text-white m-0 fitty-element h-100" data-maxfitty="200" style="width: 100%; height: 100%">
+        <div class="d-flex flex-column h-100" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }">
+            <!-- ko foreach: widget.getVehiclesForListMode -->
+            <div class="p-1 mb-1 h-100" style="width: 100%; overflow: hidden;" data-bind="style: { 'background-color': statusColor() }">
+                <div class="text-center" style="width: 100%; height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
+                    <h4 class="text-white m-0 fitty-element h-100 d-flex" data-maxfitty="200" style="width: 100%; height: 100%">
                         <span class="d-flex justify-content-between">
                             <span style="padding-left: 20px; padding-right: 40px;" class="description" data-bind="text: statusCode, style: { 'color': widget.extra_config.get('text-color') }"></span>
-                            <span style="padding-right: 20px;" class="description" data-bind="text: name, style: { 'color': widget.extra_config.get('text-color') }"></span>
+                            <span style="padding-right: 20px;" class="description flex-shrink-0" data-bind="text: name, style: { 'color': widget.extra_config.get('text-color') }"></span>
                         </span>
                     </h4>
                 </div>
@@ -52,6 +52,10 @@
 
                             <!-- ko if: widget.isSingleMode() -->
                             <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'issi-to-show', title: 'ISSI', description: 'ISSI des Fahrzeuges, welches angezeigt werden soll.' } }"></div>
+                            <!-- /ko -->
+
+                            <!-- ko if: !widget.isSingleMode() -->
+                            <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'filter-station', title: 'Filter Wache', description: 'Nur Fahrzeuge einer bestimmten Wache anzeigen. Leeres Feld -> alle.' } }"></div>
                             <!-- /ko -->
 
                             <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'text-fitty', description: 'Textgröße automatisch anpassen' } }"></div>

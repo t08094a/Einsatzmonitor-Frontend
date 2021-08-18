@@ -18,6 +18,21 @@ class VehicleWidget extends Widget {
         });
     });
 
+    getVehiclesForListMode: Computed = ko.computed(() => {
+        let filteredVehicles = ko.utils.arrayFilter(this.main.vehicleModel.vehicles(), (vehicle: Vehicle) => {
+            if (this.extra_config.get('filter-station')()) {
+                return vehicle.station() === this.extra_config.get('filter-station')();
+            }
+            return true;
+        });
+
+        setTimeout(() => {
+            this.fitIfPossible();
+        }, 200);
+
+        return filteredVehicles;
+    });
+
     loaded() {
     }
 
