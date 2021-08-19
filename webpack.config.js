@@ -42,7 +42,7 @@ let common_config = {
         extensions: ['.tsx', '.ts', '.js', '.html']
     },
     resolveLoader: {
-        moduleExtensions: ['raw-loader']
+        extensions: ['raw-loader']
     },
     externals: {
         knockout: 'ko',

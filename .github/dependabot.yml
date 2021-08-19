@@ -17,3 +17,7 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      # For all dependencies, ignore all patch updates
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-patch" ]
