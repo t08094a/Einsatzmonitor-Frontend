@@ -49,9 +49,6 @@ let common_config = {
         // google: 'google',
         'ko.observableDicitonary': 'ko'
     },
-    devServer: {
-        writeToDisk: true
-    }
 };
 
 module.exports = [
@@ -76,6 +73,9 @@ module.exports = [
             filename: '[name]-bundle.js',
             path: path.resolve(__dirname, 'src/renderer/dist')
         },
+        devServer: {
+            writeToDisk: true,
+        }
     }),
 
     // Object.assign({}, common_config, {
