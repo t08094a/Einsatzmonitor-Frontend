@@ -8,7 +8,7 @@ import Widget from "./widgets/Widget";
 import * as ko from "knockout";
 import * as electron from "electron";
 import path from "path";
-import {JSONFile, Low} from "lowdb/lib";
+import {JSONFile, Low} from "lowdb";
 
 
 const userDataPath = (electron.app || electron.remote.app).getPath('userData');

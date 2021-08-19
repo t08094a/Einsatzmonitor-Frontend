@@ -4,7 +4,7 @@ import Vehicle from "../common/models/Vehicle";
 import * as ko from "knockout";
 import electron from "electron";
 import path from "path";
-import {JSONFile, Low} from "lowdb/lib";
+import {JSONFile, Low} from "lowdb";
 
 
 const userDataPath = (electron.app || electron.remote.app).getPath('userData');
