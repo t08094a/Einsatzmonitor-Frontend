@@ -557,7 +557,7 @@
 
 
     <div class="window-buttons-wrapper version-info mr-2 mb-2 p-1" style="position:fixed; right:0; bottom:0;">
-        <small id="app-version" class="text-muted text-white">EinsatzMonitor V0.0.0 Beta</small>
+        <small id="app-version" class="text-muted text-white">EinsatzMonitor V0.0.0</small>
     </div>
 
     <div class="window-buttons-wrapper version-info mr-2 mb-2 p-1" style="position:fixed; bottom:0; z-index: 1000;">
@@ -677,7 +677,7 @@
 <script>
     const version_container = document.getElementById('app-version');
     const appVersion = window.require('electron').remote.app.getVersion();
-    const versionString = `EinsatzMonitor V${appVersion} Beta`;
+    const versionString = `EinsatzMonitor V${appVersion}`;
 
     version_container.innerHTML = versionString;
 </script>
