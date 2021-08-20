@@ -1,8 +1,12 @@
 import EinsatzMonitorController from "./EinsatzMonitorController";
 import settings from "electron-settings";
+import * as Sentry from "@sentry/electron";
 
 // custom knockout-sortable
 require('/src/renderer/static/js/knockout-sortable.js');
+
+if (settings.getSync("sentry.enabled"))
+    Sentry.init({dsn: settings.getSync("sentry.dsn") as string});
 
 export function loadWidgetsHtml() {
     let output = document.querySelector(".template-output");

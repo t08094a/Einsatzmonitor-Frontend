@@ -4,14 +4,15 @@ import AutoLaunch from 'auto-launch';
 import settings from 'electron-settings';
 import {autoUpdater} from 'electron-updater';
 import * as path from "path";
+import * as Sentry from "@sentry/electron";
 
 let realFs = require('fs')
 let gracefulFs = require('graceful-fs')
 
 gracefulFs.gracefulify(realFs)
 
-// if (config.sentry.enabled)
-//     require('./sentry');
+if (settings.getSync("sentry.enabled"))
+    Sentry.init({dsn: settings.getSync("sentry.dsn") as string});
 
 const ElectronSampleAppLauncher = new AutoLaunch({
     name: 'Electron-sample-app',
@@ -82,8 +83,8 @@ function createDefaultConfig() {
     setDefaultConfigValue("info.httpFetchInterval", 30);
 
 
-    setDefaultConfigValue("sentry.enabled", false);
-    setDefaultConfigValue("sentry.dsn", "https://dsn@sentry.io/123456");
+    setDefaultConfigValue("sentry.enabled", true);
+    setDefaultConfigValue("sentry.dsn", "https://9e1dec4c594e449b96f2ee2c4877968e@o967810.ingest.sentry.io/5919167");
 
 
     setDefaultConfigValue("googleMapsKey", "123456abc");
