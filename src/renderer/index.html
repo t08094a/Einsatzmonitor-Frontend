@@ -627,7 +627,7 @@
     }
 
     function loadBundle() {
-        let scriptSrc = isDev() ? 'http://localhost:8080/src/renderer/dist/ui-bundle.js' : './dist/ui-bundle.js';
+        let scriptSrc = isDev() ? 'http://localhost:8080/ui-bundle.js' : './dist/ui-bundle.js';
 
         let script = document.createElement('script');
         script.id = "appBundle";

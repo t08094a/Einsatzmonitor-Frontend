@@ -71,10 +71,25 @@ module.exports = [
         },
         output: {
             filename: '[name]-bundle.js',
-            path: path.resolve(__dirname, 'src/renderer/dist')
+            path: path.resolve(__dirname, 'src/renderer/dist'),
+            publicPath: '/',
         },
         devServer: {
-            writeToDisk: true,
+            host: '127.0.0.1',
+            allowedHosts: 'all',
+            hot: true,
+            devMiddleware: {
+                writeToDisk: true,
+                publicPath: '/',
+            },
+            client: {
+                webSocketURL: {
+                    hostname: '127.0.0.1',
+                    pathname: '/ws',
+                    port: 8080,
+                    protocol: 'ws',
+                }
+            },
         }
     }),
 

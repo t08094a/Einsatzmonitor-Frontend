@@ -10,7 +10,7 @@
     "dist:win": "electron-builder --win",
     "dist:linux": "electron-builder --linux",
     "dev:electron_old": "webpack --config webpack.config.js --mode development && electron .",
-    "dev:webpack": "webpack serve --progress --hot --inline --mode development",
+    "dev:webpack": "webpack serve --progress --hot --mode development",
     "dev:electron": "set NODE_ENV=dev && electron .",
     "dist:webpack": "webpack --mode development"
   },
