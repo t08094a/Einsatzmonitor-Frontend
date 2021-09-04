@@ -11,6 +11,7 @@ import SettingsModel from "./EinsatzMonitorSettings";
 import settings from "electron-settings";
 import VehicleModel from "./VehicleModel";
 import AAOModel from "./AAOModel";
+import AlarmHistoryModel from "./AlarmHistoryModel";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
@@ -264,6 +265,7 @@ class EinsatzMonitorModel {
     settingsModel: SettingsModel;
     vehicleModel: VehicleModel;
     aaoModel: AAOModel;
+    alarmHistoryModel: AlarmHistoryModel;
 
     constructor() {
         // Update view if "operations" changes
@@ -285,6 +287,8 @@ class EinsatzMonitorModel {
 
         this.aaoModel = new AAOModel(this);
         this.aaoModel.loadAaoFromDisk();
+
+        this.alarmHistoryModel = new AlarmHistoryModel(this);
 
         logger.info("Loaded SettingsModel");
 

@@ -1,5 +1,5 @@
 import EinsatzMonitorModel from "./EinsatzMonitor";
-import {logger} from "../common/common";
+import {em, logger} from "../common/common";
 import Operation from "../common/models/Operation";
 
 abstract class AlarmReceiver {
@@ -31,6 +31,8 @@ abstract class AlarmReceiver {
             case "STATUS": {
                 logger.info("AlarmReceiver | Received STATUS");
                 this.einsatzMonitorModel.vehicleModel.updateStatusForVehicle(alarmData['address'], alarmData['status']);
+
+                em.emit('NewStatus', alarmData);
                 break;
             }
 

@@ -10,6 +10,7 @@ import VehicleWidget from "./info/VehicleWidget";
 import AlarmMinutesWidget from "./operation/AlarmMinutesWidget";
 import CustomParameterWidget from "./operation/CustomParameterWidget";
 import AaoWidget from "./operation/AaoWidget";
+import HistoryWidget from "./info/HistoryWidget";
 
 type tClassMapping = {
     [key: string]: any
@@ -24,6 +25,7 @@ const classMapping: tClassMapping = {
     'image-widget': ImageWidget,
     'weather-widget': WeatherWidget,
     'vehicle-widget': VehicleWidget,
+    'alarm-history-widget': HistoryWidget,
 
     'operation-alarmMinutes': AlarmMinutesWidget,
     'operation-customParameter': CustomParameterWidget,
