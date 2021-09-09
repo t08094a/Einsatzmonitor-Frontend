@@ -14,7 +14,7 @@ export function loadWidgetsHtml() {
 
     templates.keys().forEach((key: string) => {
         if (output)
-            output.innerHTML += templates(key);
+            output.innerHTML += templates(key).default;
     })
 }
 
