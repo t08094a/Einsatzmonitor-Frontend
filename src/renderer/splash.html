@@ -90,7 +90,7 @@
     <h1 class="text-danger mt-2"><strong>Einsatzmonitor</strong></h1>
 
     <div class="mt-2">
-        <small id="app-version" class="text-primary">V 0.0.0 Beta</small>
+        <small id="app-version" class="text-primary">V0.0.0</small>
     </div>
 
     <div class="sk-flow sk-center mt-3">
@@ -102,10 +102,8 @@
 
 <script>
     const version_container = document.getElementById('app-version');
-    const appVersion = window.require('electron').remote.app.getVersion();
-    const versionString = `V ${appVersion} Beta`;
-
-    console.log(window.require('electron').remote)
+    const appVersion = require('@electron/remote').app.getVersion();
+    const versionString = `V${appVersion}`;
 
     version_container.innerHTML = versionString;
 </script>

@@ -2,7 +2,7 @@ import Time from "./models/Time";
 import {Client} from "@googlemaps/google-maps-services-js";
 import {Loader} from '@googlemaps/js-api-loader';
 import settings from "electron-settings";
-import electron from "electron";
+import {app} from "@electron/remote";
 
 export function str_pad_left(string: number, pad: string, length: number) {
     return (new Array(length + 1).join(pad) + string).slice(-length);
@@ -72,6 +72,6 @@ export const loader = new Loader({
     libraries: ["geometry"]
 });
 
-export const userDataPath = (electron.app || electron.remote.app).getPath('userData');
+export const userDataPath = app.getPath('userData');
 
 export default {}

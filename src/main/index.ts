@@ -9,7 +9,12 @@ import * as Sentry from "@sentry/electron";
 let realFs = require('fs')
 let gracefulFs = require('graceful-fs')
 
-gracefulFs.gracefulify(realFs)
+gracefulFs.gracefulify(realFs);
+
+// @ts-ignore
+settings.init();
+
+require('@electron/remote/main').initialize();
 
 if (settings.getSync("sentry.enabled"))
     Sentry.init({dsn: settings.getSync("sentry.dsn") as string});
@@ -34,7 +39,8 @@ ElectronSampleAppLauncher.isEnabled()
     });
 
 function createWindow() {
-    let splash = new BrowserWindow({webPreferences: {nodeIntegration: true, enableRemoteModule: true}, width: 500, height: 500, transparent: true, frame: false, alwaysOnTop: true});
+    // @ts-ignore
+    let splash = new BrowserWindow({webPreferences: {nodeIntegration: true, contextIsolation: false, enableRemoteModule: true}, width: 500, height: 500, transparent: true, frame: false, alwaysOnTop: true});
     splash.loadURL(`file://${path.join(__dirname, "../../renderer/splash.html")}`);
 
     // Create default config
@@ -44,9 +50,11 @@ function createWindow() {
     let win = new BrowserWindow({
         width: 1920,
         height: 1080,
+        backgroundColor: "#2e2c29",
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
+            // @ts-ignore
             enableRemoteModule: true,
             // preload: path.join(__dirname, "../../renderer/static/js/preload.js")
         },
@@ -61,8 +69,10 @@ function createWindow() {
     win.loadURL(`file://${path.join(__dirname, "../../renderer/index.html")}`)
 
     win.webContents.once('did-finish-load', () => {
-        splash.destroy();
-        win.show();
+        setTimeout(() => {
+            win.show();
+            splash.destroy();
+        }, 1500)
     });
 
     // autoUpdater.checkForUpdates();

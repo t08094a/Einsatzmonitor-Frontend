@@ -1,17 +1,14 @@
 import AAO from "../common/models/AAO";
-import {em, logger} from "../common/common";
+import {em, logger, userDataPath} from "../common/common";
 import EinsatzMonitorModel from "./EinsatzMonitor";
 import toastr from "toastr";
 import Operation from "../common/models/Operation";
 import AaoWidget from "./widgets/operation/AaoWidget";
 import Widget from "./widgets/Widget";
 import * as ko from "knockout";
-import * as electron from "electron";
 import path from "path";
 import {JSONFile, Low} from "lowdb";
 
-
-const userDataPath = (electron.app || electron.remote.app).getPath('userData');
 const file = path.join(userDataPath, 'aao_db.json');
 const adapter = new JSONFile(file);
 const aaoDb = new Low(adapter);

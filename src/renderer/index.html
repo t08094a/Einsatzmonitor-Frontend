@@ -650,7 +650,8 @@
     const fullscreen_button = document.getElementById('fullscreen-button');
     const toolbar_button = document.getElementById('toolbar-button');
     const console_button = document.getElementById('console-button');
-    let win = require('electron').remote.getCurrentWindow();
+    let remote = require('@electron/remote');
+    let win = remote.getCurrentWindow();
 
     close_button.addEventListener('click', () => {
         win.close();
@@ -674,10 +675,10 @@
     })
 </script>
 
-<!-- version display -->
+<!-- version display-->
 <script>
     const version_container = document.getElementById('app-version');
-    const appVersion = window.require('electron').remote.app.getVersion();
+    const appVersion = require('@electron/remote').app.getVersion();
     const versionString = `EinsatzMonitor V${appVersion}`;
 
     version_container.innerHTML = versionString;

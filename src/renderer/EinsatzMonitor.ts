@@ -5,7 +5,7 @@ import moment from "moment";
 import fitty from "fitty";
 import toastr from "toastr";
 import {widgetTypes} from "./widgets/Widget";
-import {em, logger} from "../common/common";
+import {em, logger, userDataPath} from "../common/common";
 import dynamicWidget from "./widgets/DynamicWidget";
 import SettingsModel from "./EinsatzMonitorSettings";
 import settings from "electron-settings";
@@ -18,9 +18,6 @@ let html_content = require('./widget_templates/info/text_widget.html');
 const ko = require('knockout');
 const fs = require('fs');
 const path = require('path');
-const electron = require('electron');
-const app = electron.app || electron.remote.app;
-const userDataPath = app.getPath('userData');
 const gridsterWidgetsFilePath = path.join(userDataPath, "gridster_widgets.json");
 const gridsterWidgetsOperationFilePath = path.join(userDataPath, "gridster_widgets_operation.json");
 

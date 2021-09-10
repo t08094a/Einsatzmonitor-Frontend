@@ -1,13 +1,10 @@
-import {logger} from "../common/common";
+import {logger, userDataPath} from "../common/common";
 import toastr from "toastr";
 import Vehicle from "../common/models/Vehicle";
 import * as ko from "knockout";
-import electron from "electron";
 import path from "path";
 import {JSONFile, Low} from "lowdb";
 
-
-const userDataPath = (electron.app || electron.remote.app).getPath('userData');
 const file = path.join(userDataPath, 'vehicles_db.json');
 const adapter = new JSONFile(file);
 const vehiclesDb = new Low(adapter);
