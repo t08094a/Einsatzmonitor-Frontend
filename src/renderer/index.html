@@ -584,8 +584,7 @@
         window.module = module;
         module = undefined;
     }
-
-    const settings = require('electron-settings');
+    const ipc = require('electron').ipcRenderer;
     const log = require("electron-log");
 </script>
 
@@ -612,10 +611,10 @@
 <!-- sentry -->
 <!-- Todo: move sentry code to the top -->
 <script>
-    if (settings.getSync("sentry.enabled")) {
+    if (ipc.sendSync('isSentryEnabled')) {
         let Sentry = require('@sentry/browser');
         Sentry.init({
-            dsn: settings.getSync("sentry.dsn")
+            dsn: ipc.sendSync('getSentryDsn')
         });
     }
 </script>

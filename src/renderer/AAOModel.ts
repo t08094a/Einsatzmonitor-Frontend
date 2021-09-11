@@ -94,8 +94,11 @@ class AAOModel {
                 // cast vehicles back to their actual object instead of plain JS objects
                 if (key == "vehicles1" || key == "vehicles2" || key == "vehicles3") {
                     val.forEach((item: any) => {
-                        // @ts-ignore
-                        prop.push(this.main.vehicleModel.getVehicleById(item.identification));
+                        if (item) {
+                            // @ts-ignore
+                            prop.push(this.main.vehicleModel.getVehicleById(item?.identification));
+                        }
+
                     });
                     return;
                 }

@@ -1,4 +1,3 @@
-const settings = require('electron-settings');
 const {contextBridge, remote} = require('electron');
 const log = require("electron-log");
 

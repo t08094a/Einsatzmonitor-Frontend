@@ -2,9 +2,8 @@ import {Computed, Observable, PureComputed} from 'knockout';
 import Person from './Person';
 import Functioning from './Functioning';
 import moment from "moment";
-import {alamosFeedbackUrl, axiosConfigParams, client, em, logger, str_pad_left} from "../common";
+import {alamosFeedbackUrl, axiosConfigParams, client, em, logger, store, str_pad_left} from "../common";
 import axios from "axios";
-import settings from "electron-settings";
 import AAO from "./AAO";
 import * as ko from "knockout";
 
@@ -134,7 +133,7 @@ class Operation {
         this.secondsSinceAlarm(diff)
         this.timeSinceAlarm(finalTime);
 
-        if (minutes >= (settings.getSync("einsatz.displayTime") as number)) {
+        if (minutes >= (store.get("einsatz.displayTime") as number)) {
             this.stopTasks();
 
             // Trigger EinsatzRemove event
@@ -172,7 +171,7 @@ class Operation {
             .geocode({
                 params: {
                     address: this.street(),
-                    key: settings.getSync("googleMapsKey") as string
+                    key: store.get("googleMapsKey") as string
                 }
             })
             .then(r => {
@@ -277,7 +276,7 @@ class Operation {
         });
 
         this.getUnitsSorted = ko.computed(() => {
-            let custom = (settings.getSync("einsatz.einheitenAlwaysTop") as string).split(",");
+            let custom = (store.get("einsatz.einheitenAlwaysTop") as string).split(",");
 
             return this.units().reduce((acc, element) => {
                 let found: boolean = false;
@@ -327,11 +326,11 @@ class Operation {
         });
 
         this.getVisibleUnitsSorted = ko.computed(() => {
-            return this.getUnitsSorted().slice(0, settings.getSync("einsatz.showEinheitenLimit"));
+            return this.getUnitsSorted().slice(0, store.get("einsatz.showEinheitenLimit"));
         });
 
         this.getInvisibleUnitsCount = ko.computed(() => {
-            return this.units().length - (settings.getSync("einsatz.showEinheitenLimit") as number);
+            return this.units().length - (store.get("einsatz.showEinheitenLimit") as number);
         });
     }
 }

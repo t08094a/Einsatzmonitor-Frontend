@@ -1,6 +1,5 @@
-import settings from "electron-settings";
 import EinsatzMonitorModel from "./EinsatzMonitor";
-import {em, execute, logger} from "../common/common";
+import {em, execute, logger, store} from "../common/common";
 import Operation from "../common/models/Operation";
 
 const ko = require('knockout');
@@ -30,7 +29,7 @@ class DisplayManager {
                 let parsedData = JSON.parse(data);
 
                 if (parsedData['event'] === 'sensor_trigger') {
-                    if (parsedData['sensor'] === 'motion' && settings.getSync("motionDetector.enabled")) {
+                    if (parsedData['sensor'] === 'motion' && store.get("motionDetector.enabled")) {
                         lastMovement = new Date().getTime();
                         turnOnDisplay();
                     }
@@ -49,7 +48,7 @@ class DisplayManager {
             let currentTimestamp = new Date().getTime();
             let diffSeconds = (currentTimestamp - lastMovement) / 1000;
 
-            let displayOnMinutes = parseInt((settings.getSync("motionDetector.displayOnTimeMinutes") as any).toString())
+            let displayOnMinutes = parseInt((store.get("motionDetector.displayOnTimeMinutes") as any).toString())
 
             if (diffSeconds < (60 * displayOnMinutes)) {
                 logger.info(`Last movement: ${diffSeconds}s ago.`);
@@ -72,7 +71,7 @@ class DisplayManager {
 
         function turnOffDisplay() {
             if (hdmiState !== 0) {
-                if (settings.getSync("displayAlwaysOn")) {
+                if (store.get("displayAlwaysOn")) {
                     return;
                 }
 

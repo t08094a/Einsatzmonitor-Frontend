@@ -52,7 +52,7 @@
     "axios": "^0.21.2",
     "crypto-js": "^4.1.1",
     "electron-log": "^4.4.1",
-    "electron-settings": "github:theArina/electron-settings#master",
+    "electron-store": "^8.0.0",
     "electron-updater": "^4.3.9",
     "fitty": "^2.3.5",
     "graceful-fs": "^4.2.8",

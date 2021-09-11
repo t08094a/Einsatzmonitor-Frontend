@@ -1,6 +1,5 @@
-import {logger} from "../common/common";
+import {logger, store} from "../common/common";
 import toastr from "toastr";
-import settings from "electron-settings";
 
 const ko = require('knockout');
 
@@ -21,6 +20,8 @@ class SettingsModel {
         "displayAlwaysOn": "Boolean",
         "einsatz.fetch": "FetchType",
         "alamos.alarmInput.enabled": "Boolean",
+        "webserver.alarmInput.enabled": "Boolean",
+        "mqtt.alarmInput.enabled": "Boolean",
     };
 
     get_type = (key: any) => {
@@ -28,7 +29,7 @@ class SettingsModel {
     };
 
     loadSettings = () => {
-        let all = this.dotNotate(settings.getSync(), null, null);
+        let all = this.dotNotate(store.store, null, null);
         logger.info('Loaded settings:', all);
 
         for (let key in all) {
@@ -117,7 +118,12 @@ class EinsatzMonitorSetting {
 
     save = () => {
         logger.info(`Saving config entry ${this.key()} => ${this.value()}`);
-        settings.setSync(this.key(), this.value());
+
+        try {
+            store.set(this.key(), this.value());
+        } catch (e) {
+            logger.error(`Error config entry ${this.key()} => ${this.value()}: ${e}`)
+        }
     }
 
     get_id_name = (obj: any, id: any) => {

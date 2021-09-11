@@ -1,6 +1,5 @@
 import EinsatzMonitorModel from "./EinsatzMonitor";
-import settings from "electron-settings";
-import {logger, replaceAll, sha256} from "../common/common";
+import {logger, replaceAll, sha256, store} from "../common/common";
 import AlarmReceiver from "./AlarmReceiver";
 
 const net = require('net');
@@ -18,7 +17,7 @@ class AlarmReceiverAlamos extends AlarmReceiver {
         alarmReceiver.on('connection', (sock: any) => {
             sock.setEncoding('utf8')
             sock.on('data', (data: any) => {
-                sha256(settings.getSync("alamos.alarmInput.password")).then((passwordHash) => {
+                sha256(store.get("alamos.alarmInput.password")).then((passwordHash) => {
                     let encodedPassword = passwordHash.substring(0, 32);
 
                     let key = CryptoJS.enc.Utf8.parse(encodedPassword)

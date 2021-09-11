@@ -1,8 +1,7 @@
 import ReconnectingWebSocket from "reconnectingwebsocket";
-import settings from "electron-settings";
 import toastr from "toastr";
 import EinsatzMonitorModel from "./EinsatzMonitor";
-import {logger} from "../common/common";
+import {logger, store} from "../common/common";
 
 class AlarmReceiverWebsocket {
     einsatzMonitorModel: EinsatzMonitorModel;
@@ -11,7 +10,7 @@ class AlarmReceiverWebsocket {
         this.einsatzMonitorModel = einsatzMonitorModel;
 
         setTimeout(() => {
-            let einsatzWebsocket = new ReconnectingWebSocket((settings.getSync("einsatz.url")?.toString() as string)?.replace("{activeMinutes}", ((settings.getSync("einsatz.einsatzDisplayTime") as number) - 2).toString()));
+            let einsatzWebsocket = new ReconnectingWebSocket(((store.get("einsatz.url") as string)?.toString() as string)?.replace("{activeMinutes}", ((store.get("einsatz.einsatzDisplayTime") as number) - 2).toString()));
             einsatzWebsocket.reconnectDecay = 1.0;
 
             einsatzWebsocket.onmessage = (e: any) => {

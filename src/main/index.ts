@@ -1,23 +1,31 @@
 import {app, BrowserWindow} from 'electron';
 import log from 'electron-log';
 import AutoLaunch from 'auto-launch';
-import settings from 'electron-settings';
 import {autoUpdater} from 'electron-updater';
 import * as path from "path";
 import * as Sentry from "@sentry/electron";
+import Store from 'electron-store';
+import * as electron from "electron";
 
-let realFs = require('fs')
-let gracefulFs = require('graceful-fs')
+const realFs = require('fs')
+const gracefulFs = require('graceful-fs')
+const store = new Store({name: 'settings'});
+const ipc = electron.ipcMain;
 
 gracefulFs.gracefulify(realFs);
 
-// @ts-ignore
-settings.init();
-
 require('@electron/remote/main').initialize();
 
-if (settings.getSync("sentry.enabled"))
-    Sentry.init({dsn: settings.getSync("sentry.dsn") as string});
+ipc.on('isSentryEnabled', (event, args) => {
+    event.returnValue = store.get("sentry.enabled", false);
+});
+
+ipc.on('getSentryDsn', (event, args) => {
+    event.returnValue = store.get("sentry.dsn");
+});
+
+if (store.get("sentry.enabled"))
+    Sentry.init({dsn: store.get("sentry.dsn") as string});
 
 const ElectronSampleAppLauncher = new AutoLaunch({
     name: 'Electron-sample-app',
@@ -58,12 +66,12 @@ function createWindow() {
             enableRemoteModule: true,
             // preload: path.join(__dirname, "../../renderer/static/js/preload.js")
         },
-        fullscreen: !settings.getSync("debug"),
-        autoHideMenuBar: !settings.getSync("debug"),
+        fullscreen: !store.get("debug"),
+        autoHideMenuBar: !store.get("debug"),
         show: false
     });
 
-    if (settings.getSync("debug"))
+    if (store.get("debug"))
         win.webContents.openDevTools();
 
     win.loadURL(`file://${path.join(__dirname, "../../renderer/index.html")}`)
@@ -127,10 +135,10 @@ function createDefaultConfig() {
 }
 
 function setDefaultConfigValue(key, value) {
-    if (settings.hasSync(key))
+    if (store.has(key))
         return;
 
-    settings.setSync(key, value);
+    store.set(key, value);
     log.info(`Saved new config value ${key} => ${value}`);
 }
 

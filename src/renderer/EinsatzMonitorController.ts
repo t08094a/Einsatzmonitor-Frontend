@@ -1,4 +1,3 @@
-import settings from "electron-settings";
 import EinsatzMonitorModel from "./EinsatzMonitor";
 import DisplayManager from "./DisplayManager";
 import AlarmReceiverWebsocket from "./AlarmReceiverWebsocket";
@@ -8,6 +7,7 @@ import mapBindingHandler from "../knockoutBindingHandlers/mapBindingHandler";
 import * as ko from 'knockout';
 import AlarmReceiverHttpServer from "./AlarmReceiverHttpServer";
 import AlarmReceiverMqtt from "./AlarmReceiverMqtt";
+import {store} from "../common/common";
 
 class EinsatzMonitorController {
     einsatzMonitorModel: EinsatzMonitorModel;
@@ -17,23 +17,23 @@ class EinsatzMonitorController {
         this.einsatzMonitorModel = new EinsatzMonitorModel();
         this.displayManager = new DisplayManager(this.einsatzMonitorModel);
 
-        if (settings.getSync("einsatz.fetch") === "websocket") {
+        if (store.get("einsatz.fetch") === "websocket") {
             new AlarmReceiverWebsocket(this.einsatzMonitorModel);
         }
 
-        if (settings.getSync("einsatz.fetch") === "http") {
+        if (store.get("einsatz.fetch") === "http") {
             new AlarmReceiverHttp(this.einsatzMonitorModel);
         }
 
-        if (settings.getSync("alamos.alarmInput.enabled")) {
+        if (store.get("alamos.alarmInput.enabled")) {
             new AlarmReceiverAlamos(this.einsatzMonitorModel);
         }
 
-        if (settings.getSync("webserver.alarmInput.enabled")) {
+        if (store.get("webserver.alarmInput.enabled")) {
             new AlarmReceiverHttpServer(this.einsatzMonitorModel);
         }
 
-        if (settings.getSync("mqtt.alarmInput.enabled")) {
+        if (store.get("mqtt.alarmInput.enabled")) {
             new AlarmReceiverMqtt(this.einsatzMonitorModel);
         }
 

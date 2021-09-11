@@ -1,14 +1,13 @@
 import EinsatzMonitorModel from "./EinsatzMonitor";
 import axios from "axios";
-import settings from "electron-settings";
 import toastr from "toastr";
-import {axiosConfigParams, logger} from "../common/common";
+import {axiosConfigParams, logger, store} from "../common/common";
 
 class AlarmReceiverHttp {
     einsatzMonitorModel: EinsatzMonitorModel;
 
     check_einsatz(axiosConfig: any) {
-        axios.get(settings.getSync("einsatz.url")?.toString()?.replace("{activeMinutes}", ((settings.getSync("einsatz.einsatzDisplayTime") as number) - 2).toString()) as string, axiosConfig)
+        axios.get((store.get("einsatz.url") as string)?.toString()?.replace("{activeMinutes}", ((store.get("einsatz.einsatzDisplayTime") as number) - 2).toString()) as string, axiosConfig)
             .then((response) => {
                 response.data.forEach((einsatz: any) => {
                     this.einsatzMonitorModel.addOperationJson(einsatz);
@@ -26,7 +25,7 @@ class AlarmReceiverHttp {
         // create task to poll einsatz from http api
         window.setInterval(() => {
             this.check_einsatz(axiosConfigParams);
-        }, 1000 * (settings.getSync("einsatz.httpFetchInterval") as number));
+        }, 1000 * (store.get("einsatz.httpFetchInterval") as number));
     }
 }
 

@@ -5,10 +5,9 @@ import moment from "moment";
 import fitty from "fitty";
 import toastr from "toastr";
 import {widgetTypes} from "./widgets/Widget";
-import {em, logger, userDataPath} from "../common/common";
+import {em, logger, store, userDataPath} from "../common/common";
 import dynamicWidget from "./widgets/DynamicWidget";
 import SettingsModel from "./EinsatzMonitorSettings";
-import settings from "electron-settings";
 import VehicleModel from "./VehicleModel";
 import AAOModel from "./AAOModel";
 import AlarmHistoryModel from "./AlarmHistoryModel";
@@ -255,8 +254,8 @@ class EinsatzMonitorModel {
     backgroundColor: Observable = ko.observable();
 
     loadBackgroundSettings() {
-        this.backgroundUrl(settings.getSync('background.image'));
-        this.backgroundColor(settings.getSync('background.color'));
+        this.backgroundUrl(store.get('background.image'));
+        this.backgroundColor(store.get('background.color'));
     }
 
     settingsModel: SettingsModel;

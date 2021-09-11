@@ -1,21 +1,20 @@
 import AlarmReceiver from "./AlarmReceiver";
 import EinsatzMonitorModel from "./EinsatzMonitor";
 import * as mqtt from "mqtt";
-import {extractArguments, logger} from "../common/common";
-import settings from "electron-settings";
+import {extractArguments, logger, store} from "../common/common";
 
 class AlarmReceiverMqtt extends AlarmReceiver {
     constructor(einsatzMonitorModel: EinsatzMonitorModel) {
         super(einsatzMonitorModel);
 
-        let client = mqtt.connect(settings.getSync("mqtt.alarmInput.host"), {username: settings.getSync("mqtt.alarmInput.user") as string, password: settings.getSync("mqtt.alarmInput.password") as string});
+        let client = mqtt.connect(store.get("mqtt.alarmInput.host"), {username: store.get("mqtt.alarmInput.user") as string, password: store.get("mqtt.alarmInput.password") as string});
 
         logger.debug(client);
 
         client.on('connect', function () {
             logger.info("AlarmReceiverMqtt | AlarmReceiver MQTT successfully connected.")
 
-            extractArguments(settings.getSync("mqtt.alarmInput.topics") as string).forEach(topic => {
+            extractArguments(store.get("mqtt.alarmInput.topics") as string).forEach(topic => {
                 logger.info(`AlarmReceiverMqtt | Subscribing to topic ${topic}`)
                 client.subscribe(topic);
             })

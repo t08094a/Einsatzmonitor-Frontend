@@ -1,9 +1,8 @@
 import Widget from "../Widget";
 import {Computed, ObservableArray} from "knockout";
 import axios from "axios";
-import {axiosConfigParams, logger, updateModel} from "../../../common/common";
+import {axiosConfigParams, logger, store, updateModel} from "../../../common/common";
 import NewsPost from "../../../common/models/NewsPost";
-import settings from "electron-settings";
 import * as ko from "knockout";
 
 class InfoNewsWidget extends Widget {
@@ -67,7 +66,7 @@ class InfoNewsWidget extends Widget {
 
         this.actionTimer = window.setInterval(() => {
             this.loadNews();
-        }, 1000 * (settings.getSync("info.httpFetchInterval") as number));
+        }, 1000 * (store.get("info.httpFetchInterval") as number));
 
         logger.info("Loaded NewsWidget");
     }

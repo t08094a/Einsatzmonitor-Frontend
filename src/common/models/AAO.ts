@@ -1,10 +1,9 @@
 import ko, {Computed, Observable, ObservableArray} from "knockout";
-import {logger, timeIsBetween} from "../common";
+import {logger, store, timeIsBetween} from "../common";
 import Operation from "./Operation";
 import Time from "./Time";
 import Vehicle from "./Vehicle";
 import VehicleModel from "../../renderer/VehicleModel";
-import settings from "electron-settings";
 
 class AAO {
     name: Observable<string> = ko.observable("Neue AAO");
@@ -65,7 +64,7 @@ class AAO {
         }
 
         if (this.customParameter()) {
-            let parameterName = settings.getSync("aao.customParameter") as string;
+            let parameterName = store.get("aao.customParameter") as string;
             let parameter = operation.getParameter(parameterName);
 
             if (this.customParameter() !== parameter) {
@@ -247,7 +246,7 @@ class AAO {
         })
 
         this.customParameterName = ko.computed(() => {
-           return settings.getSync("aao.customParameter") as string
+           return store.get("aao.customParameter") as string
         });
     }
 }

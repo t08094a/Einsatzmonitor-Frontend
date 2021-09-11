@@ -1,5 +1,4 @@
-import settings from "electron-settings";
-import {loader, logger} from "../common/common";
+import {loader, logger, store} from "../common/common";
 import * as ko from "knockout";
 
 
@@ -70,7 +69,7 @@ const mapBindingHandler = {
                     let directionsService = new google.maps.DirectionsService();
                     let directionsDisplay = new google.maps.DirectionsRenderer();
 
-                    let feuerwehr = new google.maps.LatLng(settings.getSync("feuerwehrLat"), settings.getSync("feuerwehrLng"));
+                    let feuerwehr = new google.maps.LatLng(store.get("feuerwehrLat"), store.get("feuerwehrLng"));
 
                     directionsDisplay.setMap(mapObj.googleMap);
 
@@ -100,7 +99,7 @@ const mapBindingHandler = {
                                 '&path=enc:' + response.routes[0].overview_polyline +
                                 '&markers=size:mid|color:green|' + feuerwehr.lat() + ',' + feuerwehr.lng() +
                                 '&markers=size:mid|color:red|' + mapObj.lat() + ',' + mapObj.lng() +
-                                '&key=' + settings.getSync("googleMapsKey");
+                                '&key=' + store.get("googleMapsKey");
 
                             logger.info(`StaticMap-URL: ${static_url}`)
                         }
