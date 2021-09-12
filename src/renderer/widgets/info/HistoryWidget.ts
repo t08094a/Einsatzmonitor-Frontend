@@ -1,6 +1,6 @@
 import Widget from "../Widget";
 import EinsatzMonitorModel from "../../EinsatzMonitor";
-import {logger} from "../../../common/common";
+import {extractArguments, logger} from "../../../common/common";
 import {Computed} from "knockout";
 import AlarmHistoryItem from "../../../common/models/AlarmHistoryItem";
 import AlarmType from "../../../common/AlarmType";
@@ -34,15 +34,33 @@ class HistoryWidget extends Widget {
     });
 
     alarmCountForKeyword: Computed = ko.computed(() => {
-        let keyword = this.extra_config.get('filter-keyword')();
+        let keywords = this.extra_config.get('filter-keyword')();
         let currentYear = new Date().getFullYear();
+        let count: number = 0;
 
-        let filteredOperations = this.main.alarmHistoryModel.sortedHistory().filter((item: AlarmHistoryItem) => {
+        this.main.alarmHistoryModel.sortedHistory().forEach((item: AlarmHistoryItem) => {
+            if (item.type !== AlarmType.ALARM) {
+                return;
+            }
+
             let year = new Date(Number.parseInt(item.timestamp)).getFullYear();
-            return item.keyword?.startsWith(keyword) && year == currentYear && item.type == AlarmType.ALARM;
-        })
+            if (year !== currentYear) {
+                return;
+            }
 
-        return filteredOperations.length;
+            extractArguments(keywords).forEach((keyword: string) => {
+                // no input string: count all
+                if (keywords.length == 0 && keyword.length == 0) {
+                    count++
+                } else {
+                    if (keyword.length > 0 && item.keyword?.startsWith(keyword)) {
+                        count++;
+                    }
+                }
+            });
+        });
+
+        return count;
     });
 
     private updateTimestampDisplay() {

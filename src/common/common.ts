@@ -57,7 +57,7 @@ logger.transports.file.sync = false;
 export const alamosFeedbackUrl = (dbId: string) => `https://apager-firemergency-2.appspot.com/fe2/feedback?dbId=${dbId}`;
 
 export function extractArguments(arg: string) {
-    return arg.includes(";") ? arg.split(";") : [arg];
+    return arg?.includes(";") ? arg.split(";") : [arg];
 }
 
 export function timeIsBetween(start: Time, end: Time, check: Time) {
