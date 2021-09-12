@@ -44,7 +44,7 @@ class EinsatzMonitorModel {
         });
     };
 
-    addOperationJson(operationJson: any) {
+    addOperationJson(operationJson: any, historyIgnore: boolean = false) {
         if (!this.isOperationSaved(operationJson.id)) {
             let operation = new Operation(operationJson.id, operationJson.stichwort, operationJson.stichwort_color, operationJson.description, operationJson.alarmzeit_seconds, operationJson.adresse, operationJson.objekt);
 
@@ -59,13 +59,13 @@ class EinsatzMonitorModel {
                 })
             });
 
-            this.addOperation(operation);
+            this.addOperation(operation, historyIgnore);
         } else {
             logger.warn(`Einsatz already in array (${operationJson.id})`);
         }
     };
 
-    addOperation(operation: Operation) {
+    addOperation(operation: Operation, historyIgnore: boolean = false) {
         if (this.isOperationSaved(operation.id())) {
             logger.warn(`Operation is already active (${operation.id()})`);
             return;
@@ -75,6 +75,10 @@ class EinsatzMonitorModel {
 
         // Trigger EinsatzAdd event
         em.emit('EinsatzAdd', operation);
+
+        if (!historyIgnore) {
+            em.emit('OperationHistoryAdd', operation);
+        }
 
         logger.info(`Added new operation (${operation.id()}) to array`);
 
@@ -112,7 +116,7 @@ class EinsatzMonitorModel {
                     'value': "Testort"
                 }
             ]
-        });
+        }, true);
 
         if (this.testOperationFe2Id())
             this.getLatestOperation().feedbackFe2Id(this.testOperationFe2Id());
@@ -141,7 +145,11 @@ class EinsatzMonitorModel {
         logger.debug(this.board().gridsterInfo.serialize());
     };
 
+    widgetsSaving = ko.observable(false);
+
     saveWidgets() {
+        this.widgetsSaving(true);
+
         let file = this.getCurrentWidgetType() === widgetTypes.INFO ? gridsterWidgetsFilePath : gridsterWidgetsOperationFilePath;
         logger.info(`View | Saving view ${this.getCurrentWidgetType()} to ${file}`);
 
@@ -160,11 +168,16 @@ class EinsatzMonitorModel {
         try {
             fs.writeFileSync(file, JSON.stringify(to_save), 'utf8');
             logger.info(`View | JSON file has been written`);
+            toastr.success("Widgets erfolgreich gespeichert", "Widgets");
         } catch (e) {
             logger.error("An error occurred while writing JSON file");
             logger.error(e);
+            toastr.error("Fehler beim Speichern der Widgets", "Widgets");
         }
 
+        setTimeout(() => {
+            this.widgetsSaving(false);
+        }, 500);
     };
 
     loadWidgets(path: any) {
@@ -236,6 +249,10 @@ class EinsatzMonitorModel {
 
         return widgetTypes.INFO;
     };
+
+    isInfoViewActive() {
+        return this.getCurrentWidgetType() == widgetTypes.INFO;
+    }
 
     loadView() {
         if (this.getCurrentWidgetType() == widgetTypes.OPERATION) {

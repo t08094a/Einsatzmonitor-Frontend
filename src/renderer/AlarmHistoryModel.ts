@@ -21,7 +21,7 @@ class AlarmHistoryModel {
         }) : null;
     });
 
-    private alarmHistoryItemExists(alarmHistoryItem: AlarmHistoryItem) {
+    private alarmHistoryItemExists(alarmHistoryItem: AlarmHistoryItem): boolean {
         return this.alarmHistory().filter(item => {
             return item.keyword == alarmHistoryItem.keyword
                 && item.title == alarmHistoryItem.title
@@ -31,9 +31,24 @@ class AlarmHistoryModel {
         }).length > 0
     }
 
-    private addNewAlarmHistoryItem(alarmHistoryItem: AlarmHistoryItem) {
+    private removeOldHistoryItems(): void {
+        this.alarmHistory.remove((item: AlarmHistoryItem) => {
+            if (!item.timestamp) {
+                return true;
+            }
+
+            return Date.now() - Number.parseInt(item.timestamp) > 31556952000;
+        })
+
+        alarmHistoryDb.data = this.alarmHistory();
+        alarmHistoryDb.write();
+    }
+
+    private addNewAlarmHistoryItem(alarmHistoryItem: AlarmHistoryItem): void {
         if (this.alarmHistoryItemExists(alarmHistoryItem))
             return;
+
+        this.removeOldHistoryItems();
 
         this.alarmHistory.push(alarmHistoryItem);
 
@@ -58,8 +73,8 @@ class AlarmHistoryModel {
             }
         });
 
-        em.on('EinsatzAdd', (operation: Operation) => {
-            logger.info(`AlarmHistoryModel | EinsatzAdd event fired (${operation.id()})`);
+        em.on('OperationHistoryAdd', (operation: Operation) => {
+            logger.info(`AlarmHistoryModel | OperationHistoryAdd event fired (${operation.id()})`);
 
             let alarmHistoryItem = new AlarmHistoryItem(operation.getParameter("keyword"), operation.getParameter("subject_apager"), operation.getParameter("timestamp"), operation.getParameter("location_dest"), AlarmType.ALARM);
             this.addNewAlarmHistoryItem(alarmHistoryItem);

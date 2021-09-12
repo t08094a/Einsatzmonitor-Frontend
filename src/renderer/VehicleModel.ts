@@ -66,7 +66,7 @@ class VehicleModel {
             vehiclesDb.data = ko.toJS(this.vehicles);
             vehiclesDb.write();
 
-            toastr.success("Einstellungen erfolgreich gespeichert", "Einstellungen");
+            toastr.success("Fahrzeuge erfolgreich gespeichert", "Fahrzeuge");
             this.saving(false);
         }, 100)
     };
