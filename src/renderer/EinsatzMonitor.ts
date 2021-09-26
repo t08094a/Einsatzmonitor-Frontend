@@ -347,7 +347,9 @@ export class BoardViewModel {
                 // console.log("New size: " + newDimensions.size_x + ", " + newDimensions.size_y);
 
                 // Update font size on widget resize
-                this.get_by_id(this.widgets(), parseInt(widget.attr('id'))).fitIfPossible();
+                let widgetById = this.get_by_id(this.widgets(), parseInt(widget.attr('id')));
+                widgetById.resized();
+                widgetById.fitIfPossible();
             }
         },
         draggable: {

@@ -48,6 +48,11 @@ class HistoryWidget extends Widget {
                 return;
             }
 
+            if (!keywords) {
+                count++;
+                return;
+            }
+
             extractArguments(keywords).forEach((keyword: string) => {
                 // no input string: count all
                 if (keywords.length == 0 && keyword.length == 0) {
