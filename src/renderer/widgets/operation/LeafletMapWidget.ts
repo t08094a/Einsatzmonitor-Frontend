@@ -57,6 +57,18 @@ class LeafletMapWidget extends Widget {
                 }).addTo(this.map);
                 break;
             }
+
+            case "CustomWMS": {
+                let wmsUrl = this.extra_config.get('customWMSUrl')();
+                let wmsLayers = this.extra_config.get('customWMSLayers')();
+
+                if (wmsUrl && wmsLayers) {
+                    L.tileLayer.wms(wmsUrl, {
+                        layers: wmsLayers
+                    }).addTo(this.map);
+                }
+                break;
+            }
         }
 
         L.marker([Number.parseFloat(this.lat), Number.parseFloat(this.lng)]).addTo(this.map);
