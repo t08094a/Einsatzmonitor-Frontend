@@ -114,7 +114,7 @@ class CalendarWidget extends Widget {
 
         this.actionTimer = window.setInterval(() => {
             this.loadEvents();
-        }, 1000 * 10);
+        }, 1000 * 60);
 
         logger.info("Loaded CalendarWidget");
     }
