@@ -47,7 +47,7 @@ let common_config = {
     externals: {
         knockout: 'ko',
         // google: 'google',
-        'ko.observableDicitonary': 'ko'
+        'ko.observableDicitonary': 'ko',
     },
 };
 

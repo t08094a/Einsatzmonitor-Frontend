@@ -12,7 +12,7 @@ export function replaceAll(str: string, search: string, replace: string) {
     return str.split(search).join(replace);
 }
 
-let auto_update_fields = ["id", "title", "description", "description_truncated", "date_formatted", "alarmTime", "alarmzeit_formatted", "color", "start", "isToday"];
+let auto_update_fields = ["id", "title", "description", "summary", "description_truncated", "date_formatted", "alarmTime", "alarmzeit_formatted", "color", "start", "isToday"];
 
 // loop over knockout model fields and update with values from json response
 export function updateModel(model: any, json: any) {

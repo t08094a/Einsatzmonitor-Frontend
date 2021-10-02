@@ -62,6 +62,7 @@
     "lowdb": "^2.1.0",
     "moment": "^2.29.1",
     "mqtt": "^4.2.8",
+    "node-ical": "^0.13.0",
     "nouislider": "^15.4.0",
     "reconnectingwebsocket": "^1.0.0",
     "sortablejs": "^1.14.0",
