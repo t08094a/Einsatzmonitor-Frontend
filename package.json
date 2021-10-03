@@ -39,6 +39,8 @@
   },
   "dependencies": {
     "@electron/remote": "^1.2.1",
+    "@fast-csv/format": "^4.3.5",
+    "@fast-csv/parse": "^4.3.6",
     "@googlemaps/google-maps-services-js": "^3.1.16",
     "@googlemaps/js-api-loader": "^1.12.2",
     "@sentry/browser": "^6.12.0",
@@ -55,6 +57,7 @@
     "electron-log": "^4.4.1",
     "electron-store": "^8.0.0",
     "electron-updater": "^4.3.9",
+    "fast-csv": "^4.3.6",
     "fitty": "^2.3.5",
     "graceful-fs": "^4.2.8",
     "knockout": "^3.5.1",

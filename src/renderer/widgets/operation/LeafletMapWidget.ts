@@ -1,7 +1,11 @@
 import Widget from "../Widget";
 import EinsatzMonitorModel from "../../EinsatzMonitor";
-import {logger} from "../../../common/common";
+import {logger, userDataPath} from "../../../common/common";
 import * as L from "leaflet";
+import * as fs from 'fs';
+import * as path from 'path';
+import * as csv from 'fast-csv';
+
 
 class LeafletMapWidget extends Widget {
     main: EinsatzMonitorModel;
@@ -33,6 +37,28 @@ class LeafletMapWidget extends Widget {
         this.map?.remove();
     }
 
+    addHydrantsToMap() {
+        let hydrantFiles = fs.readdirSync(path.resolve(userDataPath, 'hydrants')).filter(fn => fn.endsWith('.csv'));
+
+        logger.info("Adding hydrants to map: ", hydrantFiles);
+
+        hydrantFiles.forEach((file: string) => {
+            fs.createReadStream(path.resolve(userDataPath, 'hydrants', file))
+                .pipe(csv.parse({ headers: true, delimiter: ';' }))
+                .on('error', error => logger.error("Fehler beim Laden der Hydranten: ", error))
+                .on('data', row => {
+                    if (this.map) {
+                        L.circleMarker([row['X-Koordinaten'].replace(",", "."), row['Y-Koordinate'].replace(",", ".")], {
+                            color: row["Farbe"] || "#c9000d",
+                            radius: 6,
+                            fillOpacity: 0.5
+                        }).addTo(this.map);
+                    }
+                })
+                .on('end', (rowCount: number) => console.log(`${rowCount} Hydranten geladen`));
+        })
+    }
+
     loadMap() {
         if (!this.lat || !this.lng) {
             return;
@@ -41,7 +67,13 @@ class LeafletMapWidget extends Widget {
         logger.info("LeafletMapWidget | Loading LeafletMap");
 
         let zoom = this.extra_config.get('zoom')() ? Number.parseInt(this.extra_config.get('zoom')()) : 12;
-        this.map = L.map('leaflet-' + this.id).setView([Number.parseFloat(this.lat), Number.parseFloat(this.lng)], zoom);
+        this.map = L.map('leaflet-' + this.id, {
+            preferCanvas: true,
+        }).setView([Number.parseFloat(this.lat), Number.parseFloat(this.lng)], zoom);
+
+        if (this.extra_config.get('add-hydrants')()) {
+            this.addHydrantsToMap();
+        }
 
         switch (this.extra_config.get('layerName')()) {
             case "OpenStreetMap": {

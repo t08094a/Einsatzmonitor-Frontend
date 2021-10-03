@@ -35,6 +35,8 @@
                                 <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'customWMSLayers', title: 'WMS Layer', description: 'Mehrere Layer können mit einem Komma getrennt werden.' } }"></div>
                                 <!-- /ko -->
 
+                                <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'add-hydrants', description: 'Hydranten-Marker zur Karte hinzufügen' } }"></div>
+
                                 <button data-bind="click: widget.refreshMap" type="button" class="btn btn-primary btn-sm mt-3"><i class="fas fa-sync"></i> Karte aktualisieren</button>
                             </div>
                         </div>
