@@ -49,11 +49,25 @@ let common_config = {
         // google: 'google',
         'ko.observableDicitonary': 'ko',
     },
+    plugins: [
+        new SentryWebpackPlugin({
+            // sentry-cli configuration - can also be done directly through sentry-cli
+            // see https://docs.sentry.io/product/cli/configuration/ for details
+            authToken: process.env.SENTRY_AUTH_TOKEN,
+            org: "einsatzmonitor",
+            project: "einsatzmonitor",
+            release: process.env.SENTRY_RELEASE,
+
+            // other SentryWebpackPlugin configuration
+            include: ".",
+            ignore: ["node_modules", "webpack.config.js", "webpack.electron.config.js"],
+        }),
+    ],
 };
 
 module.exports = [
     Object.assign({}, common_config, {
-        devtool: 'inline-source-map',
+        devtool: 'source-map',
         target: 'electron-main',
         entry: {
             renderrer: './src/main/index.ts',
@@ -64,7 +78,7 @@ module.exports = [
         },
     }),
     Object.assign({}, common_config, {
-        devtool: 'inline-source-map',
+        devtool: 'source-map',
         target: 'electron-renderer',
         entry: {
             ui: './src/renderer/index.ts',
