@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const SentryWebpackPlugin = require("@sentry/webpack-plugin");
 const webpack = require("webpack");
 
 console.log(__dirname);

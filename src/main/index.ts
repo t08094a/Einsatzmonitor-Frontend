@@ -102,7 +102,7 @@ function createDefaultConfig() {
 
 
     setDefaultConfigValue("sentry.enabled", true);
-    setDefaultConfigValue("sentry.dsn", "https://9e1dec4c594e449b96f2ee2c4877968e@o967810.ingest.sentry.io/5919167");
+    setDefaultConfigValue("sentry.dsn", "https://712bb85f90424f19857458db49a56853@o967810.ingest.sentry.io/5992237");
 
 
     setDefaultConfigValue("googleMapsKey", "123456abc");
