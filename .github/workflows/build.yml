@@ -68,7 +68,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           local: einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
-          remote: ${{ secrets.SSH_REMOTE_PATH }}
+          remote: ${{ secrets.SSH_REMOTE_PATH }}/einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
