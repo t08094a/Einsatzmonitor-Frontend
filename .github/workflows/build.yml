@@ -51,8 +51,8 @@ jobs:
 #                name: EinsatzMonitor
 #                path: ./dist/
 
-      - run: mkdir einsatzmonitor-${{ matrix.os }}-${GITHUB_RUN_NUMBER}
-      - run: mv dist/* einsatzmonitor-${{ matrix.os }}-${GITHUB_RUN_NUMBER}
+      - run: mkdir einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
+      - run: mv dist/* einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
       - run: ls
 
 #      - name: Deploy with SCP
@@ -67,8 +67,9 @@ jobs:
       - name: Deploy with SCP
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: einsatzmonitor-${{ matrix.os }}-${GITHUB_RUN_NUMBER}
+          local: einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
           remote: ${{ secrets.SSH_REMOTE_PATH }}
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+          verbose: true
