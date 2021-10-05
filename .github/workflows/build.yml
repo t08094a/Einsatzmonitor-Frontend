@@ -6,9 +6,6 @@ jobs:
   release:
     runs-on: ${{ matrix.os }}
 
-    env:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest ]
@@ -55,6 +52,16 @@ jobs:
       - run: mv dist/* einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
       - run: ls
 
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: einsatzmonitor
+          SENTRY_PROJECT: einsatzmonitor
+        with:
+          environment: production
+          sourcemaps: './src/main/dist ./src/renderer/dist'
+
 #      - name: Deploy with SCP
 #        uses: i3h/deploy-with-scp@v1.0.2
 #        with:
@@ -72,4 +79,3 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
-          verbose: true
