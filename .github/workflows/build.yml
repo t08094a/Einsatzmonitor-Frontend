@@ -64,10 +64,10 @@ jobs:
 #          server-ip: ${{ secrets.SSH_HOST }}
 #          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy with SCP 2
+      - name: Deploy with SCP
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: insatzmonitor-${{ matrix.os }}-${GITHUB_RUN_NUMBER}
+          local: einsatzmonitor-${{ matrix.os }}-${GITHUB_RUN_NUMBER}
           remote: ${{ secrets.SSH_REMOTE_PATH }}
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
