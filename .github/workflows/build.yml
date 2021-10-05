@@ -52,6 +52,11 @@ jobs:
       - run: mv dist/* einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
       - run: ls
 
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+        if: matrix.os == 'ubuntu-latest'
+
       - name: Create Sentry release
         uses: getsentry/action-release@v1
         env:
@@ -61,6 +66,7 @@ jobs:
         with:
           environment: production
           sourcemaps: './src/main/dist ./src/renderer/dist'
+          version: ${{ steps.package-version.outputs.current-version}}
         if: matrix.os == 'ubuntu-latest'
 
 #      - name: Deploy with SCP
