@@ -24,8 +24,15 @@ ipc.on('getSentryDsn', (event, args) => {
     event.returnValue = store.get("sentry.dsn");
 });
 
+ipc.on('getSentryRelease', (event, args) => {
+    event.returnValue = process.env.npm_package_version
+});
+
 if (store.get("sentry.enabled"))
-    Sentry.init({dsn: store.get("sentry.dsn") as string});
+    Sentry.init({
+        dsn: store.get("sentry.dsn") as string,
+        release: process.env.npm_package_version
+    });
 
 const ElectronSampleAppLauncher = new AutoLaunch({
     name: 'Electron-sample-app',

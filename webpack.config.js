@@ -57,7 +57,7 @@ let common_config = {
     //         authToken: process.env.SENTRY_AUTH_TOKEN,
     //         org: "einsatzmonitor",
     //         project: "einsatzmonitor",
-    //         release: process.env.SENTRY_RELEASE,
+    //         release: process.env.npm_package_version,
     //
     //         // other SentryWebpackPlugin configuration
     //         include: ".",

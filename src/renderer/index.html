@@ -647,7 +647,8 @@
     if (ipc.sendSync('isSentryEnabled')) {
         let Sentry = require('@sentry/browser');
         Sentry.init({
-            dsn: ipc.sendSync('getSentryDsn')
+            dsn: ipc.sendSync('getSentryDsn'),
+            release: ipc.sendSync('getSentryRelease'),
         });
     }
 </script>
