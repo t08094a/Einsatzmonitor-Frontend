@@ -25,13 +25,13 @@ ipc.on('getSentryDsn', (event, args) => {
 });
 
 ipc.on('getSentryRelease', (event, args) => {
-    event.returnValue = process.env.npm_package_version
+    event.returnValue = process.env.npm_package_version?.replace("einsatzmonitor@", "")
 });
 
 if (store.get("sentry.enabled"))
     Sentry.init({
         dsn: store.get("sentry.dsn") as string,
-        release: process.env.npm_package_version
+        release: process.env.npm_package_version?.replace("einsatzmonitor@", "")
     });
 
 const ElectronSampleAppLauncher = new AutoLaunch({
