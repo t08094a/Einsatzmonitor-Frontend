@@ -139,6 +139,9 @@ class EinsatzMonitorModel {
         let WidgetClass = dynamicWidget(templateName);
         let wdg = new WidgetClass(this, this.board(), templateName, this.getCurrentWidgetType());
         this.board().widgets.push(wdg);
+
+        // enable edit mode for new widget
+        this.board().refreshEditMode();
     }
 
     serialize() {
@@ -392,8 +395,15 @@ export class BoardViewModel {
         ($('#settingsModal').appendTo("body") as any).modal('show');
     };
 
-    toggleEditMode() {
-        $('li').toggleClass('editMode')
+    private editMode: boolean = false;
+
+    toggleEditMode = () => {
+        this.editMode = !this.editMode;
+        this.refreshEditMode();
+    }
+
+    refreshEditMode = () => {
+        $('li').toggleClass('editMode', this.editMode);
     }
 
     get_by_id(widgets: any, id: any) {
