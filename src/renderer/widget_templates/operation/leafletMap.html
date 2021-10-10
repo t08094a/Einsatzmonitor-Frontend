@@ -37,6 +37,11 @@
 
                                 <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'add-hydrants', description: 'Hydranten-Marker zur Karte hinzufügen' } }"></div>
 
+                                <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'printing-save', description: 'Zum Ausdrucken speichern' } }"></div>
+                                <!-- ko if: widget.extra_config.get('printing-save')() -->
+                                <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'printing-id', title: 'Referenz für Ausdruck', description: 'ID als Referenz zu dieser Karte beim Ausdrucken' } }"></div>
+                                <!-- /ko -->
+
                                 <button data-bind="click: widget.refreshMap" type="button" class="btn btn-primary btn-sm mt-3"><i class="fas fa-sync"></i> Karte aktualisieren</button>
                             </div>
                         </div>

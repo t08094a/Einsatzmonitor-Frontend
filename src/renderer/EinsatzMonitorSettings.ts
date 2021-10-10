@@ -22,6 +22,7 @@ class SettingsModel {
         "alamos.alarmInput.enabled": "Boolean",
         "webserver.alarmInput.enabled": "Boolean",
         "mqtt.alarmInput.enabled": "Boolean",
+        "printing.enabled": "Boolean",
     };
 
     get_type = (key: any) => {

@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'fast-csv';
 
+let leafletImage = require('leaflet-image');
 
 class LeafletMapWidget extends Widget {
     main: EinsatzMonitorModel;
@@ -44,7 +45,7 @@ class LeafletMapWidget extends Widget {
 
         hydrantFiles.forEach((file: string) => {
             fs.createReadStream(path.resolve(userDataPath, 'hydrants', file))
-                .pipe(csv.parse({ headers: true, delimiter: ';' }))
+                .pipe(csv.parse({headers: true, delimiter: ';'}))
                 .on('error', error => logger.error("Fehler beim Laden der Hydranten: ", error))
                 .on('data', row => {
                     if (this.map) {
@@ -104,6 +105,25 @@ class LeafletMapWidget extends Widget {
         }
 
         L.marker([Number.parseFloat(this.lat), Number.parseFloat(this.lng)]).addTo(this.map);
+
+        // Wait until hydrant markers have been added to map
+        setTimeout(() => {
+            leafletImage(this.map, (err: any, canvas: any) => {
+                if (!this.map)
+                    return;
+
+                if (!this.extra_config.get('printing-save')())
+                    return;
+
+                let printingId = this.extra_config.get('printing-id')();
+
+                if (!printingId)
+                    return;
+
+                logger.debug("LeafletMapWidget | Printing ID: " + printingId);
+                this.main.getLatestOperation().printingMaps.push({'printingId': printingId, 'imgBase64': canvas.toDataURL()});
+            });
+        }, 2000);
     }
 
     constructor(main: EinsatzMonitorModel, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {

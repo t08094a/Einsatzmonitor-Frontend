@@ -2,10 +2,14 @@ import {Computed, Observable, PureComputed} from 'knockout';
 import Person from './Person';
 import Functioning from './Functioning';
 import moment from "moment";
-import {alamosFeedbackUrl, axiosConfigParams, client, em, logger, store, str_pad_left} from "../common";
+import {alamosFeedbackUrl, axiosConfigParams, client, em, logger, store, str_pad_left, userDataPath} from "../common";
 import axios from "axios";
 import AAO from "./AAO";
 import * as ko from "knockout";
+import * as nunjucks from "nunjucks";
+import fs from "fs";
+import path from "path";
+import Vehicle from "./Vehicle";
 
 class Operation {
     id: Observable = ko.observable();
@@ -224,6 +228,54 @@ class Operation {
         return this.googleRouteMap().distance() + " - " + this.googleRouteMap().duration();
     });
 
+    printingMaps: KnockoutObservableArray<any> = ko.observableArray([]);
+
+    print() {
+        let url = store.get("printing.url") as string;
+
+        if (!url) {
+            logger.info("Operation | No printing URL configured. Exiting.")
+            return;
+        }
+
+        nunjucks.configure({autoescape: false});
+        let templateFiles = fs.readdirSync(path.resolve(userDataPath, 'printingTemplates')).filter(fn => fn.endsWith('.html'));
+
+        templateFiles.forEach((file: string) => {
+            let templateFile = path.resolve(userDataPath, 'printingTemplates', file);
+            let template = fs.readFileSync(templateFile, 'utf8')
+
+            let parameters = this.parameters.toJSON();
+
+            let aaoVehicleNames: string[] = [];
+            let matchedAao = this.matchedAao();
+            if (matchedAao) {
+                let aaoVehicles = [...matchedAao.vehicles1(), ...matchedAao.vehicles2(), ...matchedAao.vehicles3()]
+                aaoVehicles.forEach((aaoVehicle: Vehicle) => {
+                    aaoVehicleNames.push(aaoVehicle.name());
+                })
+            }
+
+            parameters['aaoVehicles'] = aaoVehicleNames;
+            parameters['maps'] = this.printingMaps();
+
+            logger.debug("Operation | Printing parameters: ", parameters);
+
+            let res = nunjucks.renderString(template, parameters);
+            let encoded = Buffer.from(res).toString("base64");
+
+            axios.post(url, {
+                html: encoded
+            })
+                .then((response: any) => {
+                    logger.info("Operation | Response from printing server:", response)
+                })
+                .catch((error: string) => {
+                    logger.error("Operation | Error sending print request:", error)
+                })
+        });
+    }
+
     constructor(id: number, keyword: string, keywordColor: string, description: string, alarmTime: string, adresse: string, objekt: string, alarmData?: any) {
         this.id(id);
         this.keyword(keyword);
@@ -247,6 +299,14 @@ class Operation {
         }
 
         this.loadGoogleMap();
+
+        if (store.get("printing.enabled")) {
+            // Print alarm after 10 seconds
+            setTimeout(() => {
+                this.print();
+            }, 1000 * 10);
+        }
+
 
         this.keywordColorBadge = ko.computed(() => {
             if (!this.keywordColor())

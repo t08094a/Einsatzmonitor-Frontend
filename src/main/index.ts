@@ -79,7 +79,7 @@ function createWindow() {
     });
 
     if (store.get("debug"))
-        win.webContents.openDevTools();
+        win.webContents.openDevTools({mode: 'undocked'});
 
     win.loadURL(`file://${path.join(__dirname, "../../renderer/index.html")}`)
 
@@ -139,6 +139,9 @@ function createDefaultConfig() {
     setDefaultConfigValue("background.color", "rgb(15 15 15)");
 
     setDefaultConfigValue("aao.customParameter", "unit");
+
+    setDefaultConfigValue("printing.enabled", false);
+    setDefaultConfigValue("printing.url", "http://127.0.0.1:5000/print/");
 }
 
 function setDefaultConfigValue(key, value) {
