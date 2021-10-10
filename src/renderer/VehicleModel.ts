@@ -34,8 +34,9 @@ class VehicleModel {
     };
 
     loadVehiclesFromDisk = () => {
-        try {
-            vehiclesDb.read().then(() => {
+        logger.debug("VehicleModel | Loading vehicles from disk.")
+        return vehiclesDb.read()
+            .then(() => {
                 let vehicles = vehiclesDb.data as [Vehicle];
 
                 if (vehicles) {
@@ -45,10 +46,11 @@ class VehicleModel {
                         this.vehicles.push(new Vehicle(vehicle.station, vehicle.identification, vehicle.name, vehicle.statusCode))
                     })
                 }
+                logger.debug("VehicleModel | Finished reading vehicles.")
             })
-        } catch (e) {
-            logger.debug("No vehicles saved yet.")
-        }
+            .finally(() => {
+                logger.debug("VehicleModel | Finished loading vehicles.")
+            })
     };
 
     updateStatusForVehicle = (address: any, status: string) => {

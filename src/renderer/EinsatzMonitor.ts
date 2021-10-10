@@ -299,10 +299,15 @@ class EinsatzMonitorModel {
         this.settingsModel = settingsModel;
 
         this.vehicleModel = new VehicleModel();
-        this.vehicleModel.loadVehiclesFromDisk();
-
         this.aaoModel = new AAOModel(this);
-        this.aaoModel.loadAaoFromDisk();
+
+        this.vehicleModel.loadVehiclesFromDisk()
+            .then(() => {
+                this.aaoModel.loadAaoFromDisk();
+            })
+            .finally(() => {
+
+            })
 
         this.alarmHistoryModel = new AlarmHistoryModel(this);
 

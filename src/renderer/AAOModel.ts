@@ -127,6 +127,7 @@ class AAOModel {
     }
 
     loadAaoFromDisk = () => {
+        logger.debug("AAOModel | Loading vehicles from disk.")
         try {
             aaoDb.read().then(() => {
                 let aaos = aaoDb.data as [AAO];
@@ -142,7 +143,7 @@ class AAOModel {
 
         } catch (e) {
             logger.debug(e);
-            logger.debug("No AAOs saved yet.")
+            logger.debug("AAOModel | No AAOs saved yet.")
         }
     };
 
