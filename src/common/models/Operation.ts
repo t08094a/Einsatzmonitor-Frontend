@@ -295,6 +295,20 @@ class Operation {
         if (alarmData) {
             Object.keys(alarmData).forEach(key => {
                 this.parameters.set(key, alarmData[key]);
+
+                if (key == "vehicles") {
+                    try {
+                        let parsedVehicles = JSON.parse(alarmData[key]);
+                        this.parameters.set(key, parsedVehicles);
+
+                        // Todo: refactor this
+                        parsedVehicles.forEach((vehicle: any) => {
+                            this.units.push(vehicle.name);
+                        })
+                    } catch (e) {
+                        logger.debug("Error while parsing vehicles from alarmData:", e)
+                    }
+                }
             })
         }
 
