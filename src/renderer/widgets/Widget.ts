@@ -84,6 +84,10 @@ class Widget {
         }
     };
 
+    afterAdd() {
+
+    }
+
     resized() {
 
     }

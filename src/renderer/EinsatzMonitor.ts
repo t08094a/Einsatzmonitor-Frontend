@@ -439,7 +439,9 @@ export class BoardViewModel {
             this.gridsterInfo.add_widget(widget, sizeX, sizeY, parseInt(column), parseInt(row));
 
             // trigger fitty to properly scale font size
-            this.get_by_id(this.widgets(), parseInt(widget.attr('id') as string)).fitIfPossible();
+            let wdg = this.get_by_id(this.widgets(), parseInt(widget.attr('id') as string));
+            wdg.fitIfPossible();
+            wdg.afterAdd();
         }
     };
 

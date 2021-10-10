@@ -15,8 +15,11 @@ class LeafletMapWidget extends Widget {
     lat?: string;
     lng?: string;
 
-    loaded() {
+    afterAdd() {
         this.loadMap();
+    }
+
+    loaded() {
     }
 
     destroy() {
@@ -65,9 +68,14 @@ class LeafletMapWidget extends Widget {
             return;
         }
 
+        if (!$('#leaflet-' + this.id).length) {
+            return;
+        }
+
         logger.info("LeafletMapWidget | Loading LeafletMap");
 
         let zoom = this.extra_config.get('zoom')() ? Number.parseInt(this.extra_config.get('zoom')()) : 12;
+
         this.map = L.map('leaflet-' + this.id, {
             preferCanvas: true,
         }).setView([Number.parseFloat(this.lat), Number.parseFloat(this.lng)], zoom);
@@ -162,8 +170,6 @@ class LeafletMapWidget extends Widget {
         // Try to load initial coordinates
         this.lat = this.main.getLatestOperation().googleOverviewMap().lat();
         this.lng = this.main.getLatestOperation().googleOverviewMap().lng();
-
-        setTimeout(this.loadMap, 500);
 
         logger.info("Loaded LeafletMapWidget");
     }
