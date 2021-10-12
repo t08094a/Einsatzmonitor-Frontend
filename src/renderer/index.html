@@ -555,6 +555,7 @@
                             <h4 class="mt-3"><strong>Verfügbare Fahrzeuge</strong></h4>
                             <ul id="sourceAaoVehicles" class="list-group mb-2" data-bind="sortable: {foreach: $root.aaoModel.newAao().availableVehiclesList, options: {group: {pull: true, put: true}}}">
                                 <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem; cursor: pointer">
+                                    <span data-bind="text: station"></span>
                                     <span data-bind="text: name"></span>
                                 </li>
                             </ul>
@@ -563,6 +564,7 @@
                             <h4 class="mt-3"><strong>Prio 1 Fahrzeuge</strong></h4>
                             <ul id="vehicles1" class="list-group mb-2" data-bind="sortable: {foreach: $root.aaoModel.newAao().vehicles1, options: {pull: true, put: true}}">
                                 <li class="list-group-item d-flex justify-content-between align-items-center" data-bind="attr: {'data-id': identification}" style="padding: .25rem .50rem; cursor: pointer">
+                                    <span data-bind="text: station"></span>
                                     <span data-bind="text: name"></span>
                                 </li>
                             </ul>
@@ -570,6 +572,7 @@
                             <h4 class="mt-3"><strong>Prio 2 Fahrzeuge</strong></h4>
                             <ul id="vehicles2" class="list-group mb-2" data-bind="sortable: {foreach: $root.aaoModel.newAao().vehicles2, options: {pull: true, put: true}}">
                                 <li class="list-group-item d-flex justify-content-between align-items-center" data-bind="attr: {'data-id': identification}" style="padding: .25rem .50rem; cursor: pointer">
+                                    <span data-bind="text: station"></span>
                                     <span data-bind="text: name"></span>
                                 </li>
                             </ul>
@@ -577,6 +580,7 @@
                             <h4 class="mt-3"><strong>Prio 3 Fahrzeuge</strong></h4>
                             <ul id="vehicles3" class="list-group mb-2" data-bind="sortable: {foreach: $root.aaoModel.newAao().vehicles3, options: {pull: true, put: true}}">
                                 <li class="list-group-item d-flex justify-content-between align-items-center" data-bind="attr: {'data-id': identification}" style="padding: .25rem .50rem; cursor: pointer">
+                                    <span data-bind="text: station"></span>
                                     <span data-bind="text: name"></span>
                                 </li>
                             </ul>
