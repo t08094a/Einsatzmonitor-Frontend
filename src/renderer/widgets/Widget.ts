@@ -80,7 +80,7 @@ class Widget {
 
         if (this.extra_config.get('text-fitty')()) {
             // @ts-ignore
-            customTextFit(fittyElement, {maxFontSize: max, alignHoriz: true, alignVert: true})
+            customTextFit(fittyElement, {maxFontSize: max, alignHoriz: true, alignVert: true, multiLine: true})
         }
     };
 

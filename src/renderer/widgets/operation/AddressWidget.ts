@@ -15,10 +15,10 @@ class AddressWidget extends Widget {
         if (!parameterObject)
             parameterObject = "object";
 
-        let location = this.main.getLatestOperation().getParameter(parameterLocation);
+        let location = this.main.getLatestOperation()?.getParameter(parameterLocation);
 
         if (showObject) {
-            let object = this.main.getLatestOperation().getParameter(parameterObject);
+            let object = this.main.getLatestOperation()?.getParameter(parameterObject);
 
             location = `${location} ${object}`;
         }
