@@ -9,8 +9,7 @@
             <h2 class="m-0 fitty-element h-100" data-maxfitty="200" style="height: 100%">
                 <div class="wrapper">
                     <span><i class="fal fa-map-marker-alt"></i></span>
-                    <span data-bind="text: $root.getLatestOperation().street"></span>
-                    <span data-bind="text: $root.getLatestOperation().object"></span>
+                    <span data-bind="text: widget.locationDisplay"></span>
                 </div>
             </h2>
         </div>
@@ -29,8 +28,16 @@
                         <div class="form-group">
                             <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'text-fitty', description: 'Textgröße automatisch anpassen' } }"></div>
 
+                            <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'parameter-location', title: 'Parameter', description: 'Parameter mit der Zieladresse. Leer: location_dest' } }"></div>
+
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'show-object', description: 'Objekt am Ende anzeigen' } }"></div>
+                            <!-- ko if: widget.extra_config.get('show-object')() -->
+                            <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'parameter-object', title: 'Parameter (Objekt)', description: 'Parameter mit dem Objekt. Leer: object' } }"></div>
+                            <!-- /ko -->
+
                             <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
                             <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
+
                         </div>
                     </div>
                     <div class="modal-footer">

@@ -13,6 +13,7 @@ import AaoWidget from "./operation/AaoWidget";
 import HistoryWidget from "./info/HistoryWidget";
 import LeafletMapWidget from "./operation/LeafletMapWidget";
 import CalendarWidget from "./info/CalendarWidget";
+import AddressWidget from "./operation/AddressWidget";
 
 type tClassMapping = {
     [key: string]: any
@@ -30,6 +31,7 @@ const classMapping: tClassMapping = {
     'alarm-history-widget': HistoryWidget,
     'calendar-widget': CalendarWidget,
 
+    'operation-address': AddressWidget,
     'operation-alarmMinutes': AlarmMinutesWidget,
     'operation-customParameter': CustomParameterWidget,
     'operation-aao': AaoWidget,

@@ -78,7 +78,8 @@
 
                     <!-- ko if: !$root.isInfoViewActive() -->
                     <h5><strong>Einsatz-Widgets</strong></h5>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-keyword") }'><i class="fal fa-plus"></i> Stichwort</button>
+<!--                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-keyword") }'><i class="fal fa-plus"></i> Stichwort</button>-->
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-customParameter") }'><i class="fal fa-plus"></i> Parameter</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-address") }'><i class="fal fa-plus"></i> Adresse</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-additionalInformation") }'><i class="fal fa-plus"></i> Zusatzinfos</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-routeInformation") }'><i class="fal fa-plus"></i> Route - Informationen</button>
@@ -86,10 +87,10 @@
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-feedback") }'><i class="fal fa-plus"></i> Rückmeldungen</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-feedback-count") }'><i class="fal fa-plus"></i> Anzahl Rückmeldungen</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-alarmMinutes") }'><i class="fal fa-plus"></i> Minuten seit Alarmierung</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-overviewMap") }'><i class="fal fa-plus"></i> Karte - Übersicht</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-routeMap") }'><i class="fal fa-plus"></i> Karte - Anfahrtsweg</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-customParameter") }'><i class="fal fa-plus"></i> Eigener Parameter</button>
-                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-aao") }'><i class="fal fa-plus"></i> AAO</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-overviewMap") }'><i class="fal fa-plus"></i> Google Karte - Übersicht</button>
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-routeMap") }'><i class="fal fa-plus"></i> Google Karte - Route</button>
+
+                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-aao") }'><i class="fal fa-plus"></i> AAO - ausrückende Einsatzmittel</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-leafletMap") }'><i class="fal fa-plus"></i> Leaflet Map</button>
                     <!-- /ko -->
                 </div>
