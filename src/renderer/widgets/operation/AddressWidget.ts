@@ -20,7 +20,9 @@ class AddressWidget extends Widget {
         if (showObject) {
             let object = this.main.getLatestOperation()?.getParameter(parameterObject);
 
-            location = `${location} ${object}`;
+            if (object) {
+                location = `${location} (${object})`;
+            }
         }
 
         setTimeout(() => {

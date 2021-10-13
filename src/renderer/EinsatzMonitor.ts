@@ -101,7 +101,7 @@ class EinsatzMonitorModel {
             'description': "Testalarm",
             'alarmzeit_seconds': moment().unix(),
             'adresse': this.testOperationAddress(),
-            'objekt': "(Testobjekt)",
+            'objekt': "Testobjekt",
             'einheiten': [
                 {
                     'name': "TE FF Testfeuerwehr voll"
