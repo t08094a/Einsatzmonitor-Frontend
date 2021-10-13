@@ -139,14 +139,14 @@ class LeafletMapWidget extends Widget {
 
         this.main = main;
 
-        this.main.getLatestOperation().googleOverviewMap().lat.subscribe((newValue: any) => {
+        this.main.getLatestOperation().parameters.get("lat").subscribe((newValue: any) => {
             if (this.lat !== newValue) {
                 this.lat = newValue;
                 this.refreshMap();
             }
         })
 
-        this.main.getLatestOperation().googleOverviewMap().lng.subscribe((newValue: any) => {
+        this.main.getLatestOperation().parameters.get("lng").subscribe((newValue: any) => {
             if (this.lng !== newValue) {
                 this.lng = newValue;
                 this.refreshMap();
@@ -168,8 +168,8 @@ class LeafletMapWidget extends Widget {
         });
 
         // Try to load initial coordinates
-        this.lat = this.main.getLatestOperation().googleOverviewMap().lat();
-        this.lng = this.main.getLatestOperation().googleOverviewMap().lng();
+        this.lat = this.main.getLatestOperation().getParameter("lat");
+        this.lng = this.main.getLatestOperation().getParameter("lng");
 
         logger.info("Loaded LeafletMapWidget");
     }

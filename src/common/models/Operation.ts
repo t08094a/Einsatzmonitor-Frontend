@@ -10,6 +10,9 @@ import * as nunjucks from "nunjucks";
 import fs from "fs";
 import path from "path";
 import Vehicle from "./Vehicle";
+import GoogleGeocoder from "../../renderer/geocoding/GoogleGeocoder";
+import GeocodingResult from "../../renderer/geocoding/GeocodingResult";
+import Geocoder from "../../renderer/geocoding/Geocoder";
 
 class Operation {
     id: Observable = ko.observable();
@@ -165,29 +168,38 @@ class Operation {
 
         if (this.getParameter("lat") && this.getParameter("lng")) {
             logger.info("Using lat/lng from alarm parameters.")
-            this.loadCoordinates(this.getParameter("lat"), this.getParameter("lng"));
+            this.setCoordinatesParameter(this.getParameter("lat"), this.getParameter("lng"));
             return;
         }
 
-        logger.info("Using google geocoder to get lat/lng from provided address.")
+        let geocoder: Geocoder;
 
-        client
-            .geocode({
-                params: {
-                    address: this.street(),
-                    key: store.get("googleMapsKey") as string
-                }
-            })
-            .then(r => {
-                let latitude = r.data.results[0].geometry.location.lat;
-                let longitude = r.data.results[0].geometry.location.lng;
+        switch ("google") {
+            case "google": {
+                geocoder = new GoogleGeocoder();
+                break;
+            }
 
-                this.loadCoordinates(latitude.toString(), longitude.toString());
+            default: {
+                geocoder = new GoogleGeocoder();
+            }
+        }
+
+        geocoder.geocode(this.street())
+            .then((result: GeocodingResult) => {
+                this.setCoordinatesParameter(result.lat.toString(), result.lng.toString());
             })
-            .catch(e => logger.error(e));
+            .catch((e) => logger.error(e));
     };
 
-    loadCoordinates(lat: string, lng: string) {
+    setCoordinatesParameter(lat: string, lng: string) {
+        this.parameters.set("lat", lat);
+        this.parameters.set("lng", lng);
+
+        this.setGoogleMapsCoordinates(lat, lng);
+    }
+
+    setGoogleMapsCoordinates(lat: string, lng: string) {
         this.googleOverviewMap().lat(lat);
         this.googleOverviewMap().lng(lng);
 
