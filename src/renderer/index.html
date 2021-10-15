@@ -210,8 +210,8 @@
             <select class="custom-select" data-bind="options: booleanValues, value: value, optionsCaption: 'Please select...', optionsText: 'name', optionsValue: 'id'"></select>
             <!-- /ko -->
 
-            <!-- ko if: type() === "FetchType" -->
-            <select class="custom-select" data-bind="options: fetchValues, value: value, optionsCaption: 'Please select...', optionsText: 'name', optionsValue: 'name'"></select>
+            <!-- ko if: type() === "Select" -->
+            <select class="custom-select" data-bind="options: values, value: value, optionsCaption: 'Please select...', optionsText: 'name', optionsValue: 'name'"></select>
             <!-- /ko -->
 
             <!-- ko if: type() === "String" -->

@@ -142,6 +142,11 @@ function createDefaultConfig() {
 
     setDefaultConfigValue("printing.enabled", false);
     setDefaultConfigValue("printing.url", "http://127.0.0.1:5000/print/");
+
+    setDefaultConfigValue("geocoding.enabled", false);
+    setDefaultConfigValue("geocoding.engine", "Google");
+    setDefaultConfigValue("geocoding.google.apikey", "123456abc");
+    setDefaultConfigValue("geocoding.graphhopper.apikey", "123456abc");
 }
 
 function setDefaultConfigValue(key, value) {

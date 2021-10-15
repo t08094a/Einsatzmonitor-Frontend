@@ -11,23 +11,67 @@ class SettingsModel {
     saving = ko.observable(false);
 
     schema: any = {
-        "debug": "Boolean",
-        "info.news.show": "Boolean",
-        "info.einsaetze.show": "Boolean",
-        "info.dienste.show": "Boolean",
-        "sentry.enabled": "Boolean",
-        "motionDetector.enabled": "Boolean",
-        "displayAlwaysOn": "Boolean",
-        "einsatz.fetch": "FetchType",
-        "alamos.alarmInput.enabled": "Boolean",
-        "webserver.alarmInput.enabled": "Boolean",
-        "mqtt.alarmInput.enabled": "Boolean",
-        "printing.enabled": "Boolean",
+        "debug": {"type": "Boolean"},
+        "info.news.show": {"type": "Boolean"},
+        "info.einsaetze.show": {"type": "Boolean"},
+        "info.dienste.show": {"type": "Boolean"},
+        "sentry.enabled": {"type": "Boolean"},
+        "motionDetector.enabled": {"type": "Boolean"},
+        "displayAlwaysOn": {"type": "Boolean"},
+        "einsatz.fetch": {
+            "type": "Select",
+            "values": [
+                {
+                    "id": 0,
+                    "name": "http"
+                },
+                {
+                    "id": 1,
+                    "name": "websocket"
+                },
+                {
+                    "id": 99,
+                    "name": "disabled"
+                },
+            ]
+        },
+        "alamos.alarmInput.enabled": {"type": "Boolean"},
+        "webserver.alarmInput.enabled": {"type": "Boolean"},
+        "mqtt.alarmInput.enabled": {"type": "Boolean"},
+        "printing.enabled": {"type": "Boolean"},
+        "geocoding.enabled": {"type": "Boolean"},
+        "geocoding.engine": {
+            "type": "Select",
+            "values": [
+                {
+                    "id": 10,
+                    "name": "Google"
+                },
+                {
+                    "id": 20,
+                    "name": "GraphHopper"
+                },
+            ]
+        },
     };
 
     get_type = (key: any) => {
-        return this.schema[key] != null ? this.schema[key] : "String";
+        return this.schema[key] != null ? this.schema[key]["type"] : "String";
     };
+
+    getValues = (key: any) => {
+        if (!this.schema[key]) {
+            return []
+        }
+
+        if (!this.schema[key]["values"]) {
+            return []
+        }
+
+        return this.schema[key]["values"].map((item: any) => {
+            return new FetchSetting(item.id, item.name);
+        });
+    }
 
     loadSettings = () => {
         let all = this.dotNotate(store.store, null, null);
@@ -36,7 +80,7 @@ class SettingsModel {
         for (let key in all) {
             if (all.hasOwnProperty(key)) {
                 // console.log(key, all[key]);
-                let settings_obj = new EinsatzMonitorSetting(key, all[key], this.get_type(key));
+                let settings_obj = new EinsatzMonitorSetting(key, all[key], this.get_type(key), this.getValues(key));
 
                 if (key.startsWith("einsatz.")) {
                     this.einsatzSettings().push(settings_obj);
@@ -101,8 +145,9 @@ class EinsatzMonitorSetting {
     value = ko.observable();
     type = ko.observable();
 
+    values: any[] = [];
+
     booleanValues = ko.observableArray([new BooleanSetting(false, "false"), new BooleanSetting(true, "true")]);
-    fetchValues = ko.observableArray([new FetchSetting(0, "http"), new FetchSetting(1, "websocket"), new FetchSetting(99, "disabled")]);
 
     get_value = ko.computed(() => {
         let value = null;
@@ -138,10 +183,12 @@ class EinsatzMonitorSetting {
         return name;
     };
 
-    constructor(key: any, value: any, type: any) {
+    constructor(key: any, value: any, type: any, values: any[]) {
         this.key = ko.observable(key);
         this.value = ko.observable(value);
         this.type = ko.observable(type);
+
+        this.values = values;
     }
 
 }

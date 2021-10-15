@@ -13,6 +13,7 @@ import Vehicle from "./Vehicle";
 import GoogleGeocoder from "../../renderer/geocoding/GoogleGeocoder";
 import GeocodingResult from "../../renderer/geocoding/GeocodingResult";
 import Geocoder from "../../renderer/geocoding/Geocoder";
+import GraphHopperGeocoder from "../../renderer/geocoding/GraphHopperGeocoder";
 
 class Operation {
     id: Observable = ko.observable();
@@ -164,19 +165,29 @@ class Operation {
 
     /* Google Maps Karten */
     loadGoogleMap = () => {
-        logger.info("Loading google map")
+        logger.info("Operation | Loading google map")
 
         if (this.getParameter("lat") && this.getParameter("lng")) {
-            logger.info("Using lat/lng from alarm parameters.")
+            logger.info("Operation | Using lat/lng from alarm parameters.")
             this.setCoordinatesParameter(this.getParameter("lat"), this.getParameter("lng"));
+            return;
+        }
+
+        if (!store.get("geocoding.enabled")) {
+            logger.warn("Operation | Geocoding is disabled but coordinates parameters are missing. Maps won't work for this alarm.");
             return;
         }
 
         let geocoder: Geocoder;
 
-        switch ("google") {
-            case "google": {
+        switch (store.get("geocoding.engine") as string) {
+            case "Google": {
                 geocoder = new GoogleGeocoder();
+                break;
+            }
+
+            case "GraphHopper": {
+                geocoder = new GraphHopperGeocoder();
                 break;
             }
 
