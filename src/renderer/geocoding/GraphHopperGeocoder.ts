@@ -8,9 +8,9 @@ class GraphHopperGeocoder implements Geocoder {
         return new Promise<GeocodingResult>((resolve, reject) => {
             logger.info("GraphHopperGeocoder | Using graphhopper geocoder to get lat/lng from provided address.");
 
-            axios.get(`https://graphhopper.com/api/1/geocode?q=${address}&locale=de&key=${store.get("geocoding.graphhopper.apikey") as string}`)
+            axios.get(`https://graphhopper.com/api/1/geocode?q=${address}&locale=de&key=${store.get("graphhopper.apikey") as string}`)
                 .then(response => {
-                    logger.debug(`GraphHopperGeocoder | Geocoding response: ${response}`);
+                    logger.debug("GraphHopperGeocoder | Geocoding response:", response);
 
                     if (response.status == 200) {
                         let latitude = response.data.hits[0].point.lat;

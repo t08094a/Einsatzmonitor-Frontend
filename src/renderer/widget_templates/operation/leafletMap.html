@@ -42,6 +42,11 @@
                                 <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'printing-id', title: 'Referenz für Ausdruck', description: 'ID als Referenz zu dieser Karte beim Ausdrucken' } }"></div>
                                 <!-- /ko -->
 
+                                <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'route-show', description: 'Route anzeigen' } }"></div>
+                                <!-- ko if: widget.extra_config.get('route-show')() -->
+                                <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'route-show-full', description: 'Ganze Route darstellen (zoom-out)' } }"></div>
+                                <!-- /ko -->
+
                                 <button data-bind="click: widget.refreshMap" type="button" class="btn btn-primary btn-sm mt-3"><i class="fas fa-sync"></i> Karte aktualisieren</button>
                             </div>
                         </div>

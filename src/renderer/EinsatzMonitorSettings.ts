@@ -53,6 +53,20 @@ class SettingsModel {
                 },
             ]
         },
+        "routing.enabled": {"type": "Boolean"},
+        "routing.engine": {
+            "type": "Select",
+            "values": [
+                // {
+                //     "id": 10,
+                //     "name": "Google"
+                // },
+                {
+                    "id": 20,
+                    "name": "GraphHopper"
+                },
+            ]
+        },
     };
 
     get_type = (key: any) => {

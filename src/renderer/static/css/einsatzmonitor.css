@@ -929,3 +929,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     margin-left: -12px;
     border-right-color: #fff;
 }
+
+.leaflet-control-container .leaflet-routing-container {
+    display: none;
+}

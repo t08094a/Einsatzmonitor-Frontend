@@ -145,8 +145,12 @@ function createDefaultConfig() {
 
     setDefaultConfigValue("geocoding.enabled", false);
     setDefaultConfigValue("geocoding.engine", "Google");
-    setDefaultConfigValue("geocoding.google.apikey", "123456abc");
-    setDefaultConfigValue("geocoding.graphhopper.apikey", "123456abc");
+
+    setDefaultConfigValue("routing.enabled", false);
+    setDefaultConfigValue("routing.engine", "GraphHopper");
+
+    setDefaultConfigValue("google.apikey", "123456abc");
+    setDefaultConfigValue("graphhopper.apikey", "123456abc");
 }
 
 function setDefaultConfigValue(key, value) {

@@ -1,6 +1,6 @@
 import Widget from "../Widget";
 import EinsatzMonitorModel from "../../EinsatzMonitor";
-import {logger, userDataPath} from "../../../common/common";
+import {logger, store, userDataPath} from "../../../common/common";
 import * as L from "leaflet";
 import * as fs from 'fs';
 import * as path from 'path';
@@ -8,12 +8,15 @@ import * as csv from 'fast-csv';
 
 let leafletImage = require('leaflet-image');
 
+require('leaflet-routing-machine');
+require('lrm-graphhopper');
+
 class LeafletMapWidget extends Widget {
     main: EinsatzMonitorModel;
     map?: L.Map;
 
-    lat?: string;
-    lng?: string;
+    lat: string;
+    lng: string;
 
     afterAdd() {
         this.loadMap();
@@ -44,12 +47,12 @@ class LeafletMapWidget extends Widget {
     addHydrantsToMap() {
         let hydrantFiles = fs.readdirSync(path.resolve(userDataPath, 'hydrants')).filter(fn => fn.endsWith('.csv'));
 
-        logger.info("Adding hydrants to map: ", hydrantFiles);
+        logger.info("LeafletMapWidget | Adding hydrants to map: ", hydrantFiles);
 
         hydrantFiles.forEach((file: string) => {
             fs.createReadStream(path.resolve(userDataPath, 'hydrants', file))
                 .pipe(csv.parse({headers: true, delimiter: ';'}))
-                .on('error', error => logger.error("Fehler beim Laden der Hydranten: ", error))
+                .on('error', error => logger.error("LeafletMapWidget | Fehler beim Laden der Hydranten: ", error))
                 .on('data', row => {
                     if (this.map) {
                         L.circleMarker([row['X-Koordinaten'].replace(",", "."), row['Y-Koordinate'].replace(",", ".")], {
@@ -59,7 +62,33 @@ class LeafletMapWidget extends Widget {
                         }).addTo(this.map);
                     }
                 })
-                .on('end', (rowCount: number) => console.log(`${rowCount} Hydranten geladen`));
+                .on('end', (rowCount: number) => logger.info(`LeafletMapWidget | ${rowCount} Hydranten geladen`));
+        })
+    }
+
+    addRoutingToMap() {
+        // @ts-ignore
+        let router = new L.Routing.GraphHopper(store.get("graphhopper.apikey") as string)
+
+        // @ts-ignore
+        L.Routing.control({
+            router: router,
+            waypoints: [
+                L.latLng(store.get("feuerwehrLat") as number, store.get("feuerwehrLng") as number),
+                L.latLng(Number.parseFloat(this.lat), Number.parseFloat(this.lng))
+            ],
+            lineOptions: {
+                styles: [
+                    {color: 'black', opacity: 0.25, weight: 11},
+                    {color: 'blue', opacity: 1, weight: 5}
+                ]
+            },
+            fitSelectedRoutes: this.extra_config.get("route-show-full")()
+        }).addTo(this.map);
+
+        router.on('response', (response: any) => {
+            logger.debug('LeafletMapWidget | This routing request consumed ' + response.credits + ' credit(s)');
+            logger.debug('LeafletMapWidget | You have ' + response.remaining + ' left');
         })
     }
 
@@ -79,6 +108,10 @@ class LeafletMapWidget extends Widget {
         this.map = L.map('leaflet-' + this.id, {
             preferCanvas: true,
         }).setView([Number.parseFloat(this.lat), Number.parseFloat(this.lng)], zoom);
+
+        if (this.extra_config.get('route-show')() && store.get("routing.enabled")) {
+            this.addRoutingToMap();
+        }
 
         if (this.extra_config.get('add-hydrants')()) {
             this.addHydrantsToMap();

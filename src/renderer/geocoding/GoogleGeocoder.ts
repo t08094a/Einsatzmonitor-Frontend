@@ -11,11 +11,11 @@ class GoogleGeocoder implements Geocoder {
                 .geocode({
                     params: {
                         address: address,
-                        key: store.get("googleMapsKey") as string
+                        key: store.get("google.apikey") as string
                     }
                 })
                 .then(r => {
-                    logger.debug(`GoogleGeocoder | Geocoding response: ${r}`);
+                    logger.debug("GoogleGeocoder | Geocoding response:", r);
 
                     let latitude = r.data.results[0].geometry.location.lat;
                     let longitude = r.data.results[0].geometry.location.lng;
