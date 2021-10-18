@@ -32,10 +32,22 @@
     - Unbegrenzt viele Bildschirme sind einfach zu installieren
 - Einfache und flexible Anpassung des Layouts durch Widgets
 - Geringe Hardwarekosten auch für mehrere Bildschirme
-- Darstellung der Route und Berechnung mithilfe der Google Maps API
 - Ein/Ausschalten des Bildschirms mittels Bewegungsmelder am Raspberry Pi möglich
 - Rückmeldungen von [Alamos aPager Pro](https://www.alamos-gmbh.com/service/apager-pro/) anzeigen
-
+- Verschiedene Map-provider
+  - Google Maps
+      - GoogleMapsAPI geocoding & routing
+  - Leaflet
+      - [OpenStreetMap](https://www.openstreetmap.de/) tiles
+      - [WebAtlasNI](https://www.lgln.niedersachsen.de/startseite/online_angebote_amp_services/webdienste/webatlasni/webatlasni-156396.html) tiles
+      - [GraphHopper](https://www.graphhopper.com/) geocoding & routing
+      - Darstellung von Hydranten aus einer CSV-Datenquelle
+- AAO-Verwaltung
+- Ausdrucken einer Alarmdepesche
+  - Individuelle Anpassung mittels HTML-Template
+  - Darstellung von Hydranten bei Verwendung des Leaflet-Map-Widgets
+- Anzeigen einer Alarm-History in der Ruheansicht
+- Anzeigen eines Kalenders (iCalendar-Abo) in der Ruheansicht
 
 ## :wrench: Technik
 
@@ -51,6 +63,8 @@
     - [Moment.js](https://momentjs.com/)
     - [noUiSlider](https://refreshless.com/nouislider/)
     - [webpack](https://webpack.js.org/)
+    - [Leaflet](https://leafletjs.com/)
+    - [GraphHopper](https://www.graphhopper.com/)
 
 
 ## :cloud: Installation auf einem Raspberry Pi 4 Model B
