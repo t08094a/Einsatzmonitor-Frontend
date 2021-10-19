@@ -49,6 +49,8 @@ class LeafletMapWidget extends Widget {
 
         logger.info("LeafletMapWidget | Adding hydrants to map: ", hydrantFiles);
 
+        this.map?.createPane('hydrants');
+
         hydrantFiles.forEach((file: string) => {
             fs.createReadStream(path.resolve(userDataPath, 'hydrants', file))
                 .pipe(csv.parse({headers: true, delimiter: ';'}))
@@ -58,7 +60,8 @@ class LeafletMapWidget extends Widget {
                         L.circleMarker([row['X-Koordinaten'].replace(",", "."), row['Y-Koordinate'].replace(",", ".")], {
                             color: row["Farbe"] || "#c9000d",
                             radius: 6,
-                            fillOpacity: 0.5
+                            fillOpacity: 0.5,
+                            pane: 'hydrants'
                         }).addTo(this.map);
                     }
                 })
@@ -79,8 +82,8 @@ class LeafletMapWidget extends Widget {
             ],
             lineOptions: {
                 styles: [
-                    {color: 'black', opacity: 0.25, weight: 11},
-                    {color: 'blue', opacity: 1, weight: 5}
+                    {color: '#50a5ff', opacity: 1, weight: 10},
+                    {color: '#73B9FF', opacity: 1, weight: 5}
                 ]
             },
             fitSelectedRoutes: this.extra_config.get("route-show-full")()
