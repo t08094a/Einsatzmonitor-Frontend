@@ -54,6 +54,8 @@ export const em = new emitter();
 export const logger = require('electron-log')
 logger.transports.file.sync = false;
 logger.transports.file.maxSize = 104857600;
+logger.catchErrors();
+
 
 export const alamosFeedbackUrl = (dbId: string) => `https://apager-firemergency-2.appspot.com/fe2/feedback?dbId=${dbId}`;
 
