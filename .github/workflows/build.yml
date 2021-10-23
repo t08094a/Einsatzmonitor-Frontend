@@ -83,7 +83,7 @@ jobs:
 #          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Delete unpacked app before deployment
-        run: rm -rf *-unpacked/
+        run: rm -r *-unpacked/
         working-directory: einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
 
       - name: Deploy with SCP
