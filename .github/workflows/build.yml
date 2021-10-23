@@ -82,6 +82,10 @@ jobs:
 #          server-ip: ${{ secrets.SSH_HOST }}
 #          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Delete unpacked app before deployment
+        run: rm -rf *-unpacked/
+        working-directory: einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
+
       - name: Deploy with SCP
         uses: garygrossgarten/github-action-scp@release
         with:
