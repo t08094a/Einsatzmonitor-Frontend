@@ -27,10 +27,11 @@ class CalendarWidget extends Widget {
         return sorted;
     });
 
-    private addEvent(id: number, title: string, description: string, start: string, currentDay: number) {
+    private addEvent(id: number, title: string, description: string, start: string, location: string, currentDay: number) {
         let isToday: boolean = new Date(start).setHours(0, 0, 0, 0) == currentDay;
 
         let newDienst = new Dienst(id, title, description, start, isToday);
+        newDienst.location(location);
 
         let match = ko.utils.arrayFirst(this.events(), (item: any) => {
             return newDienst.id() === item.id();
@@ -44,6 +45,7 @@ class CalendarWidget extends Widget {
             match.title(title);
             match.description(description);
             match.start(start);
+            match.location(location);
             match.isToday(isToday);
         }
     }
@@ -70,7 +72,7 @@ class CalendarWidget extends Widget {
                         if (new Date(event.start).setHours(0, 0, 0, 0) >= currentDay) {
                             dienste.push(event.uid);
 
-                            this.addEvent(event.uid, event.summary, event.description, event.start, currentDay);
+                            this.addEvent(event.uid, event.summary, event.description, event.start, event.location, currentDay);
                         }
                     }
                 }

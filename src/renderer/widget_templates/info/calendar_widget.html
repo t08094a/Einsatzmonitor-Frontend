@@ -21,8 +21,12 @@
                                 <span class="ml-1" data-bind="text: startUhrzeit()"></span>
                             </span>
 
-                            <span style="padding-left: 30px; padding-right: 5px;" class="description flex-shrink-0">
+                            <span style="padding-left: 30px; padding-right: 5px;" class="description flex-shrink-0 d-flex flex-column align-items-start">
                                 <strong><i class="far fa-clipboard-list"></i> <span class="ml-1" data-bind="text: title()"></span></strong>
+
+                                <!-- ko if: location -->
+                                <span class="mt-2"><i class="far fa-map-marker-alt"></i> <span class="ml-1" data-bind="text: location()"></span></span>
+                                <!-- /ko -->
                             </span>
                         </span>
                     </h4>

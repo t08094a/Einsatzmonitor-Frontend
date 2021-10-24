@@ -6,6 +6,7 @@ class Dienst {
     id: Observable = ko.observable();
     title: Observable = ko.observable();
     description: Observable = ko.observable();
+    location: Observable = ko.observable();
     start: Observable = ko.observable();
     isToday: Observable = ko.observable();
 
