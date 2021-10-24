@@ -69,7 +69,6 @@ class AlarmHistoryModel {
         alarmHistoryDb.data = alarmHistoryDb.data || []
         alarmHistoryDb.data.push(alarmHistoryItem);
 
-        logger.debug(alarmHistoryDb.data)
         logger.debug(`AlarmHistoryModel | New database length: ${alarmHistoryDb.data.length}`)
 
         alarmHistoryDb.write();
