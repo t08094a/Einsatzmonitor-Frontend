@@ -2,12 +2,20 @@ import AlarmReceiver from "./AlarmReceiver";
 import EinsatzMonitorModel from "./EinsatzMonitor";
 import * as mqtt from "mqtt";
 import {extractArguments, logger, store} from "../common/common";
+import {MqttClient} from "mqtt/types/lib/client";
 
 class AlarmReceiverMqtt extends AlarmReceiver {
     constructor(einsatzMonitorModel: EinsatzMonitorModel) {
         super(einsatzMonitorModel);
 
-        let client = mqtt.connect(store.get("mqtt.alarmInput.host"), {username: store.get("mqtt.alarmInput.user") as string, password: store.get("mqtt.alarmInput.password") as string});
+        let client: MqttClient;
+
+        try {
+            client = mqtt.connect(store.get("mqtt.alarmInput.host"), {username: store.get("mqtt.alarmInput.user") as string, password: store.get("mqtt.alarmInput.password") as string});
+        } catch (e) {
+            logger.error("AlarmReceiverMqtt |", e);
+            return;
+        }
 
         logger.debug(client);
 
