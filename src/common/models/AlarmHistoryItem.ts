@@ -24,6 +24,14 @@ class AlarmHistoryItem {
         this.timestampDisplay(moment(Number.parseInt(this.timestamp)).fromNow());
     }
 
+    public equals(item: any) {
+        return this.keyword == item.keyword
+            && this.title == item.title
+            && this.timestamp == item.timestamp
+            && this.location == item.location
+            && this.type == item.type;
+    }
+
     constructor(keyword: string, title: string, timestamp: string, location: string, type: AlarmType) {
         this.keyword = keyword;
         this.title = title;

@@ -23,24 +23,36 @@ class AlarmHistoryModel {
 
     private alarmHistoryItemExists(alarmHistoryItem: AlarmHistoryItem): boolean {
         return this.alarmHistory().filter(item => {
-            return item.keyword == alarmHistoryItem.keyword
-                && item.title == alarmHistoryItem.title
-                && item.timestamp == alarmHistoryItem.timestamp
-                && item.location == alarmHistoryItem.location
-                && item.type == alarmHistoryItem.type;
+            return item.equals(alarmHistoryItem);
         }).length > 0
     }
 
     private removeOldHistoryItems(): void {
-        this.alarmHistory.remove((item: AlarmHistoryItem) => {
-            if (!item.timestamp) {
+        this.alarmHistory.remove((alarmHistoryItem: AlarmHistoryItem) => {
+            if (!alarmHistoryItem.timestamp) {
+                this.removeItemFromDb(alarmHistoryItem);
                 return true;
             }
 
-            return Date.now() - Number.parseInt(item.timestamp) > 31556952000;
-        })
+            let yearMs: number = 1000 * 60 * 60 * 24 * 365;
+            let isOld: boolean = Date.now() - Number.parseInt(alarmHistoryItem.timestamp) > yearMs;
 
-        alarmHistoryDb.data = this.alarmHistory();
+            if (isOld) {
+                logger.debug(`AlarmHistoryModel | AlarmHistoryItem ${alarmHistoryItem.title} is older than one year. Removing.`);
+                this.removeItemFromDb(alarmHistoryItem);
+            }
+
+            return isOld
+        })
+    }
+
+    private removeItemFromDb(alarmHistoryItem: AlarmHistoryItem) {
+        alarmHistoryDb.data?.forEach((dbItem, index) => {
+            if (alarmHistoryItem.equals(dbItem)) {
+                alarmHistoryDb.data?.splice(index, 1);
+                logger.debug(`AlarmHistoryModel | AlarmHistoryItem ${alarmHistoryItem.title} has been removed from database.`);
+            }
+        });
         alarmHistoryDb.write();
     }
 
@@ -50,10 +62,16 @@ class AlarmHistoryModel {
 
         this.removeOldHistoryItems();
 
+        logger.debug(`AlarmHistoryModel | Adding new AlarmHistoryItem:`, alarmHistoryItem)
+
         this.alarmHistory.push(alarmHistoryItem);
 
         alarmHistoryDb.data = alarmHistoryDb.data || []
         alarmHistoryDb.data.push(alarmHistoryItem);
+
+        logger.debug(alarmHistoryDb.data)
+        logger.debug(`AlarmHistoryModel | New database length: ${alarmHistoryDb.data.length}`)
+
         alarmHistoryDb.write();
     }
 
