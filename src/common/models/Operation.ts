@@ -98,7 +98,8 @@ class Operation {
             })
     };
 
-    getFunctionCount = (fn: any, feedback: any) => {
+    // Todo: Refactor into separate FeedbackCountWidget class
+    getFunctionCount = (fn: string, feedback: string, countTotal: boolean) => {
         let count = 0;
         let check: any;
 
@@ -109,14 +110,21 @@ class Operation {
         else
             check = ["RECEIVED", "READ", "FREE"];
 
-        this.feedbackPersons().forEach(item => {
-            item.functions().forEach((func: any) => {
-                let function_name = func.name();
+        this.feedbackPersons().forEach((feedbackPerson: Person) => {
+            if (!countTotal) {
+                feedbackPerson.functions().forEach((func: any) => {
+                    let function_name = func.name();
 
-                if (function_name === fn && check.includes(item.feedback())) {
+                    if (fn && function_name === fn && check.includes(feedbackPerson.feedback())) {
+                        count++;
+                    }
+                })
+            } else {
+                if (check.includes(feedbackPerson.feedback())) {
                     count++;
                 }
-            })
+            }
+
         });
 
         return count;

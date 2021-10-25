@@ -4,7 +4,12 @@
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
         <div style="position: absolute; left: 0; /*bottom: 0;*/ z-index: -1000; width: 100%" class="mb-1 mt-1">
+            <!-- ko if: widget.extra_config.get('count-total')() -->
+            <span class="badge badge-primary p-1 pl-2 pr-2" style="font-size: 18px; width: 100%">Alle Rückmeldungen</span>
+            <!-- /ko -->
+            <!-- ko if: !widget.extra_config.get('count-total')() -->
             <span class="badge badge-primary p-1 pl-2 pr-2" style="font-size: 18px; width: 100%" data-bind="text: widget.extra_config.get('function')"></span>
+            <!-- /ko -->
         </div>
 
         <!-- ko if: $root.getLatestOperation() -->
@@ -14,9 +19,12 @@
                 <div class="einsatz-einheit">
                     <div class=""> <!-- needs a surrounding div for size calculation because of padding -->
                         <h2 class="text-white m-0" style="line-height: 0.9" data-maxfitty="100" data-bind="style: {'font-size': widget.extra_config.get('text-size')() + 'px', class: 'text-' + widget.config.get('align')()}">
-                            <span data-bind="text: $root.getLatestOperation()?.getFunctionCount(widget.extra_config.get('function')(), 'YES')" class="text-success">20</span>
+                            <span data-bind="text: $root.getLatestOperation()?.getFunctionCount(widget.extra_config.get('function')(), 'YES', widget.extra_config.get('count-total')())" class="text-success"></span>
+
+                            <!-- ko if: !widget.extra_config.get('hide-negative')() -->
                             /
-                            <span data-bind="text: $root.getLatestOperation()?.getFunctionCount(widget.extra_config.get('function')(), 'NO')" class="text-danger">10</span>
+                            <span data-bind="text: $root.getLatestOperation()?.getFunctionCount(widget.extra_config.get('function')(), 'NO', widget.extra_config.get('count-total')())" class="text-danger"></span>
+                            <!-- /ko -->
                         </h2>
                     </div>
                 </div>
@@ -35,9 +43,15 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'count-total', description: 'Gesamtzahl aller Rückmeldungen zählen' } }"></div>
+
+                            <!-- ko if: !widget.extra_config.get('count-total')() -->
                             <label for="feedbackCountWidgetFunktion" class="mb-1"><Strong>Funktion</Strong></label>
                             <input type="text" class="form-control" id="feedbackCountWidgetFunktion" aria-describedby="feedbackCountWidgetFunktionHelp" data-bind="value: widget.extra_config.get('function'), valueUpdate: 'afterkeydown'">
-                            <small id="feedbackCountWidgetFunktionHelp" class="form-text text-muted">Gibt an, für welche Funktion die Anazhl an Rückmeldungen dargestellt werden soll.</small>
+                            <small id="feedbackCountWidgetFunktionHelp" class="form-text text-muted">Gibt an, für welche Funktion die Anzahl an Rückmeldungen dargestellt werden soll.</small>
+                            <!-- /ko -->
+
+                            <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'hide-negative', description: 'Negative Rückmeldungen ausblenden' } }"></div>
 
                             <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'text-size', max: '300', title: 'Textgröße', description: 'Textgröße: ' } }"></div>
 
