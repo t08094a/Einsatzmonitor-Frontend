@@ -68,13 +68,12 @@ class Operation {
                         if (this.isFeedbackPersonSaved(feedback)) {
                             logger.debug(`${feedback.name} is already saved in feedback list. Updating entry`);
 
-                            ko.utils.arrayFirst(this.feedbackPersons(), (item: any) => {
-                                if (feedback.name === item.name()) {
-                                    item.feedback(feedback.state);
+                            this.feedbackPersons().forEach((feedbackPerson: Person) => {
+                                if (feedback.name == feedbackPerson.name()) {
+                                    feedbackPerson.feedback(feedback.state);
                                 }
-                                return true;
-                                // Todo: is this correct?
-                            });
+                            })
+
                         } else {
                             // new
                             logger.info(`Creating new feedback entry for ${feedback.name}`);
