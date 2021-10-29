@@ -3,6 +3,7 @@ import {logger} from "../../../common/common";
 import {Computed, ObservableArray} from "knockout";
 import ko from "knockout";
 import Dienst from "../../../common/models/Dienst";
+import moment from "moment";
 
 const ical = __non_webpack_require__('node-ical');
 
@@ -64,6 +65,8 @@ class CalendarWidget extends Widget {
             .then((data: any) => {
                 let dienste: any = [];
 
+                logger.debug("CalendarWidget | iCalendar data:", data);
+
                 for (let k in data) {
                     let event = data[k];
                     if (event.type == "VEVENT") {
@@ -72,16 +75,42 @@ class CalendarWidget extends Widget {
                         if (new Date(event.start).setHours(0, 0, 0, 0) >= currentDay) {
                             dienste.push(event.uid);
 
-                            this.addEvent(event.uid, event.summary, event.description, event.start, event.location, currentDay);
+                            // ignore if the event is an recurring event and do further processing
+                            if (!event.rrule) {
+                                this.addEvent(event.uid, event.summary, event.description, event.start, event.location, currentDay);
+                            }
+                        }
+
+                        // Handle recurring events and fetch the next upcoming start dates
+                        if (event.rrule && this.extra_config.get("show-recurring")()) {
+                            let recurringEventDates = event.rrule.between(moment.utc().toDate(), moment.utc().add(6, 'M').toDate());
+
+                            let filteredRecurringEventDates: any = [];
+
+                            recurringEventDates.forEach((recurringEventDate: any) => {
+                                if (event.exdate) {
+                                    if (!event.exdate[recurringEventDate.toISOString().substring(0, 10)]) {
+                                        filteredRecurringEventDates.push(recurringEventDate);
+                                    }
+                                } else {
+                                    filteredRecurringEventDates.push(recurringEventDate);
+                                }
+                            });
+
+                            filteredRecurringEventDates.forEach((filteredRecurringEventDate: any) => {
+                                this.addEvent(event.uid + filteredRecurringEventDate.getTime(), event.summary, event.description, filteredRecurringEventDate, event.location, currentDay);
+                                dienste.push(event.uid + filteredRecurringEventDate.getTime());
+                            });
                         }
                     }
                 }
 
-                this.events().forEach((item: any) => {
-                    if (!dienste.includes(item.id())) {
-                        this.events.remove(item);
-                    }
+                // Remove items which are no longer present in calendar response
+                let cleanedArray = ko.utils.arrayFilter(this.events(), (item: Dienst) => {
+                    return dienste.includes(item.id());
                 });
+
+                this.events(cleanedArray);
             })
             .catch((error: any) => {
                 logger.error("Fehler beim Abrufen der iCalender URL: ", error);
