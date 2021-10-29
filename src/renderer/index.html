@@ -33,13 +33,13 @@
     <link href="./static/css/einsatzmonitor.css" rel="stylesheet">
 </head>
 
-<body class="h-100" data-bind="style: {'backgroundImage': 'url('+ backgroundUrl() +')', 'backgroundColor': backgroundColor }">
+<body class="h-100 overflow-hidden" data-bind="style: {'backgroundImage': 'url('+ backgroundUrl() +')', 'backgroundColor': backgroundColor }">
 
 <div class="template-output"></div>
 
 <div class="container d-flex flex-column h-100 px-0">
-    <div class="gridster-test">
-        <div class="gridster" id="gridsterInfo">
+    <div class="gridster-test h-100">
+        <div class="gridster h-100" id="gridsterInfo">
             <ul class="m-0" data-bind="template: { name: board().templateName, foreach: board().widgets, as: 'widget', afterAdd: board().addGridster, beforeRemove: board().removeGridster }"></ul>
         </div>
     </div>

@@ -409,6 +409,7 @@ export class BoardViewModel {
 
     refreshEditMode = () => {
         $('li').toggleClass('editMode', this.editMode);
+        $('body').toggleClass('overflow-hidden', !this.editMode);
     }
 
     get_by_id(widgets: any, id: any) {
