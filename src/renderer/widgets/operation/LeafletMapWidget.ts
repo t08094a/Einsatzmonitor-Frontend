@@ -110,6 +110,7 @@ class LeafletMapWidget extends Widget {
 
         this.map = L.map('leaflet-' + this.id, {
             preferCanvas: true,
+            zoomControl: false
         }).setView([Number.parseFloat(this.lat), Number.parseFloat(this.lng)], zoom);
 
         if (this.extra_config.get('route-show')() && store.get("routing.enabled")) {
