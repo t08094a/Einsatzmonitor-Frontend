@@ -295,7 +295,8 @@ class Operation {
             let encoded = Buffer.from(res).toString("base64");
 
             axios.post(url, {
-                html: encoded
+                html: encoded,
+                amount: aaoVehicleNames.length
             })
                 .then((response: any) => {
                     logger.info("Operation | Response from printing server:", response)

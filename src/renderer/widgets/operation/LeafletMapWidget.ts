@@ -61,7 +61,7 @@ class LeafletMapWidget extends Widget {
                             color: row["Farbe"] || "#c9000d",
                             radius: 6,
                             fillOpacity: 0.5,
-                            pane: 'hydrants'
+                            // pane: 'hydrants'
                         }).addTo(this.map);
                     }
                 })
