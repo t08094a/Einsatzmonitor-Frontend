@@ -5,11 +5,12 @@ import * as L from "leaflet";
 import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'fast-csv';
+import {TileLayer} from "leaflet";
+import 'leaflet-routing-machine';
+import 'lrm-graphhopper';
 
 let leafletImage = require('leaflet-image');
 
-require('leaflet-routing-machine');
-require('lrm-graphhopper');
 
 class LeafletMapWidget extends Widget {
     main: EinsatzMonitorModel;
@@ -44,55 +45,72 @@ class LeafletMapWidget extends Widget {
         this.map?.remove();
     }
 
-    addHydrantsToMap() {
+    addHydrantsToMap(): Promise<any> {
         let hydrantFiles = fs.readdirSync(path.resolve(userDataPath, 'hydrants')).filter(fn => fn.endsWith('.csv'));
 
         logger.info("LeafletMapWidget | Adding hydrants to map: ", hydrantFiles);
 
         this.map?.createPane('hydrants');
 
-        hydrantFiles.forEach((file: string) => {
-            fs.createReadStream(path.resolve(userDataPath, 'hydrants', file))
-                .pipe(csv.parse({headers: true, delimiter: ';'}))
-                .on('error', error => logger.error("LeafletMapWidget | Fehler beim Laden der Hydranten: ", error))
-                .on('data', row => {
-                    if (this.map) {
-                        L.circleMarker([row['X-Koordinaten'].replace(",", "."), row['Y-Koordinate'].replace(",", ".")], {
-                            color: row["Farbe"] || "#c9000d",
-                            radius: 6,
-                            fillOpacity: 0.5,
-                            // pane: 'hydrants'
-                        }).addTo(this.map);
-                    }
-                })
-                .on('end', (rowCount: number) => logger.info(`LeafletMapWidget | ${rowCount} Hydranten geladen`));
-        })
+        let promises = hydrantFiles.map((file: string) => {
+            return new Promise((resolve, reject) => {
+                fs.createReadStream(path.resolve(userDataPath, 'hydrants', file))
+                    .pipe(csv.parse({headers: true, delimiter: ';'}))
+                    .on('error', error => {
+                        logger.error("LeafletMapWidget | Fehler beim Laden der Hydranten: ", error);
+                        reject(error);
+                    })
+                    .on('data', row => {
+                        if (this.map) {
+                            L.circleMarker([row['X-Koordinaten'].replace(",", "."), row['Y-Koordinate'].replace(",", ".")], {
+                                color: row["Farbe"] || "#c9000d",
+                                radius: 6,
+                                fillOpacity: 0.5,
+                                // pane: 'hydrants'
+                            }).addTo(this.map);
+                        }
+                    })
+                    .on('end', (rowCount: number) => {
+                        logger.info(`LeafletMapWidget | ${rowCount} Hydranten geladen`);
+                        resolve(rowCount);
+                    });
+            });
+        });
+
+        return Promise.all(promises);
     }
 
     addRoutingToMap() {
-        // @ts-ignore
-        let router = new L.Routing.GraphHopper(store.get("graphhopper.apikey") as string)
+        return new Promise((resolve, reject) => {
+            if (!this.map)
+                return;
 
-        // @ts-ignore
-        L.Routing.control({
-            router: router,
-            waypoints: [
-                L.latLng(store.get("feuerwehrLat") as number, store.get("feuerwehrLng") as number),
-                L.latLng(Number.parseFloat(this.lat), Number.parseFloat(this.lng))
-            ],
-            lineOptions: {
-                styles: [
-                    {color: '#50a5ff', opacity: 1, weight: 10},
-                    {color: '#73B9FF', opacity: 1, weight: 5}
-                ]
-            },
-            fitSelectedRoutes: this.extra_config.get("route-show-full")()
-        }).addTo(this.map);
+            // @ts-ignore
+            let router = new L.Routing.GraphHopper(store.get("graphhopper.apikey") as string)
 
-        router.on('response', (response: any) => {
-            logger.debug('LeafletMapWidget | This routing request consumed ' + response.credits + ' credit(s)');
-            logger.debug('LeafletMapWidget | You have ' + response.remaining + ' left');
-        })
+            L.Routing.control({
+                router: router,
+                waypoints: [
+                    L.latLng(store.get("feuerwehrLat") as number, store.get("feuerwehrLng") as number),
+                    L.latLng(Number.parseFloat(this.lat), Number.parseFloat(this.lng))
+                ],
+                lineOptions: {
+                    styles: [
+                        {color: '#50a5ff', opacity: 1, weight: 10},
+                        {color: '#73B9FF', opacity: 1, weight: 5}
+                    ],
+                    extendToWaypoints: true,
+                    missingRouteTolerance: 10
+                },
+                fitSelectedRoutes: this.extra_config.get("route-show-full")()
+            }).addTo(this.map);
+
+            router.on('response', (response: any) => {
+                logger.debug('LeafletMapWidget | This routing request consumed ' + response.credits + ' credit(s)');
+                logger.debug('LeafletMapWidget | You have ' + response.remaining + ' left');
+                resolve(true);
+            })
+        });
     }
 
     loadMap() {
@@ -113,24 +131,27 @@ class LeafletMapWidget extends Widget {
             zoomControl: false
         }).setView([Number.parseFloat(this.lat), Number.parseFloat(this.lng)], zoom);
 
+        let promises: Promise<any>[] = []
+
         if (this.extra_config.get('route-show')() && store.get("routing.enabled")) {
-            this.addRoutingToMap();
+            promises.push(this.addRoutingToMap());
         }
 
         if (this.extra_config.get('add-hydrants')()) {
-            this.addHydrantsToMap();
+            promises.push(this.addHydrantsToMap());
         }
 
+        let tileLayer: TileLayer;
         switch (this.extra_config.get('layerName')()) {
             case "OpenStreetMap": {
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(this.map);
                 break;
             }
 
             case "WebAtlas_NI": {
-                L.tileLayer.wms('https://www.geobasisdaten.niedersachsen.de/doorman/noauth/mapproxy_webatlasni', {
+                tileLayer = L.tileLayer.wms('https://www.geobasisdaten.niedersachsen.de/doorman/noauth/mapproxy_webatlasni', {
                     layers: 'wa_25832_f'
                 }).addTo(this.map);
                 break;
@@ -141,7 +162,7 @@ class LeafletMapWidget extends Widget {
                 let wmsLayers = this.extra_config.get('customWMSLayers')();
 
                 if (wmsUrl && wmsLayers) {
-                    L.tileLayer.wms(wmsUrl, {
+                    tileLayer = L.tileLayer.wms(wmsUrl, {
                         layers: wmsLayers
                     }).addTo(this.map);
                 }
@@ -149,10 +170,19 @@ class LeafletMapWidget extends Widget {
             }
         }
 
+        let tileLoadingPromise = new Promise((resolve, reject) => {
+            tileLayer.on("load", () => {
+                logger.info("LeafletMapWidget | All visible tiles have been loaded.");
+                resolve(true);
+            })
+        })
+
+        promises.push(tileLoadingPromise);
+
         L.marker([Number.parseFloat(this.lat), Number.parseFloat(this.lng)]).addTo(this.map);
 
-        // Wait until hydrant markers have been added to map
-        setTimeout(() => {
+        Promise.all(promises).then(() => {
+            logger.info("LeafletMapWidget | Map has been fully loaded.");
             leafletImage(this.map, (err: any, canvas: any) => {
                 if (!this.map)
                     return;
@@ -168,7 +198,7 @@ class LeafletMapWidget extends Widget {
                 logger.debug("LeafletMapWidget | Printing ID: " + printingId);
                 this.main.getLatestOperation().printingMaps.push({'printingId': printingId, 'imgBase64': canvas.toDataURL()});
             });
-        }, 2000);
+        })
     }
 
     constructor(main: EinsatzMonitorModel, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
