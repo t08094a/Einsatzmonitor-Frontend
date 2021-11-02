@@ -65,7 +65,7 @@ class CalendarWidget extends Widget {
             .then((data: any) => {
                 let dienste: any = [];
 
-                logger.debug("CalendarWidget | iCalendar data:", data);
+                logger.debug(`CalendarWidget | Successfully updated iCalendar data.`);
 
                 for (let k in data) {
                     let event = data[k];
