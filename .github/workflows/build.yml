@@ -50,6 +50,7 @@ jobs:
         os: [ ubuntu-latest, windows-latest ]
 
     steps:
+      - run: ls
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
