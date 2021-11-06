@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  release:
+  build:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -37,29 +37,23 @@ jobs:
           # release the app after building
           # release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
-#            - name: deploy files
-#              uses: garygrossgarten/github-action-scp@release
-#              with:
-#                local: './dist/'
-#                remote: '/var/www/html/einsatzmonitor-frontend'
-#                host: ${{ secrets.SSH_HOST }}
-#                username: ${{ secrets.SSH_USER }}
-#                password: ${{ secrets.SSH_PRIVATE_KEY }}
-#
-#            - name: Upload artifact
-#              uses: actions/upload-artifact@v1.0.0
-#              with:
-#                name: EinsatzMonitor
-#                path: ./dist/
-
       - run: mkdir einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
       - run: mv dist/* einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
       - run: ls
 
+  release:
+    needs: build
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+
+    steps:
       - name: get-npm-version
         id: package-version
         uses: martinbeentjes/npm-get-version-action@master
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master'
 
       - name: Create Sentry release
         uses: getsentry/action-release@v1
@@ -71,20 +65,12 @@ jobs:
           environment: production
           sourcemaps: './src/main/dist ./src/renderer/dist'
           version: ${{ steps.package-version.outputs.current-version}}
-        if: matrix.os == 'ubuntu-latest'
-
-#      - name: Deploy with SCP
-#        uses: i3h/deploy-with-scp@v1.0.2
-#        with:
-#          src: einsatzmonitor-${{ matrix.os }}-${GITHUB_RUN_NUMBER}
-#          dest: ${{ secrets.SSH_REMOTE_PATH }}
-#          username: ${{ secrets.SSH_USER }}
-#          server-ip: ${{ secrets.SSH_HOST }}
-#          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master'
 
       - name: Delete unpacked app before deployment
         run: rm -r *-unpacked/
         working-directory: einsatzmonitor-${{ matrix.os }}-${{ github.run_number }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
 
       - name: Deploy with SCP
         uses: garygrossgarten/github-action-scp@release
@@ -94,3 +80,4 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
