@@ -2,7 +2,7 @@ import {Computed, Observable, PureComputed} from 'knockout';
 import Person from './Person';
 import Functioning from './Functioning';
 import moment from "moment";
-import {alamosFeedbackUrl, axiosConfigParams, client, em, logger, store, str_pad_left, userDataPath} from "../common";
+import {alamosFeedbackUrl, axiosConfigParams, em, logger, store, str_pad_left, userDataPath} from "../common";
 import axios from "axios";
 import AAO from "./AAO";
 import * as ko from "knockout";
@@ -14,6 +14,7 @@ import GoogleGeocoder from "../../renderer/geocoding/GoogleGeocoder";
 import GeocodingResult from "../../renderer/geocoding/GeocodingResult";
 import Geocoder from "../../renderer/geocoding/Geocoder";
 import GraphHopperGeocoder from "../../renderer/geocoding/GraphHopperGeocoder";
+import TextToSpeech from "../../renderer/tts/TextToSpeech";
 
 class Operation {
     id: Observable = ko.observable();
@@ -307,6 +308,26 @@ class Operation {
         });
     }
 
+    doTextToSpeech() {
+        let text = store.get("tts.text") as string;
+        let matches = text.matchAll(/{{(.*?)}}/gm);
+        let replacedText = text;
+
+        // @ts-ignore
+        for (const match of matches) {
+            let replace = match[0];
+            let parameter = match[1];
+            let parameterContent = this.getParameter(parameter.trim());
+
+            replacedText = replacedText.replace(replace, parameterContent ? parameterContent : "");
+        }
+
+        logger.info("Operation | TTS:", replacedText);
+
+        let textToSpeech = new TextToSpeech(replacedText);
+        textToSpeech.run();
+    }
+
     constructor(id: number, keyword: string, keywordColor: string, description: string, alarmTime: string, adresse: string, objekt: string, alarmData?: any) {
         this.id(id);
         this.keyword(keyword);
@@ -352,6 +373,9 @@ class Operation {
             }, 1000 * 10);
         }
 
+        if (store.get("tts.enabled")) {
+            this.doTextToSpeech();
+        }
 
         this.keywordColorBadge = ko.computed(() => {
             if (!this.keywordColor())

@@ -23,7 +23,7 @@ let common_config = {
             },
             {
                 test: /\.exec\.js$/,
-                use: [ 'raw-loader' ]
+                use: ['raw-loader']
             },
             // {
             //     test: /\.html$/,
