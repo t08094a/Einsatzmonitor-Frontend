@@ -8,7 +8,7 @@
         <!-- ko if: widget.getVehicleForSingleMode() -->
         <div class="text-center vert-center" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'background-color': widget.getVehicleForSingleMode().statusColor() }" style="height: 100%;">
             <!-- needs a surrounding div for size calculation because of padding -->
-            <h1 class="text-white m-0 fitty-element h-100" data-maxfitty="200" style="height: 100%;">
+            <h1 class="text-white m-0 fitty-element h-100" data-maxfitty="200" style="height: 100%;" data-bind="style: {'font-size': widget.extra_config.get('text-size')() + 'px'}">
                 <span class="d-flex justify-content-between">
                     <span style="padding-left: 20px; padding-right: 40px;" class="description" data-bind="text: widget.getVehicleForSingleMode().statusCode, style: { 'color': widget.extra_config.get('text-color') }"></span>
                     <span style="padding-right: 20px;" class="description" data-bind="text: widget.getVehicleForSingleMode().name, style: { 'color': widget.extra_config.get('text-color') }"></span>
