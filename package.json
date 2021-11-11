@@ -1,6 +1,6 @@
 {
   "name": "einsatzmonitor",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "main": "src/main/dist/renderrer-bundle.js",
   "scripts": {
     "old_start": "electron .",
@@ -12,7 +12,7 @@
     "dev:electron_old": "webpack --config webpack.config.js --mode development && electron .",
     "dev:webpack": "webpack serve --progress --hot --mode development",
     "dev:electron": "set NODE_ENV=dev && electron .",
-    "dist:webpack": "webpack --mode development"
+    "dist:webpack": "webpack --mode production"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
