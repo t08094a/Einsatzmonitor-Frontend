@@ -8,7 +8,6 @@ import moment from "moment";
 const ical = __non_webpack_require__('node-ical');
 
 class CalendarWidget extends Widget {
-    actionTimer: any;
     events: ObservableArray = ko.observableArray<any>([]);
 
     sortedEvents: Computed = ko.computed(() => {
@@ -134,10 +133,6 @@ class CalendarWidget extends Widget {
 
     loaded() {
         this.loadEvents();
-    }
-
-    destroy() {
-        clearInterval(this.actionTimer);
     }
 
     constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {

@@ -4,8 +4,6 @@ import {logger, str_pad_left} from "../../../common/common";
 import * as ko from "knockout";
 
 class ClockWidget extends Widget {
-    actionTimer: any;
-
     date: Observable<Date> = ko.observable(new Date());
     parsedClock: Computed = ko.computed(() => {
         if (this.extra_config.get("hide-seconds")())
@@ -20,10 +18,6 @@ class ClockWidget extends Widget {
 
     loaded() {
         this.updateClock();
-    }
-
-    destroy() {
-        clearInterval(this.actionTimer);
     }
 
     constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {

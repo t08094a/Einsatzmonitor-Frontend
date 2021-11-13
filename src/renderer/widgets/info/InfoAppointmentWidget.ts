@@ -6,7 +6,6 @@ import Dienst from "../../../common/models/Dienst";
 import * as ko from "knockout";
 
 class InfoAppointmentWidget extends Widget {
-    actionTimer: any;
     appointments: ObservableArray = ko.observableArray<any>([]);
 
     sortedAppointments: Computed = ko.computed(() => {
@@ -54,10 +53,6 @@ class InfoAppointmentWidget extends Widget {
 
     loaded() {
         this.loadAppointments();
-    }
-
-    destroy() {
-        clearInterval(this.actionTimer);
     }
 
     constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {

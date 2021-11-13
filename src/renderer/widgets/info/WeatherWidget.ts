@@ -5,8 +5,6 @@ import {Computed, Observable} from "knockout";
 import * as ko from "knockout";
 
 class WeatherWidget extends Widget {
-    actionTimer: number;
-
     name: Observable<string> = ko.observable("");
     description: Observable<string> = ko.observable("");
     temperature: Observable<string> = ko.observable("");
@@ -116,10 +114,6 @@ class WeatherWidget extends Widget {
 
     loaded() {
         this.updateWeather();
-    }
-
-    destroy() {
-        clearInterval(this.actionTimer);
     }
 
     constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {

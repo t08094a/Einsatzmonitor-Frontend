@@ -82,10 +82,6 @@ class HistoryWidget extends Widget {
 
     }
 
-    destroy() {
-        clearInterval(this.actionTimer);
-    }
-
     constructor(main: EinsatzMonitorModel, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
         super(main, board, template_name, type, row, col, x, y);
 

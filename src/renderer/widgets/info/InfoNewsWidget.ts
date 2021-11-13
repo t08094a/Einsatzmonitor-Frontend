@@ -6,7 +6,6 @@ import NewsPost from "../../../common/models/NewsPost";
 import * as ko from "knockout";
 
 class InfoNewsWidget extends Widget {
-    actionTimer: any;
     news: ObservableArray = ko.observableArray<any>([]);
 
     sortedNews: Computed = ko.computed(() => {
@@ -55,10 +54,6 @@ class InfoNewsWidget extends Widget {
 
     loaded() {
         this.loadNews();
-    }
-
-    destroy() {
-        clearInterval(this.actionTimer);
     }
 
     constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {

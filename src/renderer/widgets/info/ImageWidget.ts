@@ -4,8 +4,7 @@ import {logger} from "../../../common/common";
 import * as ko from "knockout";
 
 class ImageWidget extends Widget {
-    actionTimer: number;
-
+    // Todo: implement
     updateImage() {
 
     }
@@ -30,10 +29,6 @@ class ImageWidget extends Widget {
 
     loaded() {
         this.updateImage();
-    }
-
-    destroy() {
-        clearInterval(this.actionTimer);
     }
 
     constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {

@@ -6,7 +6,6 @@ import InfoEinsatz from "../../../common/models/InfoEinsatz";
 import * as ko from "knockout";
 
 class InfoOperationWidget extends Widget {
-    actionTimer: any;
     operations: ObservableArray = ko.observableArray<any>([]);
 
     sortedOperations: Computed = ko.computed(() => {
@@ -54,10 +53,6 @@ class InfoOperationWidget extends Widget {
 
     loaded() {
         this.loadOperations();
-    }
-
-    destroy() {
-        clearInterval(this.actionTimer);
     }
 
     constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
