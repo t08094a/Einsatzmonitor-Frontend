@@ -7,14 +7,15 @@ import * as Sentry from "@sentry/electron";
 import Store from 'electron-store';
 import * as electron from "electron";
 
-const realFs = require('fs')
-const gracefulFs = require('graceful-fs')
+const remoteMain = require("@electron/remote/main");
+const realFs = require('fs');
+const gracefulFs = require('graceful-fs');
 const store = new Store({name: 'settings'});
 const ipc = electron.ipcMain;
 
 gracefulFs.gracefulify(realFs);
 
-require('@electron/remote/main').initialize();
+remoteMain.initialize();
 
 ipc.on('isSentryEnabled', (event, args) => {
     event.returnValue = store.get("sentry.enabled", false);
@@ -58,6 +59,8 @@ function createWindow() {
     let splash = new BrowserWindow({webPreferences: {nodeIntegration: true, contextIsolation: false, enableRemoteModule: true}, width: 500, height: 500, transparent: true, frame: false, alwaysOnTop: true});
     splash.loadURL(`file://${path.join(__dirname, "../../renderer/splash.html")}`);
 
+    remoteMain.enable(splash.webContents);
+
     // Create default config
     createDefaultConfig();
 
@@ -69,14 +72,14 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-            // @ts-ignore
-            enableRemoteModule: true,
             // preload: path.join(__dirname, "../../renderer/static/js/preload.js")
         },
         fullscreen: !store.get("debug"),
         autoHideMenuBar: !store.get("debug"),
         show: false
     });
+
+    remoteMain.enable(win.webContents);
 
     if (store.get("debug"))
         win.webContents.openDevTools({mode: 'undocked'});
