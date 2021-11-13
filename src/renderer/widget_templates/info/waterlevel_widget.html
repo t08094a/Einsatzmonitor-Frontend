@@ -1,0 +1,71 @@
+<template id="waterlevel-widget">
+    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }, style: { 'background-color': widget.extra_config.get('background-color') }" class='gs-w'
+        style='list-style-type: none; overflow: hidden;'>
+        <div data-bind="template: { name: 'widget-buttons' }"></div>
+
+
+        <div class="d-flex flex-column h-100">
+            <div class="py-1 h-100" style="width: 100%; overflow: hidden;">
+                <div class="text-center" style="width: 100%; height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
+
+                    <div class="d-flex flex-column h-100">
+                        <div class="flex-grow-1">
+                            <div id="waterLevelChart" class="h-100 w-100"></div>
+                        </div>
+
+                        <!-- ko if: widget.extra_config.get('showCurrentWaterLevel')() -->
+                        <div class="mx-4 mt-2 mb-1 flex-shrink-1">
+                            <div>
+                                <h4 class="text-white m-0 fitty-element flex-shrink-0" data-maxfitty="200" style="width: 100%; height: 100%;"
+                                    data-bind="text: widget.currentWaterLevel, style: { 'color': widget.extra_config.get('text-color'), 'background-color': widget.extra_config.get('item-bgcolor') }">
+                                </h4>
+                            </div>
+                        </div>
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Widget - Wasserstand</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'text-fitty', description: 'Textgröße automatisch anpassen' } }"></div>
+
+                                <label class="mt-3" for="exampleFormControlSelect1"><strong>Quelle</strong></label>
+                                <select class="form-control" id="exampleFormControlSelect1" data-bind="value: widget.extra_config.get('apiSource')">
+                                    <option>Pegelonline</option>
+                                </select>
+
+                                <!-- ko if: widget.extra_config.get('apiSource')() == 'Pegelonline' -->
+                                <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'pegelonlineStation', title: 'Messstelle', description: 'Name der Pegelonline Messstelle.' } }"></div>
+                                <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'pegelonlineLimit', title: 'Zeitraum in Tagen', description: 'Wasserstand der letzten 1-30 Tagen anzeigen' } }"></div>
+                                <!-- /ko -->
+
+                                <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'showCurrentWaterLevel', description: 'Aktuellen Wasserstand anzeigen' } }"></div>
+
+                                <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
+                                <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
+
+                                <button data-bind="click: widget.updateChart" type="button" class="btn btn-primary btn-sm mt-3"><i class="fas fa-sync"></i> Chart aktualisieren</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</template>

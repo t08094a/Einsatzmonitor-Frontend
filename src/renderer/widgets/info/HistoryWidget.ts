@@ -6,8 +6,6 @@ import AlarmHistoryItem from "../../../common/models/AlarmHistoryItem";
 import AlarmType from "../../../common/AlarmType";
 
 class HistoryWidget extends Widget {
-    private actionTimer: any;
-
     alarmHistoryItems: Computed = ko.computed(() => {
         if (!this.main.alarmHistoryModel.sortedHistory())
             return [];

@@ -23,6 +23,8 @@ class Widget {
     dataCol: Observable = ko.observable();
     availableAlignments: ObservableArray = ko.observableArray<string>([]);
 
+    protected actionTimer?: any;
+
     removeSelected = () => {
         this.board.removeWidget(this);
         this.destroy();
@@ -97,7 +99,7 @@ class Widget {
     }
 
     destroy() {
-
+        clearInterval(this.actionTimer);
     }
 
     constructor(main: any, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
