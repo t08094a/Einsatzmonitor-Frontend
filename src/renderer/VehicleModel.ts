@@ -56,7 +56,7 @@ class VehicleModel {
     updateStatusForVehicle = (address: any, status: string) => {
         this.vehicles().forEach((vehicle: Vehicle) => {
             if (vehicle.identification() === address) {
-                vehicle.statusCode(Number.parseInt(status));
+                vehicle.updateStatus(Number.parseInt(status));
             }
         })
     }

@@ -1,16 +1,44 @@
-import {store} from "../common";
+import {logger, store} from "../common";
 
 const ko = require('knockout');
 import {Computed, Observable} from 'knockout';
 
 class Vehicle {
-    station: Observable = ko.observable();
-    identification: Observable = ko.observable();
-    name: Observable = ko.observable();
-    statusCode: Observable = ko.observable();
-    statusColor: Computed;
+    readonly station: Observable = ko.observable();
+    readonly identification: Observable = ko.observable();
+    readonly name: Observable = ko.observable();
+    private resetTimer?: number;
+    private _statusCode: Observable = ko.observable();
+    readonly statusColor: Computed;
 
-    colors: Record<string, string> = store.get("status.colors") as Record<string, string>;
+    private colors: Record<string, string> = store.get("status.colors") as Record<string, string>;
+
+    public get statusCode(): Observable {
+        return this._statusCode;
+    }
+
+    public updateStatus(statusCode: number) {
+        let previousStatusCode = this.statusCode();
+        this._statusCode(statusCode);
+
+        logger.debug(`Vehicle | [${this.name()}] New status: ${statusCode}; Previous status: ${previousStatusCode};`);
+
+        let resetEnabled = store.get("status.reset.enabled");
+        let resetCode = store.get("status.reset.code") as number;
+        let resetSeconds = store.get("status.reset.seconds") as number;
+
+        if (resetEnabled && statusCode == resetCode && previousStatusCode != resetCode) {
+            this.resetTimer = window.setTimeout(() => {
+                this._statusCode(previousStatusCode);
+                clearTimeout(this.resetTimer);
+                logger.debug(`Vehicle | [${this.name()}] Status reset to ${previousStatusCode}`);
+            }, 1000 * resetSeconds);
+        }
+
+        if (statusCode != resetCode) {
+            clearTimeout(this.resetTimer);
+        }
+    }
 
     private getColor(status: string): string {
         let defaultColor = "#4b4b4b";
@@ -27,10 +55,10 @@ class Vehicle {
         this.station(station);
         this.identification(identification);
         this.name(name);
-        this.statusCode(statusCode);
+        this._statusCode(statusCode);
 
         this.statusColor = ko.computed(() => {
-            switch (this.statusCode()) {
+            switch (this._statusCode()) {
                 case 1:
                     return this.getColor("1");
                 case 2:
@@ -63,7 +91,7 @@ class Vehicle {
             station: this.station(),
             identification: this.identification(),
             name: this.name(),
-            statusCode: this.statusCode()
+            statusCode: this._statusCode()
         }
     }
 }

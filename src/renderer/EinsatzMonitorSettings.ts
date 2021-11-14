@@ -67,6 +67,7 @@ class SettingsModel {
                 },
             ]
         },
+        "status.reset.enabled": {"type": "Boolean"},
     };
 
     get_type = (key: any) => {

@@ -162,6 +162,10 @@ function createDefaultConfig() {
     setDefaultConfigValue("status.colors.5", "#ae00ff");
     setDefaultConfigValue("status.colors.6", "#ff0000");
     setDefaultConfigValue("status.colors.default", "#4b4b4b");
+
+    setDefaultConfigValue("status.reset.enabled", true);
+    setDefaultConfigValue("status.reset.code", 5);
+    setDefaultConfigValue("status.reset.seconds", 15);
 }
 
 function setDefaultConfigValue(key, value) {
