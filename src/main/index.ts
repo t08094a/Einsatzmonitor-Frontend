@@ -154,6 +154,14 @@ function createDefaultConfig() {
 
     setDefaultConfigValue("google.apikey", "123456abc");
     setDefaultConfigValue("graphhopper.apikey", "123456abc");
+
+    setDefaultConfigValue("status.colors.1", "#0099ff");
+    setDefaultConfigValue("status.colors.2", "#02a600");
+    setDefaultConfigValue("status.colors.3", "#ffb300");
+    setDefaultConfigValue("status.colors.4", "#ff5100");
+    setDefaultConfigValue("status.colors.5", "#ae00ff");
+    setDefaultConfigValue("status.colors.6", "#ff0000");
+    setDefaultConfigValue("status.colors.default", "#4b4b4b");
 }
 
 function setDefaultConfigValue(key, value) {

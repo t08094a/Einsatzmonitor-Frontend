@@ -1,3 +1,5 @@
+import {store} from "../common";
+
 const ko = require('knockout');
 import {Computed, Observable} from 'knockout';
 
@@ -8,6 +10,19 @@ class Vehicle {
     statusCode: Observable = ko.observable();
     statusColor: Computed;
 
+    colors: Record<string, string> = store.get("status.colors") as Record<string, string>;
+
+    private getColor(status: string): string {
+        let defaultColor = "#4b4b4b";
+
+        if (this.colors) {
+            defaultColor = this.colors["default"] ? this.colors["default"] : "#c9c9c9";
+            return this.colors[status] ? this.colors[status] : defaultColor;
+        }
+
+        return defaultColor;
+    }
+
     constructor(station: string, identification: string, name: string, statusCode: number) {
         this.station(station);
         this.identification(identification);
@@ -17,21 +32,39 @@ class Vehicle {
         this.statusColor = ko.computed(() => {
             switch (this.statusCode()) {
                 case 1:
-                    return "#0099ff";
+                    return this.getColor("1");
                 case 2:
-                    return "#02a600";
+                    return this.getColor("2");
                 case 3:
-                    return "#ffb300";
+                    return this.getColor("3");
                 case 4:
-                    return "#ff5100";
+                    return this.getColor("4");
                 case 5:
-                    return "#ae00ff";
+                    return this.getColor("5");
                 case 6:
-                    return "#ff0000";
+                    return this.getColor("6");
                 default:
-                    return "#c9c9c9"
+                    return this.getColor("default");
             }
         });
+    }
+
+    public static fromJSON(json: any): Vehicle {
+        let obj = JSON.parse(json);
+        return this.fromJS(obj);
+    }
+
+    public static fromJS(js: any): Vehicle {
+        return new Vehicle(js['station'], js['identification'], js['name'], js['statusCode']);
+    }
+
+    public toJSON() {
+        return {
+            station: this.station(),
+            identification: this.identification(),
+            name: this.name(),
+            statusCode: this.statusCode()
+        }
     }
 }
 

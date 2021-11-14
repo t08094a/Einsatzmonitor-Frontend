@@ -65,7 +65,7 @@ class VehicleModel {
         this.saving(true);
 
         setTimeout(() => {
-            vehiclesDb.data = ko.toJS(this.vehicles);
+            vehiclesDb.data = this.vehicles().map(vehicle => vehicle.toJSON());
             vehiclesDb.write();
 
             toastr.success("Fahrzeuge erfolgreich gespeichert", "Fahrzeuge");
