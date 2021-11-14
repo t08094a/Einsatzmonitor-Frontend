@@ -359,6 +359,11 @@ class Operation {
                         })
                     } catch (e) {
                         logger.debug("Error while parsing vehicles from alarmData:", e)
+
+                        let vehicles = alarmData[key].split("\n");
+
+                        this.units(vehicles);
+                        this.parameters.set(key, vehicles);
                     }
                 }
             })
