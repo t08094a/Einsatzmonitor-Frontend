@@ -84,22 +84,15 @@ class CalendarWidget extends Widget {
                         if (event.rrule && this.extra_config.get("show-recurring")()) {
                             let recurringEventDates = event.rrule.between(moment.utc().toDate(), moment.utc().add(6, 'M').toDate());
 
-                            let filteredRecurringEventDates: any = [];
-
-                            recurringEventDates.forEach((recurringEventDate: any) => {
-                                if (event.exdate) {
-                                    if (!event.exdate[recurringEventDate.toISOString().substring(0, 10)]) {
-                                        filteredRecurringEventDates.push(recurringEventDate);
-                                    }
-                                } else {
-                                    filteredRecurringEventDates.push(recurringEventDate);
+                            for (let recurringEventDate of recurringEventDates) {
+                                if (event.exdate && event.exdate[recurringEventDate.toISOString().substring(0, 10)]) {
+                                    logger.debug("Filtered one event:", event);
+                                    break;
                                 }
-                            });
 
-                            filteredRecurringEventDates.forEach((filteredRecurringEventDate: any) => {
-                                this.addEvent(event.uid + filteredRecurringEventDate.getTime(), event.summary, event.description, filteredRecurringEventDate, event.location, currentDay);
-                                dienste.push(event.uid + filteredRecurringEventDate.getTime());
-                            });
+                                this.addEvent(event.uid + recurringEventDate.getTime(), event.summary, event.description, recurringEventDate, event.location, currentDay);
+                                dienste.push(event.uid + recurringEventDate.getTime());
+                            }
                         }
                     }
                 }
