@@ -11,8 +11,6 @@ class CalendarWidget extends Widget {
     events: ObservableArray = ko.observableArray<any>([]);
 
     sortedEvents: Computed = ko.computed(() => {
-        this.fit();
-
         let sorted = this.events ? this.events().sort(function (a, b) {
             return a.start() < b.start() ? -1 : (a.start() > b.start() ? 1 : 0);
         }) : [];
@@ -103,6 +101,8 @@ class CalendarWidget extends Widget {
                 });
 
                 this.events(cleanedArray);
+
+                this.fit();
             })
             .catch((error: any) => {
                 logger.error("Fehler beim Abrufen der iCalender URL: ", error);
