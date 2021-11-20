@@ -3,6 +3,7 @@ import {Observable} from "knockout";
 import moment from "moment";
 
 class AlarmHistoryItem {
+    readonly id: string;
     readonly keyword: string;
     readonly title: string;
     readonly timestamp: string;
@@ -17,7 +18,7 @@ class AlarmHistoryItem {
     }
 
     public static fromJS(js: any): AlarmHistoryItem {
-        return new AlarmHistoryItem(js.keyword, js.title, js.timestamp, js.location, js.type);
+        return new AlarmHistoryItem(js.id, js.keyword, js.title, js.timestamp, js.location, js.type);
     }
 
     public updateTimestampDisplay() {
@@ -25,14 +26,16 @@ class AlarmHistoryItem {
     }
 
     public equals(item: any) {
-        return this.keyword == item.keyword
+        return this.id == item.id
+            && this.keyword == item.keyword
             && this.title == item.title
             && this.timestamp == item.timestamp
             && this.location == item.location
             && this.type == item.type;
     }
 
-    constructor(keyword: string, title: string, timestamp: string, location: string, type: AlarmType) {
+    constructor(id: string, keyword: string, title: string, timestamp: string, location: string, type: AlarmType) {
+        this.id = id;
         this.keyword = keyword;
         this.title = title;
         this.timestamp = timestamp;

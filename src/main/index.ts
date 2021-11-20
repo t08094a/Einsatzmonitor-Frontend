@@ -166,6 +166,15 @@ function createDefaultConfig() {
     setDefaultConfigValue("status.reset.enabled", true);
     setDefaultConfigValue("status.reset.code", 5);
     setDefaultConfigValue("status.reset.seconds", 15);
+
+    setDefaultConfigValue("alarmHistory.enabled", true);
+    setDefaultConfigValue("alarmHistory.parameters.id", "einsatznummer");
+    setDefaultConfigValue("alarmHistory.parameters.title", "subject");
+    setDefaultConfigValue("alarmHistory.parameters.timestamp", "timestamp");
+    setDefaultConfigValue("alarmHistory.parameters.keyword", "keyword");
+    setDefaultConfigValue("alarmHistory.parameters.location", "location_dest");
+
+    setDefaultConfigValue("alarmHistory.ignoreDuplicatedById.enabled", false);
 }
 
 function setDefaultConfigValue(key, value) {

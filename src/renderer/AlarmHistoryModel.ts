@@ -1,4 +1,4 @@
-import {em, logger, userDataPath} from "../common/common";
+import {em, logger, store, userDataPath} from "../common/common";
 import path from "path";
 import {JSONFile, Low} from "lowdb";
 import EinsatzMonitorModel from "./EinsatzMonitor";
@@ -22,6 +22,14 @@ class AlarmHistoryModel {
     });
 
     private alarmHistoryItemExists(alarmHistoryItem: AlarmHistoryItem): boolean {
+        let checkDuplicated = store.get("alarmHistory.ignoreDuplicatedById.enabled") as boolean;
+
+        if (checkDuplicated) {
+            return this.alarmHistory().filter(item => {
+                return item.id == alarmHistoryItem.id;
+            }).length > 0
+        }
+
         return this.alarmHistory().filter(item => {
             return item.equals(alarmHistoryItem);
         }).length > 0
@@ -57,8 +65,10 @@ class AlarmHistoryModel {
     }
 
     private addNewAlarmHistoryItem(alarmHistoryItem: AlarmHistoryItem): void {
-        if (this.alarmHistoryItemExists(alarmHistoryItem))
+        if (this.alarmHistoryItemExists(alarmHistoryItem)) {
+            logger.info("AlarmHistoryModel | AlarmHistoryItem already exists.");
             return;
+        }
 
         this.removeOldHistoryItems();
 
@@ -90,16 +100,40 @@ class AlarmHistoryModel {
             }
         });
 
+        let idParameter = store.get("alarmHistory.parameters.id") as string;
+        let titleParameter = store.get("alarmHistory.parameters.title") as string;
+        let keywordParameter = store.get("alarmHistory.parameters.keyword") as string;
+        let timestampParameter = store.get("alarmHistory.parameters.timestamp") as string;
+        let locationParameter = store.get("alarmHistory.parameters.location") as string;
+
         em.on('OperationHistoryAdd', (operation: Operation) => {
             logger.info(`AlarmHistoryModel | OperationHistoryAdd event fired (${operation.id()})`);
 
-            let alarmHistoryItem = new AlarmHistoryItem(operation.getParameter("keyword"), operation.getParameter("subject_apager"), operation.getParameter("timestamp"), operation.getParameter("location_dest"), AlarmType.ALARM);
+            if (!store.get("alarmHistory.enabled")) {
+                logger.debug("AlarmHistoryModel | History is disabled. Not adding operation to history.")
+                return;
+            }
+
+            let title = operation.getParameter(titleParameter);
+
+            if (!title) {
+                logger.info(`AlarmHistoryModel | Parameter ${titleParameter} not found. Not adding operation to history.`);
+                return;
+            }
+
+            let alarmHistoryItem = new AlarmHistoryItem(operation.getParameter(idParameter), operation.getParameter(keywordParameter), title, operation.getParameter(timestampParameter), operation.getParameter(locationParameter), AlarmType.ALARM);
             this.addNewAlarmHistoryItem(alarmHistoryItem);
         });
 
         em.on('NewStatus', (alarmData: any) => {
             logger.info(`AlarmHistoryModel | NewStatus event fired`);
-            let alarmHistoryItem = new AlarmHistoryItem(alarmData["keyword"], alarmData["subject_apager"], alarmData["timestamp"], alarmData["location_dest"], AlarmType.STATUS);
+
+            if (!alarmData[titleParameter]) {
+                logger.info(`AlarmHistoryModel | Parameter ${titleParameter} not found. Not adding operation to history.`);
+                return;
+            }
+
+            let alarmHistoryItem = new AlarmHistoryItem(alarmData[idParameter], alarmData[keywordParameter], alarmData[titleParameter], alarmData[timestampParameter], alarmData[locationParameter], AlarmType.STATUS);
             this.addNewAlarmHistoryItem(alarmHistoryItem);
         });
     }

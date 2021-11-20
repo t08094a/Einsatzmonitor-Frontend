@@ -10,8 +10,6 @@ class HistoryWidget extends Widget {
         if (!this.main.alarmHistoryModel.sortedHistory())
             return [];
 
-        this.fit();
-
         let alarmHistoryItems = this.main.alarmHistoryModel.sortedHistory();
 
         let hideAlarm: boolean = this.extra_config.get('hide-alarm')();
@@ -78,6 +76,10 @@ class HistoryWidget extends Widget {
         }, 100);
     }
 
+    afterAdd() {
+        this.fit();
+    }
+
     loaded() {
 
     }
@@ -89,7 +91,7 @@ class HistoryWidget extends Widget {
             this.updateTimestampDisplay();
         }, 1000 * 1);
 
-        let parametersToUpdate = ["show-location", "count-only"];
+        let parametersToUpdate = ["show-location", "count-only", "hide-alarm", "hide-status"];
 
         parametersToUpdate.forEach((parameter: string) => {
             this.extra_config.get(parameter).subscribe((newValue: any) => {
