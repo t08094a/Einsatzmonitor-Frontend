@@ -84,11 +84,18 @@ class CalendarWidget extends Widget {
 
                             for (let recurringEventDate of recurringEventDates) {
                                 if (event.exdate && event.exdate[recurringEventDate.toISOString().substring(0, 10)]) {
-                                    logger.debug("Filtered one event:", event);
+                                    logger.debug(`CalendarWidget | Filtered one recurring event (${event.summary} @ ${event.start})`);
                                     break;
                                 }
 
-                                this.addEvent(event.uid + recurringEventDate.getTime(), event.summary, event.description, recurringEventDate, event.location, currentDay);
+                                let startDate = recurringEventDate;
+
+                                // Check if recurring event has a different startDate
+                                if (event.recurrences && event.recurrences[recurringEventDate.toISOString().substring(0, 10)]) {
+                                    startDate = event.recurrences[recurringEventDate.toISOString().substring(0, 10)].start;
+                                }
+
+                                this.addEvent(event.uid + recurringEventDate.getTime(), event.summary, event.description, startDate, event.location, currentDay);
                                 dienste.push(event.uid + recurringEventDate.getTime());
                             }
                         }
