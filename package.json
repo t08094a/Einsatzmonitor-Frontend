@@ -21,7 +21,7 @@
     "@sentry/webpack-plugin": "^1.18.3",
     "@types/leaflet": "^1.7.5",
     "@types/leaflet-routing-machine": "^3.2.3",
-    "@types/node": "^16.9.0",
+    "@types/node": "^16.11.9",
     "@types/nunjucks": "^3.2.0",
     "@types/sortablejs": "^1.10.7",
     "@types/tmp": "^0.2.2",
