@@ -55,7 +55,7 @@
     "@types/jquery": "^3.5.1",
     "@types/knockout": "^3.4.71",
     "@types/reconnectingwebsocket": "^1.0.7",
-    "apexcharts": "^3.29.0",
+    "apexcharts": "^3.30.0",
     "auto-launch": "^5.0.5",
     "axios": "^0.21.2",
     "crypto-js": "^4.1.1",
