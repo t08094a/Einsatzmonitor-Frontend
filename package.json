@@ -29,7 +29,7 @@
     "@types/webpack-env": "^1.15.2",
     "babel-loader": "^8.2.2",
     "electron": "^16.0.1",
-    "electron-builder": "^22.3.2",
+    "electron-builder": "^22.14.5",
     "html-loader": "^3.0.1",
     "html-webpack-plugin": "^5.5.0",
     "raw-loader": "^4.0.2",
