@@ -75,7 +75,7 @@ jobs:
         with:
           environment: production
           sourcemaps: './src/main/dist ./src/renderer/dist'
-          version: ${{ steps.package-version.outputs.current-version}}
+          version: einsatzmonitor@${{ steps.package-version.outputs.current-version}}
         if: matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master'
 
       - name: Delete unpacked app before deployment
