@@ -18,7 +18,7 @@
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.15.0",
     "@babel/preset-typescript": "^7.15.0",
-    "@sentry/webpack-plugin": "^1.17.2",
+    "@sentry/webpack-plugin": "^1.18.3",
     "@types/leaflet": "^1.7.5",
     "@types/leaflet-routing-machine": "^3.2.3",
     "@types/node": "^16.9.0",
