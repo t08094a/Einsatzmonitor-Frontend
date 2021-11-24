@@ -51,13 +51,13 @@ export async function sha256(message: any) {
 const emitter = require('events').EventEmitter;
 export const em = new emitter();
 
-export const logger = require('electron-log')
+export const logger = require('electron-log');
 logger.transports.file.sync = false;
 logger.transports.file.maxSize = 104857600;
 logger.catchErrors();
 
 
-export const alamosFeedbackUrl = (dbId: string) => `https://apager-firemergency-2.appspot.com/fe2/feedback?dbId=${dbId}`;
+export const alamosFeedbackUrl = (dbId: string) => `https://alamos-backend.ey.r.appspot.com/fe2/feedback?dbId=${dbId}`;
 
 export function extractArguments(arg: string) {
     return arg?.includes(";") ? arg.split(";") : [arg];

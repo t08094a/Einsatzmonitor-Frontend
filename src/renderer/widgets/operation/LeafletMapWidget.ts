@@ -5,12 +5,11 @@ import * as L from "leaflet";
 import * as fs from 'fs';
 import * as path from 'path';
 import * as csv from 'fast-csv';
-import {TileLayer} from "leaflet";
+import {DivIconOptions, TileLayer} from "leaflet";
 import 'leaflet-routing-machine';
 import 'lrm-graphhopper';
 
-let leafletImage = require('leaflet-image');
-
+import domtoimage from "dom-to-image";
 
 class LeafletMapWidget extends Widget {
     main: EinsatzMonitorModel;
@@ -85,23 +84,34 @@ class LeafletMapWidget extends Widget {
             if (!this.map)
                 return;
 
+            let waypoints = [
+                L.latLng(store.get("feuerwehrLat") as number, store.get("feuerwehrLng") as number),
+                L.latLng(Number.parseFloat(this.lat), Number.parseFloat(this.lng))
+            ]
+
             // @ts-ignore
             let router = new L.Routing.GraphHopper(store.get("graphhopper.apikey") as string)
 
             L.Routing.control({
                 router: router,
-                waypoints: [
-                    L.latLng(store.get("feuerwehrLat") as number, store.get("feuerwehrLng") as number),
-                    L.latLng(Number.parseFloat(this.lat), Number.parseFloat(this.lng))
-                ],
+                // waypoints: waypoints,
+                plan: L.Routing.plan(waypoints, {
+                    // @ts-ignore
+                    createMarker: (i, wp) => {
+                        // dummy function to remove basic markers
+                    },
+                    routeWhileDragging: false,
+                    draggableWaypoints: false
+                }),
                 lineOptions: {
                     styles: [
-                        {color: '#50a5ff', opacity: 1, weight: 10},
-                        {color: '#73B9FF', opacity: 1, weight: 5}
+                        {color: '#50a5ff', opacity: 1, weight: 8},
+                        {color: '#73B9FF', opacity: 1, weight: 4}
                     ],
                     extendToWaypoints: true,
                     missingRouteTolerance: 10
                 },
+                addWaypoints: false,
                 fitSelectedRoutes: this.extra_config.get("route-show-full")()
             }).addTo(this.map);
 
@@ -128,7 +138,9 @@ class LeafletMapWidget extends Widget {
 
         this.map = L.map('leaflet-' + this.id, {
             preferCanvas: true,
-            zoomControl: false
+            zoomControl: false,
+            fadeAnimation: false,
+            zoomAnimation: false
         }).setView([Number.parseFloat(this.lat), Number.parseFloat(this.lng)], zoom);
 
         let promises: Promise<any>[] = []
@@ -179,26 +191,67 @@ class LeafletMapWidget extends Widget {
 
         promises.push(tileLoadingPromise);
 
-        L.marker([Number.parseFloat(this.lat), Number.parseFloat(this.lng)]).addTo(this.map);
+        // Add icons
+        const size = 24; // needs to correspond to font-size
+        const iconOptions: DivIconOptions = {
+            iconSize: [size, size],
+            iconAnchor: [size / 2, size + 9],
+            shadowAnchor: [size / 2, size + 9],
+            shadowSize: [size * 2, size * 2],
+            className: 'customMarker',
+        }
 
+        let startIconParameter = this.main.getLatestOperation().parameters.get("monitor_icon_start")();
+        let destinationIconParameter = this.main.getLatestOperation().parameters.get("keyword_category")();
+
+        const startIcon = {
+            ...iconOptions,
+            html: startIconParameter ? startIconParameter : '🚒'
+        }
+
+        const destinationIcon = {
+            ...iconOptions,
+            html: destinationIconParameter ? destinationIconParameter : "🔥"
+        }
+
+        L.marker([store.get("feuerwehrLat") as number, store.get("feuerwehrLng") as number], {draggable: false, icon: L.divIcon(startIcon)}).addTo(this.map)
+        L.marker([Number.parseFloat(this.lat), Number.parseFloat(this.lng)], {draggable: false, icon: L.divIcon(destinationIcon)}).addTo(this.map)
+
+        // Export map
         Promise.all(promises).then(() => {
             logger.info("LeafletMapWidget | Map has been fully loaded.");
-            leafletImage(this.map, (err: any, canvas: any) => {
-                if (!this.map)
-                    return;
 
-                if (!this.extra_config.get('printing-save')())
-                    return;
+            if (!this.map)
+                return;
 
-                let printingId = this.extra_config.get('printing-id')();
+            if (!this.extra_config.get('printing-save')())
+                return;
 
-                if (!printingId)
-                    return;
+            let printingId = this.extra_config.get('printing-id')();
 
-                logger.debug("LeafletMapWidget | Printing ID: " + printingId);
-                this.main.getLatestOperation().printingMaps.push({'printingId': printingId, 'imgBase64': canvas.toDataURL()});
-            });
-        })
+            if (!printingId)
+                return;
+
+            logger.debug("LeafletMapWidget | Printing ID: " + printingId);
+            logger.debug("LeafletMapWidget | Generating image...");
+
+            setTimeout(() => {
+                let leafletMapElement = document.getElementById('leaflet-' + this.id);
+
+                if (leafletMapElement) {
+                    domtoimage.toPng(leafletMapElement, {
+                        imagePlaceholder: ""
+                    })
+                        .then((dataUrl) => {
+                            this.main.getLatestOperation().printingMaps.push({'printingId': printingId, 'imgBase64': dataUrl});
+                            logger.debug("LeafletMapWidget | Successfully generated image.");
+                        })
+                        .catch((error) => {
+                            logger.error('LeafletMapWidget | Error while generating image from leaflet map:', error);
+                        });
+                }
+            }, 500);
+        });
     }
 
     constructor(main: EinsatzMonitorModel, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {

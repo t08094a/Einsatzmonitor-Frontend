@@ -933,3 +933,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-control-container .leaflet-routing-container {
     display: none;
 }
+
+.customMarker {
+    font-size: 24px;
+    filter: drop-shadow(3px 3px 6px #000);
+}
