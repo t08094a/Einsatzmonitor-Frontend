@@ -11,6 +11,7 @@ import SettingsModel from "./EinsatzMonitorSettings";
 import VehicleModel from "./VehicleModel";
 import AAOModel from "./AAOModel";
 import AlarmHistoryModel from "./AlarmHistoryModel";
+import {JSONFile, Low} from "lowdb";
 
 let html_content = require('./widget_templates/info/text_widget.html');
 
@@ -19,6 +20,10 @@ const fs = require('fs');
 const path = require('path');
 const gridsterWidgetsFilePath = path.join(userDataPath, "gridster_widgets.json");
 const gridsterWidgetsOperationFilePath = path.join(userDataPath, "gridster_widgets_operation.json");
+
+const testOperationParametersFile = path.join(userDataPath, 'test_operation.json');
+const adapter = new JSONFile(testOperationParametersFile);
+const testOperationDb = new Low(adapter);
 
 
 class EinsatzMonitorModel {
@@ -90,36 +95,33 @@ class EinsatzMonitorModel {
         });
     };
 
-    testOperationFe2Id: Observable = ko.observable();
-    testOperationAddress: Observable = ko.observable();
+    newTestOperationParameter: KnockoutObservable<string> = ko.observable("");
+    newTestOperationValue: KnockoutObservable<string> = ko.observable("");
+
+    // @ts-ignore
+    testOperationParameters: any = ko.observableDictionary();
+
+    addTestOperationParameter() {
+        if (this.newTestOperationParameter() && this.newTestOperationValue()) {
+            this.testOperationParameters.set(this.newTestOperationParameter(), this.newTestOperationValue());
+            this.saveTestOperationParameters();
+        }
+    }
+
+    removeTestOperationParameter = (item: string) => {
+        this.testOperationParameters.remove(item);
+        this.saveTestOperationParameters();
+    }
+
+    private saveTestOperationParameters() {
+        testOperationDb.data = this.testOperationParameters.toJSON();
+        testOperationDb.write();
+    }
 
     addTestOperation() {
-        this.addOperationJson({
-            'id': 1,
-            'stichwort': "F1",
-            'stichwort_color': "danger",
-            'description': "Testalarm",
-            'alarmzeit_seconds': moment().unix(),
-            'adresse': this.testOperationAddress(),
-            'objekt': "Testobjekt",
-            'einheiten': [
-                {
-                    'name': "TE FF Testfeuerwehr voll"
-                },
-                {
-                    'name': "TE FF Feuerwehr2 voll"
-                }
-            ],
-            'zusatzinfos': [
-                {
-                    'name': "Ort",
-                    'value': "Testort"
-                }
-            ]
-        }, true);
-
-        if (this.testOperationFe2Id())
-            this.getLatestOperation().feedbackFe2Id(this.testOperationFe2Id());
+        let operation = new Operation(1, "", "", "", moment().unix().toString(), "", "", ko.toJS(this.testOperationParameters.toJSON()));
+        operation.feedbackFe2Id(this.testOperationParameters.get('dbId')());
+        this.addOperation(operation);
     };
 
     clearOperations() {
@@ -294,6 +296,8 @@ class EinsatzMonitorModel {
         let settingsModel = new SettingsModel();
         settingsModel.loadSettings();
 
+        logger.info("Loaded SettingsModel");
+
         this.loadBackgroundSettings();
 
         this.settingsModel = settingsModel;
@@ -311,7 +315,11 @@ class EinsatzMonitorModel {
 
         this.alarmHistoryModel = new AlarmHistoryModel(this);
 
-        logger.info("Loaded SettingsModel");
+        testOperationDb.read()
+            .then(() => {
+                let parameters = testOperationDb.data;
+                this.testOperationParameters.pushAll(parameters);
+            });
 
         em.on('EinsatzRemove', (operation: Operation) => {
             logger.info('EinsatzRemove event fired. Removing Operation from list.');

@@ -79,7 +79,7 @@
 
                     <!-- ko if: !$root.isInfoViewActive() -->
                     <h5><strong>Einsatz-Widgets</strong></h5>
-<!--                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-keyword") }'><i class="fal fa-plus"></i> Stichwort</button>-->
+                    <!--                    <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-keyword") }'><i class="fal fa-plus"></i> Stichwort</button>-->
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-customParameter") }'><i class="fal fa-plus"></i> Parameter</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-address") }'><i class="fal fa-plus"></i> Adresse</button>
                     <button class="btn btn-outline-danger mt-1" data-bind='click: function(data, event) { addWidget("operation-additionalInformation") }'><i class="fal fa-plus"></i> Zusatzinfos</button>
@@ -115,12 +115,26 @@
                 <div class="modal-body">
                     <h5><strong>Testeinsatz</strong></h5>
 
-                    <label for="inputAlamosDbId"><strong>Alamos Feedback-ID für Testeinsatz</strong></label>
-                    <input type="text" class="form-control mb-2" id="inputAlamosDbId" data-bind="textInput: testOperationFe2Id">
+                    <ul class="list-group mb-2" data-bind="foreach: testOperationParameters.items">
+                        <li class="list-group-item d-flex justify-content-between align-items-center font-monospace" style="padding: .1rem .50rem;">
+                            <code>
+                                <span data-bind="text: key"></span> ->
+                                <span data-bind="text: value"></span>
+                            </code>
+                            <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.removeTestOperationParameter" data-toggle="tooltip" data-placement="top" title="löschen"><i
+                                    class="fal fa-minus"></i></button>
+                        </li>
+                    </ul>
 
-                    <label for="inputAdresse"><strong>Adresse für Testeinsatz</strong></label>
-                    <input type="text" class="form-control mb-2" id="inputAdresse" data-bind="textInput: testOperationAddress">
-                    <div class="row">
+                    <div class="input-group input-group-sm">
+                        <input aria-label="Parameter" id="testOperationParameter" type="text" class="form-control" data-bind="textInput: newTestOperationParameter" placeholder="keyword"/>
+                        <input aria-label="Wert" type="text" class="form-control" data-bind="textInput: newTestOperationValue" placeholder="F1"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addTestOperationParameter" data-bind="click: addTestOperationParameter">Hinzufügen</button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
                         <div class="col">
                             <button class="btn btn-warning btn-block" data-bind='click: addTestOperation'><i class="fal fa-play"></i> Testeinsatz starten</button>
                         </div>
@@ -253,7 +267,9 @@
                             <td data-bind="text: station"></td>
                             <td data-bind="text: identification"></td>
                             <td data-bind="text: name"></td>
-                            <td><button class="btn btn-sm btn-danger" data-bind="click:$root.vehicleModel.removeVehicle" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-trash-alt"></i></button></td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" data-bind="click:$root.vehicleModel.removeVehicle" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-trash-alt"></i></button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -274,7 +290,7 @@
                                 <input id="vehicleNameInput" type="text" class="form-control" data-bind="textInput: $root.vehicleModel.newVehicle.name" placeholder="Bezeichnung"/>
                             </div>
                             <div class="col">
-                                <button class="btn btn-block btn-primary" style="bottom: 0; position: absolute;" data-bind="click: $root.vehicleModel.addNewVehicle">Hinzufügen </button>
+                                <button class="btn btn-block btn-primary" style="bottom: 0; position: absolute;" data-bind="click: $root.vehicleModel.addNewVehicle">Hinzufügen</button>
                             </div>
                         </div>
                     </form>
@@ -330,7 +346,7 @@
 
                             <td data-bind="text: objects, visible: objects().length > 0"></td>
                             <td data-bind="visible: objects().length == 0"><code>alle</code></td>
-<!--                            <td data-bind="text: enabledTimeFrameDisplay"></td>-->
+                            <!--                            <td data-bind="text: enabledTimeFrameDisplay"></td>-->
                             <td><span data-bind="text: assignedVehicles" class="badge badge-pill badge-danger">Danger</span></td>
                             <td>
                                 <div>
@@ -393,7 +409,8 @@
                                 <ul class="list-group mb-2" data-bind="foreach: $root.aaoModel.newAao().keywords">
                                     <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem;">
                                         <span data-bind="text: $data"></span>
-                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeKeyword" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-minus"></i></button>
+                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeKeyword" data-toggle="tooltip" data-placement="top"
+                                                title="löschen"><i class="fal fa-minus"></i></button>
                                     </li>
                                 </ul>
 
@@ -410,7 +427,8 @@
                                 <ul class="list-group mb-2" data-bind="foreach: $root.aaoModel.newAao().keywordDescriptions">
                                     <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem;">
                                         <span data-bind="text: $data"></span>
-                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeKeywordDescription" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-minus"></i></button>
+                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeKeywordDescription" data-toggle="tooltip"
+                                                data-placement="top" title="löschen"><i class="fal fa-minus"></i></button>
                                     </li>
                                 </ul>
 
@@ -427,7 +445,8 @@
                                 <ul class="list-group mb-2" data-bind="foreach: $root.aaoModel.newAao().cities">
                                     <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem;">
                                         <span data-bind="text: $data"></span>
-                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeCity" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-minus"></i></button>
+                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeCity" data-toggle="tooltip" data-placement="top"
+                                                title="löschen"><i class="fal fa-minus"></i></button>
                                     </li>
                                 </ul>
 
@@ -444,7 +463,8 @@
                                 <ul class="list-group mb-2" data-bind="foreach: $root.aaoModel.newAao().objects">
                                     <li class="list-group-item d-flex justify-content-between align-items-center" style="padding: .25rem .50rem;">
                                         <span data-bind="text: $data"></span>
-                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeObject" data-toggle="tooltip" data-placement="top" title="löschen"><i class="fal fa-minus"></i></button>
+                                        <button style="padding: .10rem .25rem; font-size: .675rem; height: 80%" class="btn btn-sm btn-danger" data-bind="click: $root.aaoModel.newAao().removeObject" data-toggle="tooltip" data-placement="top"
+                                                title="löschen"><i class="fal fa-minus"></i></button>
                                     </li>
                                 </ul>
 
@@ -518,7 +538,8 @@
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <button class="btn btn-block btn-outline-success" data-bind="click: $root.aaoModel.openVehicleSelectModal">
-                                    Fahrzeuge auswählen (<strong><span data-bind="text: $root.aaoModel.newAao().assignedVehicles"></span></strong> zugeordnet)</button>
+                                    Fahrzeuge auswählen (<strong><span data-bind="text: $root.aaoModel.newAao().assignedVehicles"></span></strong> zugeordnet)
+                                </button>
                                 <button class="btn btn-block btn-primary" data-bind="click: $root.aaoModel.addNewAao">AAO hinzufügen</button>
                             </div>
                         </div>
@@ -528,7 +549,7 @@
                     <button class="btn btn-success" data-bind="click: $root.aaoModel.loadAaoFromDisk">Aus Einstellungen laden</button>
 
                     <button class="btn btn-success" data-bind="click: $root.aaoModel.saveAaoToDisk, enable: !$root.aaoModel.saving() ">Speichern <i data-bind="visible: $root.aaoModel.saving()"
-                                                                                                                                                                 class="fa fa-cog fa-spin fa-fw"></i></button>
+                                                                                                                                                    class="fa fa-cog fa-spin fa-fw"></i></button>
                     <button type="button" class="btn btn-secondary" data-bind='click: board().openSettingsMenuModal' data-dismiss="modal">Zurück</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Schließen</button>
                 </div>
