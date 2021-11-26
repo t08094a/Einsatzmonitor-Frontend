@@ -27,7 +27,7 @@
     "@types/sortablejs": "^1.10.7",
     "@types/tmp": "^0.2.2",
     "@types/toastr": "^2.1.39",
-    "@types/webpack-env": "^1.15.2",
+    "@types/webpack-env": "^1.16.3",
     "babel-loader": "^8.2.2",
     "electron": "^16.0.1",
     "electron-builder": "^22.14.5",
