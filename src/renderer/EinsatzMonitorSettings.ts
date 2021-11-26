@@ -39,6 +39,8 @@ class SettingsModel {
         "webserver.alarmInput.enabled": {"type": "Boolean"},
         "mqtt.alarmInput.enabled": {"type": "Boolean"},
         "printing.enabled": {"type": "Boolean"},
+        "printing.remote": {"type": "Boolean"},
+        "printing.storePDF": {"type": "Boolean"},
         "geocoding.enabled": {"type": "Boolean"},
         "geocoding.engine": {
             "type": "Select",
@@ -68,6 +70,9 @@ class SettingsModel {
             ]
         },
         "status.reset.enabled": {"type": "Boolean"},
+        "tts.enabled": {"type": "Boolean"},
+        "alarmHistory.enabled": {"type": "Boolean"},
+        "alarmHistory.ignoreDuplicatedById.enabled": {"type": "Boolean"},
     };
 
     get_type = (key: any) => {

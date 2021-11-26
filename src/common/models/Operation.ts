@@ -15,6 +15,7 @@ import GeocodingResult from "../../renderer/geocoding/GeocodingResult";
 import Geocoder from "../../renderer/geocoding/Geocoder";
 import GraphHopperGeocoder from "../../renderer/geocoding/GraphHopperGeocoder";
 import TextToSpeech from "../../renderer/tts/TextToSpeech";
+import {BrowserWindow} from "@electron/remote";
 
 class Operation {
     id: Observable = ko.observable();
@@ -295,16 +296,52 @@ class Operation {
             let res = nunjucks.renderString(template, parameters);
             let encoded = Buffer.from(res).toString("base64");
 
-            axios.post(url, {
-                html: encoded,
-                amount: aaoVehicleNames.length
-            })
-                .then((response: any) => {
-                    logger.info("Operation | Response from printing server:", response)
+            let window_to_PDF = new BrowserWindow({show: false});
+            window_to_PDF.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(res)}`);
+
+            let defaultCopies = Number.parseInt(store.get("printing.defaultCopies", 1) as string) || 1;
+
+            window_to_PDF.webContents.on("did-finish-load", () => {
+                window_to_PDF.webContents.printToPDF({
+                    landscape: false,
+                    marginsType: 0,
+                    printBackground: true,
+                    printSelectionOnly: false,
+                    pageSize: "A4",
                 })
-                .catch((error: string) => {
-                    logger.error("Operation | Error sending print request:", error)
+                    .then((buffer) => {
+                        if (store.get("printing.storePDF", false)) {
+                            fs.writeFileSync(path.resolve(userDataPath, 'printingTemplates', `${this.getParameter("keyword")}_${moment().unix()}.pdf`), buffer);
+                        }
+                    })
+                    .then(() => {
+                        return new Promise((resolve) => {
+                            window_to_PDF.webContents.print({silent: true, printBackground: true, copies: aaoVehicleNames.length > 0 ? aaoVehicleNames.length : defaultCopies});
+                            setTimeout(() => {
+                                resolve(true);
+                            }, 2000);
+                        })
+                    })
+                    .finally(() => {
+                        window_to_PDF.close()
+                    })
+            });
+
+            /**
+             * @deprecated Will be removed in future release.
+             */
+            if (store.get("printing.remote")) {
+                axios.post(url, {
+                    html: encoded,
+                    amount: aaoVehicleNames.length
                 })
+                    .then((response: any) => {
+                        logger.info("Operation | Response from printing server:", response)
+                    })
+                    .catch((error: string) => {
+                        logger.error("Operation | Error sending print request:", error)
+                    })
+            }
         });
     }
 
@@ -372,10 +409,10 @@ class Operation {
         this.loadGoogleMap();
 
         if (store.get("printing.enabled")) {
-            // Print alarm after 10 seconds
+            // Print alarm after 20 seconds
             setTimeout(() => {
                 this.print();
-            }, 1000 * 10);
+            }, 1000 * (store.get("printing.delay", 20) as number));
         }
 
         if (store.get("tts.enabled")) {

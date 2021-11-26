@@ -144,7 +144,11 @@ function createDefaultConfig() {
     setDefaultConfigValue("aao.customParameter", "unit");
 
     setDefaultConfigValue("printing.enabled", false);
+    setDefaultConfigValue("printing.remote", false);
     setDefaultConfigValue("printing.url", "http://127.0.0.1:5000/print/");
+    setDefaultConfigValue("printing.delay", 20);
+    setDefaultConfigValue("printing.storePDF", false);
+    setDefaultConfigValue("printing.defaultCopies", 1);
 
     setDefaultConfigValue("geocoding.enabled", false);
     setDefaultConfigValue("geocoding.engine", "Google");

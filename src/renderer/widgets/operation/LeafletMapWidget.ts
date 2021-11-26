@@ -240,7 +240,9 @@ class LeafletMapWidget extends Widget {
 
                 if (leafletMapElement) {
                     domtoimage.toPng(leafletMapElement, {
-                        imagePlaceholder: ""
+                        imagePlaceholder: "",
+                        width: leafletMapElement.clientWidth,
+                        height: leafletMapElement.clientHeight
                     })
                         .then((dataUrl) => {
                             this.main.getLatestOperation().printingMaps.push({'printingId': printingId, 'imgBase64': dataUrl});
