@@ -938,3 +938,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
     font-size: 24px;
     filter: drop-shadow(3px 3px 6px #000);
 }
+
+.widgetEditModal .modal-content .modal-header > button {
+    color: white;
+}
+
+.widgetEditModal .modal-header {
+    cursor: move;
+    background-color: #004085;
+    color: white;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.widgetEditModal .modal-content {
+    border-style: none;
+}

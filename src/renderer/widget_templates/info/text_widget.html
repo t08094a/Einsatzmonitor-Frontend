@@ -6,7 +6,7 @@
         <h1 class="big-text m-0"
             data-bind="text: widget.extra_config.get('text-title'), style: { 'color': widget.extra_config.get('text-color'), 'font-size': widget.extra_config.get('text-size')() + 'px' }, class: 'text-' + widget.config.get('align')(), css: { 'vert-center': widget.extra_config.get('vert-center') }"></h1>
 
-        <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade" tabindex="-1" role="dialog">
+        <div data-bind="attr: { 'id': 'edit-' + id }" class="modal fade widgetEditModal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">

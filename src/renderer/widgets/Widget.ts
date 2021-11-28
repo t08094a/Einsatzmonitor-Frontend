@@ -36,7 +36,14 @@ class Widget {
 
     edit = () => {
         this.board.editWidget(this);
-        ($('#edit-' + this.id).appendTo("body") as any).modal('show');
+        let editModalSelector = '#edit-' + this.id;
+        ($(editModalSelector).appendTo("body") as any).modal('show');
+
+        // @ts-ignore
+        $(editModalSelector).draggable({
+            handle: ".modal-header"
+        });
+
         ($('.widget-colorpicker') as any).colorpicker({
             extensions: [
                 {
