@@ -1,4 +1,4 @@
-import {Observable, ObservableArray} from "knockout";
+import {Computed, Observable, ObservableArray} from "knockout";
 import EinsatzMonitorModel, {BoardViewModel} from "../EinsatzMonitor";
 import * as ko from "knockout";
 
@@ -62,17 +62,19 @@ class Widget {
 
         let sliderSelector = "[id ='edit-" + this.id + "'] .widget-slider";
 
-        ($(sliderSelector) as any).slider({
-            // initial value
-            value: this.extra_config.get($(sliderSelector).attr("data-field"))(),
+        for (let sliderObj of $(sliderSelector) as any) {
+            ($(sliderObj) as any).slider({
+                // initial value
+                value: this.extra_config.get($(sliderObj).attr("data-field"))(),
 
-            min: 0,
-            max: $(sliderSelector).attr("data-max") ? $(sliderSelector).attr("data-max") : 300,
+                min: 0,
+                max: $(sliderObj).attr("data-max") || 300,
 
-            slide: (event: any, ui: any) => {
-                this.extra_config.get($(sliderSelector).attr("data-field"))(ui.value);
-            }
-        });
+                slide: (event: any, ui: any) => {
+                    this.extra_config.get($(sliderObj).attr("data-field"))(ui.value);
+                }
+            });
+        }
     };
 
     fitIfPossible() {
@@ -85,6 +87,10 @@ class Widget {
             customTextFit(fittyElement, {maxFontSize: max, alignHoriz: true, alignVert: true, multiLine: true})
         }
     };
+
+    getBackgroundColor: Computed = ko.computed(() => {
+        return this.extra_config?.get("background-color")() || "rgba(255, 255, 255, 0)"
+    });
 
     afterAdd() {
 

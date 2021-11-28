@@ -1,5 +1,5 @@
 <template id="vehicle-widget">
-    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }" class='gs-w bg-transparent'
+    <li data-bind="attr: { 'id': id, 'data-row': widget.dataRow, 'data-col': widget.dataCol, 'data-sizex': widget.datasizex, 'data-sizey': widget.datasizey }, style: { 'background-color': widget.getBackgroundColor() }" class='gs-w'
         style='list-style-type: none; overflow: hidden;'>
         <div data-bind="template: { name: 'widget-buttons' }"></div>
 
@@ -22,7 +22,8 @@
         <!-- ko if: !widget.isSingleMode() -->
         <div class="d-flex flex-column h-100" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }">
             <!-- ko foreach: widget.getVehiclesForListMode -->
-            <div class="p-1 mb-1 h-100" style="width: 100%; overflow: hidden;" data-bind="style: { 'background-color': statusColor() }">
+            <div class="p-1 h-100" style="width: 100%; overflow: hidden; max-height: 256px; box-shadow: 0 .5rem 1rem rgba(0,0,0,.5); margin-bottom: 0.35rem"
+                 data-bind="style: { 'background-color': statusColor(), 'max-height': widget.extra_config.get('listItemMaxHeight')() + 'px' }">
                 <div class="text-center" style="width: 100%; height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
                     <h4 class="text-white m-0 fitty-element h-100 d-flex" data-maxfitty="200" style="width: 100%; height: 100%" data-bind="style: {'font-size': widget.extra_config.get('text-size')() + 'px'}">
                         <span class="d-flex justify-content-between">
@@ -48,10 +49,10 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <div class="widget-slider" data-field="text-size"></div>
-                            <p data-bind="text: widget.extra_config.get('text-size')() + 'px'"></p>
+                            <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'text-size', max: '300', title: 'Textgröße', description: 'Textgröße: ' } }"></div>
 
-                            <select class="form-control" data-bind="options: widget.availableModes, value: widget.extra_config.get('selected-mode')"></select>
+                            <label for="vehicleWidgetModeSelect" class="mb-1 mt-3"><Strong>Modus</Strong></label>
+                            <select id="vehicleWidgetModeSelect" class="form-control" data-bind="options: widget.availableModes, value: widget.extra_config.get('selected-mode')"></select>
 
                             <!-- ko if: widget.isSingleMode() -->
                             <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'issi-to-show', title: 'ISSI', description: 'ISSI des Fahrzeuges, welches angezeigt werden soll.' } }"></div>
@@ -59,11 +60,12 @@
 
                             <!-- ko if: !widget.isSingleMode() -->
                             <div data-bind="template: { name: 'edit-text', data: { wdg: widget, value: 'filter-station', title: 'Filter Wache', description: 'Nur Fahrzeuge einer bestimmten Wache anzeigen. Leeres Feld -> alle.' } }"></div>
+                            <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'listItemMaxHeight', max: '256', title: 'Maximale Höhe eines Fahrzeuges in der Liste', description: 'Maximale Höhe: ' } }"></div>
                             <!-- /ko -->
 
                             <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'text-fitty', description: 'Textgröße automatisch anpassen' } }"></div>
 
-                            <!--                            <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>-->
+                            <div data-bind="template: { name: 'edit-backgroundColor', data: { wdg: widget } }"></div>
                             <div data-bind="template: { name: 'edit-textColor', data: { wdg: widget } }"></div>
                         </div>
                     </div>
