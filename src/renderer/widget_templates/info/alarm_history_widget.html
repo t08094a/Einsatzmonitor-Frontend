@@ -6,16 +6,17 @@
         <!-- ko if: !widget.extra_config.get('count-only')() -->
         <div class="d-flex flex-column h-100" data-bind="class: 'text-' + widget.config.get('align')(), style: { 'color': widget.extra_config.get('text-color') }">
             <!-- ko foreach: widget.alarmHistoryItems -->
-            <div class="p-1 h-100" style="width: 100%; overflow: hidden;">
-                <div class="text-center d-flex align-items-center" style="width: 100%; height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
-                    <h4 class="text-white m-0 fitty-element h-100 d-flex flex-column" data-maxfitty="200" style="width: 100%; height: 100%; max-height: 60px;">
+            <div class="p-1 h-100" style="width: 100%; overflow: hidden; max-height: 256px; box-shadow: 0 .5rem 1rem rgba(0,0,0,.5); margin-bottom: 0.35rem"
+                 data-bind="style: { 'background-color':  widget.extra_config.get('item-bgcolor'), 'max-height': widget.extra_config.get('listItemMaxHeight')() + 'px' }">
+                <div class="text-center" style="width: 100%; height: 100%"> <!-- needs a surrounding div for size calculation because of padding -->
+                    <h4 class="text-white m-0 fitty-element h-100 d-flex" data-maxfitty="200" style="width: 100%; height: 100%" data-bind="style: {'font-size': widget.extra_config.get('text-size')() + 'px'}">
                         <span class="d-flex justify-content-between">
-                            <span style="padding-left: 5px; padding-right: 20px;" class="description flex-shrink-0" data-bind="text: title"></span>
-                            <span style="padding-left: 20px; padding-right: 5px;" class="description flex-shrink-0" data-bind="text: timestampDisplay"></span>
+                            <span style="padding-left: 10px; padding-right: 40px;" class="description" data-bind="text: title, style: { 'color': widget.extra_config.get('text-color') }"></span>
+                            <span style="padding-right: 10px;" class="description flex-shrink-0" data-bind="text: timestampDisplay, style: { 'color': widget.extra_config.get('text-color') }"></span>
                         </span>
                         <!-- ko if: widget.extra_config.get('show-location') -->
                         <span class="d-flex mt-1">
-                            <span style="padding-left: 5px; padding-right: 20px;" class="description" data-bind="text: location"></span>
+                            <span style="padding-left: 10px; padding-right: 20px;" class="description" data-bind="text: location"></span>
                         </span>
                         <!-- /ko -->
                     </h4>
@@ -52,6 +53,9 @@
 
                             <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'hide-alarm', description: 'Alarme ausblenden' } }"></div>
                             <div data-bind="template: { name: 'edit-booleanValue', data: { wdg: widget, value: 'hide-status', description: 'Statusmeldungen ausblenden' } }"></div>
+
+                            <div data-bind="template: { name: 'edit-slider', data: { wdg: widget, field: 'listItemMaxHeight', max: '256', title: 'Maximale Höhe eines Ereignisses in der Liste', description: 'Maximale Höhe: ' } }"></div>
+                            <div data-bind="template: { name: 'edit-color', data: { wdg: widget, field: 'item-bgcolor', title: 'Hintergrundfarbe eines Ereignisses', description: 'Hintergrundfarbe eines Ereignisses in der Liste.' } }"></div>
                             <!-- /ko -->
 
                             <!-- ko if: widget.extra_config.get('count-only') -->
