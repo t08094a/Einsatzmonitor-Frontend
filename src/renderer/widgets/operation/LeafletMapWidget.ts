@@ -45,7 +45,13 @@ class LeafletMapWidget extends Widget {
     }
 
     addHydrantsToMap(): Promise<any> {
-        let hydrantFiles = fs.readdirSync(path.resolve(userDataPath, 'hydrants')).filter(fn => fn.endsWith('.csv'));
+        let hydrantFiles;
+
+        try {
+            hydrantFiles = fs.readdirSync(path.resolve(userDataPath, 'hydrants')).filter(fn => fn.endsWith('.csv'));
+        } catch (e) {
+            return Promise.reject("Error reading hydrants files: " + e);
+        }
 
         logger.info("LeafletMapWidget | Adding hydrants to map: ", hydrantFiles);
 
@@ -218,42 +224,46 @@ class LeafletMapWidget extends Widget {
         L.marker([Number.parseFloat(this.lat), Number.parseFloat(this.lng)], {draggable: false, icon: L.divIcon(destinationIcon)}).addTo(this.map)
 
         // Export map
-        Promise.all(promises).then(() => {
-            logger.info("LeafletMapWidget | Map has been fully loaded.");
+        Promise.all(promises)
+            .then(() => {
+                logger.info("LeafletMapWidget | Map has been fully loaded.");
 
-            if (!this.map)
-                return;
+                if (!this.map)
+                    return;
 
-            if (!this.extra_config.get('printing-save')())
-                return;
+                if (!this.extra_config.get('printing-save')())
+                    return;
 
-            let printingId = this.extra_config.get('printing-id')();
+                let printingId = this.extra_config.get('printing-id')();
 
-            if (!printingId)
-                return;
+                if (!printingId)
+                    return;
 
-            logger.debug("LeafletMapWidget | Printing ID: " + printingId);
-            logger.debug("LeafletMapWidget | Generating image...");
+                logger.debug("LeafletMapWidget | Printing ID: " + printingId);
+                logger.debug("LeafletMapWidget | Generating image...");
 
-            setTimeout(() => {
-                let leafletMapElement = document.getElementById('leaflet-' + this.id);
+                setTimeout(() => {
+                    let leafletMapElement = document.getElementById('leaflet-' + this.id);
 
-                if (leafletMapElement) {
-                    domtoimage.toPng(leafletMapElement, {
-                        imagePlaceholder: "",
-                        width: leafletMapElement.clientWidth,
-                        height: leafletMapElement.clientHeight
-                    })
-                        .then((dataUrl) => {
-                            this.main.getLatestOperation().printingMaps.push({'printingId': printingId, 'imgBase64': dataUrl});
-                            logger.debug("LeafletMapWidget | Successfully generated image.");
+                    if (leafletMapElement) {
+                        domtoimage.toPng(leafletMapElement, {
+                            imagePlaceholder: "",
+                            width: leafletMapElement.clientWidth,
+                            height: leafletMapElement.clientHeight
                         })
-                        .catch((error) => {
-                            logger.error('LeafletMapWidget | Error while generating image from leaflet map:', error);
-                        });
-                }
-            }, 500);
-        });
+                            .then((dataUrl) => {
+                                this.main.getLatestOperation().printingMaps.push({'printingId': printingId, 'imgBase64': dataUrl});
+                                logger.debug("LeafletMapWidget | Successfully generated image.");
+                            })
+                            .catch((error) => {
+                                logger.error('LeafletMapWidget | Error while generating image from leaflet map:', error);
+                            });
+                    }
+                }, 500);
+            })
+            .catch((error) => {
+                logger.error('LeafletMapWidget | Error while loading leaflet map:', error);
+            });
     }
 
     constructor(main: EinsatzMonitorModel, board: any, template_name: any, type: any, row = 0, col = 0, x = 3, y = 2) {
