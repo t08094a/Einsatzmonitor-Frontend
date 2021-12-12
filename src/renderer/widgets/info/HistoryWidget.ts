@@ -73,7 +73,7 @@ class HistoryWidget extends Widget {
     fit() {
         setTimeout(() => {
             this.fitIfPossible();
-        }, 500);
+        }, 100);
     }
 
     afterAdd() {
@@ -89,7 +89,8 @@ class HistoryWidget extends Widget {
 
         this.actionTimer = window.setInterval(() => {
             this.updateTimestampDisplay();
-        }, 1000 * 1);
+            this.fit();
+        }, 1000 * 5);
 
         let parametersToUpdate = ["show-location", "count-only", "hide-alarm", "hide-status"];
 
