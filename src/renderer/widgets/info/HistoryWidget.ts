@@ -73,7 +73,7 @@ class HistoryWidget extends Widget {
     fit() {
         setTimeout(() => {
             this.fitIfPossible();
-        }, 100);
+        }, 500);
     }
 
     afterAdd() {
