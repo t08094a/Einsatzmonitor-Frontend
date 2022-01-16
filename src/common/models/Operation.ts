@@ -16,6 +16,7 @@ import Geocoder from "../../renderer/geocoding/Geocoder";
 import GraphHopperGeocoder from "../../renderer/geocoding/GraphHopperGeocoder";
 import TextToSpeech from "../../renderer/tts/TextToSpeech";
 import {BrowserWindow} from "@electron/remote";
+import tmp from "tmp";
 
 class Operation {
     id: Observable = ko.observable();
@@ -296,8 +297,17 @@ class Operation {
             let res = nunjucks.renderString(template, parameters);
             let encoded = Buffer.from(res).toString("base64");
 
+            const tmpRenderedTemplate = tmp.fileSync({postfix: '.html'});
+
+            try {
+                fs.writeFileSync(tmpRenderedTemplate.name, res);
+                logger.info(`Operation | Saved rendered printing template to ${tmpRenderedTemplate.name}`)
+            } catch (err) {
+                logger.error("Operation | Error saving rendered printing template:", err);
+            }
+
             let window_to_PDF = new BrowserWindow({show: false});
-            window_to_PDF.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(res)}`);
+            window_to_PDF.loadFile(tmpRenderedTemplate.name);
 
             let defaultCopies = Number.parseInt(store.get("printing.defaultCopies", 1) as string) || 1;
 
@@ -323,7 +333,8 @@ class Operation {
                         })
                     })
                     .finally(() => {
-                        window_to_PDF.close()
+                        window_to_PDF.close();
+                        tmpRenderedTemplate.removeCallback();
                     })
             });
 
