@@ -69,17 +69,14 @@ class Operation {
 
                     lstOfFeedbacks.forEach((feedback: any) => {
                         if (this.isFeedbackPersonSaved(feedback)) {
-                            logger.debug(`${feedback.name} is already saved in feedback list. Updating entry`);
-
                             this.feedbackPersons().forEach((feedbackPerson: Person) => {
                                 if (feedback.name == feedbackPerson.name()) {
                                     feedbackPerson.feedback(feedback.state);
                                 }
                             })
-
                         } else {
                             // new
-                            logger.info(`Creating new feedback entry for ${feedback.name}`);
+                            logger.info(`Operation | Creating new feedback entry for ${feedback.name}: ${feedback.state}`);
                             let person = new Person(feedback.name, feedback.state);
                             if (feedback.functions) {
                                 if (feedback.functions.includes(";")) {
@@ -92,7 +89,8 @@ class Operation {
                             }
                             this.feedbackPersons.push(person);
                         }
-                    })
+                    });
+                    logger.debug(`Operation | Successfully updated ${lstOfFeedbacks.length} feedback entries.`);
                 }
             })
             .catch((error_resp) => {
@@ -161,7 +159,7 @@ class Operation {
 
     getFeedbackTimer = window.setInterval(() => {
         if (this.feedbackFe2Id() == null) {
-            logger.info("No feedback ID found. Not requesting Alamos feedback.");
+            logger.info("Operation | No feedback ID found. Not requesting Alamos feedback.");
             return;
         }
 
@@ -406,7 +404,7 @@ class Operation {
                             this.units.push(vehicle.name);
                         })
                     } catch (e) {
-                        logger.debug("Error while parsing vehicles from alarmData:", e)
+                        logger.debug("Operation | Error while parsing vehicles from alarmData:", e)
 
                         let vehicles = alarmData[key].split("\n");
 
