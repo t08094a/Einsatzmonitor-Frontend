@@ -15,6 +15,7 @@ import LeafletMapWidget from "./operation/LeafletMapWidget";
 import CalendarWidget from "./info/CalendarWidget";
 import AddressWidget from "./operation/AddressWidget";
 import WaterLevelWidget from "./info/WaterLevelWidget";
+import BrightSkyWidget from "./info/BrightSkyWidget";
 
 type tClassMapping = {
     [key: string]: any
@@ -32,6 +33,7 @@ const classMapping: tClassMapping = {
     'alarm-history-widget': HistoryWidget,
     'calendar-widget': CalendarWidget,
     'waterlevel-widget': WaterLevelWidget,
+    'brightsky-widget': BrightSkyWidget,
 
     'operation-address': AddressWidget,
     'operation-alarmMinutes': AlarmMinutesWidget,

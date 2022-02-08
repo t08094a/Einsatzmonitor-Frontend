@@ -1,6 +1,6 @@
 {
   "name": "einsatzmonitor",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "main": "src/main/dist/renderrer-bundle.js",
   "scripts": {
     "old_start": "electron .",
