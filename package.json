@@ -47,7 +47,7 @@
     "@fast-csv/format": "^4.3.5",
     "@fast-csv/parse": "^4.3.6",
     "@googlemaps/google-maps-services-js": "^3.3.2",
-    "@googlemaps/js-api-loader": "^1.12.2",
+    "@googlemaps/js-api-loader": "^1.13.5",
     "@sentry/browser": "^6.17.6",
     "@sentry/electron": "^2.5.1",
     "@types/auto-launch": "^5.0.2",
